@@ -1,0 +1,5 @@
+.env
+localhost.env
+build
+node_modules
+/web
