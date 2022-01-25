@@ -6,7 +6,7 @@ module.exports = {
 			movieId: {
 				allowNull: false,
 				field: 'movie_id',
-				type: Sequelize.UUID,
+				type: Sequelize.INTEGER,
 				primaryKey: true,
 				onDelete: 'CASCADE',
 				references: {
@@ -17,7 +17,7 @@ module.exports = {
 			personId: {
 				allowNull: false,
 				field: 'person_id',
-				type: Sequelize.UUID,
+				type: Sequelize.INTEGER,
 				primaryKey: true,
 				onDelete: 'CASCADE',
 				references: {
