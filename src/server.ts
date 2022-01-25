@@ -2,6 +2,7 @@ import express from 'express';
 
 import dbInit from './db/init';
 import {Movie, MoviePeople, Person} from './db/models';
+import routerGraphql from './routes/graphql';
 
 
 dbInit();
@@ -10,6 +11,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use('/graphql', routerGraphql)
 app.get('/', async (req, res) => {
 	const movie = await Movie.findOne({
 		where: {
