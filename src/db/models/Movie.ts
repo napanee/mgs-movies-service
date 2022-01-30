@@ -39,7 +39,7 @@ interface MovieAttributes {
 }
 
 export interface MovieInput extends Optional<MovieAttributes, 'id'|'tmdb'> {}
-export interface MovieOuput extends Required<MovieAttributes> {}
+export interface MovieOutput extends Required<MovieAttributes> {}
 
 const attributes: ModelAttributes = {
 	title: {

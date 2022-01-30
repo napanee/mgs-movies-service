@@ -28,7 +28,7 @@ interface GenreAttributes {
 }
 
 export interface GenreInput extends Optional<GenreAttributes, 'id'> {}
-export interface GenreOuput extends Required<GenreAttributes> {}
+export interface GenreOutput extends Required<GenreAttributes> {}
 
 const attributes: ModelAttributes = {
 	name: {

@@ -17,7 +17,7 @@ interface UserAttributes {
 }
 
 export interface UserInput extends Optional<UserAttributes, 'id' | 'isActive'> {}
-export interface UserOuput extends Required<UserAttributes> {}
+export interface UserOutput extends Required<UserAttributes> {}
 
 const attributes: ModelAttributes = {
 	firstName: {

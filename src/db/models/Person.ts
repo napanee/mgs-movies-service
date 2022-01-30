@@ -39,7 +39,7 @@ interface PersonAttributes {
 }
 
 export interface PersonInput extends Optional<PersonAttributes, 'id'|'tmdb'> {}
-export interface PersonOuput extends Required<PersonAttributes> {}
+export interface PersonOutput extends Required<PersonAttributes> {}
 
 const attributes: ModelAttributes = {
 	name: {

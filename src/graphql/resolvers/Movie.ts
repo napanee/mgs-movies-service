@@ -1,7 +1,7 @@
 import {Includeable, Op, Order, WhereOptions} from 'sequelize';
 
 import Genre from '../../db/models/Genre';
-import Movie, {MovieInput, MovieOuput} from '../../db/models/Movie';
+import Movie, {MovieInput, MovieOutput} from '../../db/models/Movie';
 import Person from '../../db/models/Person';
 import {fetchMovieCredits, fetchMovieData, fetchPerson} from '../../utils';
 
@@ -43,7 +43,7 @@ export interface IArgsDelete {
 
 interface IListResponse {
 	edges: {
-		node: MovieOuput
+		node: MovieOutput
 	}[];
 	pageInfo: {
 		hasNextPage: () => boolean;
@@ -55,11 +55,11 @@ interface IListResponse {
 class MovieController {
 	private model = Movie;
 
-	async get(): Promise<MovieOuput | undefined> {
+	async get(): Promise<MovieOutput | undefined> {
 		const options: IOptions = {};
 		const movie = await this.model.findOne(options);
 
-		return movie?.toJSON<MovieOuput>();
+		return movie?.toJSON<MovieOutput>();
 	}
 
 	async list(args: IArgsList): Promise<IListResponse> {

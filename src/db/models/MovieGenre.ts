@@ -12,7 +12,7 @@ interface MovieGenreAttributes {
 }
 
 export interface MovieGenreInput extends Required<MovieGenreAttributes> {}
-export interface MovieGenreOuput extends Required<MovieGenreAttributes> {}
+export interface MovieGenreOutput extends Required<MovieGenreAttributes> {}
 
 const attributes: ModelAttributes = {
 	movieId: {
