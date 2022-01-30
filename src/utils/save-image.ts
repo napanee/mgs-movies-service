@@ -7,7 +7,7 @@ import {MD5} from 'crypto-js';
 import {MEDIA_ROOT} from '../config';
 
 
-const saveImage = async (imagePath: string, detailPath: string) => {
+export const saveImage = async (imagePath: string, detailPath: string) => {
 	const destFolder = `${MEDIA_ROOT}/${detailPath}`;
 	const md5FileName = MD5(imagePath);
 	const ext = path.extname(imagePath);
@@ -24,5 +24,3 @@ const saveImage = async (imagePath: string, detailPath: string) => {
 
 	return `${detailPath}/${md5FileName}${ext}`;
 }
-
-export default saveImage;
