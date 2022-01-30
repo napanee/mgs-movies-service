@@ -30,9 +30,11 @@ module.exports = {
 				type: Sequelize.STRING
 			},
 			imdb: {
+				allowNull: false,
 				type: Sequelize.STRING
 			},
 			tmdb: {
+				allowNull: false,
 				type: Sequelize.INTEGER
 			},
 			createdAt: {

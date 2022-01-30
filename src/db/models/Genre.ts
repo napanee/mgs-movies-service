@@ -43,6 +43,11 @@ const attributes: ModelAttributes = {
 	tmdb: {
 		allowNull: false,
 		type: DataTypes.INTEGER,
+		validate: {
+			notEmpty: {
+				msg: 'This field cannot be empty.',
+			},
+		},
 	},
 };
 

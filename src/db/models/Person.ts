@@ -19,7 +19,7 @@ import {
 } from 'sequelize';
 import { MoviePeople } from '.';
 
-import saveImage from '../../utils/save-image';
+import {saveImage} from '../../utils';
 import {sequelizeConnection} from '../connection';
 
 import Movie from './Movie';
@@ -28,17 +28,17 @@ import Movie from './Movie';
 interface PersonAttributes {
 	id: string;
 	name: string;
+	imdb: string;
+	tmdb: number;
 	biography?: string;
 	birthday?: string | null;
 	deathday?: string | null;
 	placeOfBirth?: string | null;
 	image?: string | null;
-	imdb?: string;
-	tmdb?: number;
 	Movies?: Movie[];
 }
 
-export interface PersonInput extends Optional<PersonAttributes, 'id'> {}
+export interface PersonInput extends Optional<PersonAttributes, 'id'|'tmdb'> {}
 export interface PersonOuput extends Required<PersonAttributes> {}
 
 const attributes: ModelAttributes = {
@@ -68,13 +68,23 @@ const attributes: ModelAttributes = {
 	},
 	imdb: {
 		type: DataTypes.STRING,
+		validate: {
+			notEmpty: {
+				msg: 'This field cannot be empty.',
+			},
+		},
 	},
 	tmdb: {
 		type: DataTypes.INTEGER,
+		validate: {
+			notEmpty: {
+				msg: 'This field cannot be empty.',
+			},
+		},
 	},
 };
 
-const beforeCreate = async (person: Person) => {
+const loadImages = async (person: Person) => {
 	if (!person.isNewRecord || !person.image) {
 		return
 	}
@@ -90,13 +100,13 @@ const beforeCreate = async (person: Person) => {
 class Person extends Model<PersonAttributes, PersonInput> implements PersonAttributes {
 	declare id: string;
 	declare name: string;
+	declare imdb: string;
+	declare tmdb: number;
 	declare biography?: string;
 	declare birthday?: string | null;
 	declare deathday?: string | null;
 	declare placeOfBirth?: string | null;
 	declare image?: string;
-	declare imdb?: string;
-	declare tmdb?: number;
 
 	declare readonly createdAt: Date;
 	declare readonly updatedAt: Date;
@@ -124,6 +134,6 @@ class Person extends Model<PersonAttributes, PersonInput> implements PersonAttri
 	}
 }
 
-Person.init(attributes, {hooks: {beforeCreate}, sequelize: sequelizeConnection});
+Person.init(attributes, {hooks: {beforeCreate: loadImages}, sequelize: sequelizeConnection});
 
 export default Person;

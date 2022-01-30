@@ -18,7 +18,7 @@ import {
 	Optional
 } from 'sequelize';
 
-import saveImage from '../../utils/save-image';
+import {saveImage} from '../../utils';
 import {sequelizeConnection} from '../connection';
 
 import Genre from './Genre';
@@ -30,15 +30,15 @@ interface MovieAttributes {
 	title: string;
 	titleOriginal: string;
 	releaseDate: string;
+	imdb: string;
+	tmdb: number;
 	runtime?: number | null;
 	overview?: string | null;
 	backdrop?: string | null;
 	poster?: string | null;
-	imdb?: string;
-	tmdb?: number;
 }
 
-export interface MovieInput extends Optional<MovieAttributes, 'id'> {}
+export interface MovieInput extends Optional<MovieAttributes, 'id'|'tmdb'> {}
 export interface MovieOuput extends Required<MovieAttributes> {}
 
 const attributes: ModelAttributes = {
@@ -90,23 +90,33 @@ const attributes: ModelAttributes = {
 	},
 	imdb: {
 		type: DataTypes.STRING,
+		validate: {
+			notEmpty: {
+				msg: 'This field cannot be empty.',
+			},
+		},
 	},
 	tmdb: {
 		type: DataTypes.INTEGER,
+		validate: {
+			notEmpty: {
+				msg: 'This field cannot be empty.',
+			},
+		},
 	},
 };
 
-const beforeCreate = async (movie: Movie) => {
+const loadImages = async (movie: Movie) => {
 	const year = dayjs(movie.releaseDate, {format: 'YYYY-MM-DD'}).year();
 	const hash = MD5(year.toString()).toString().substring(0, 5);
 
-	if (movie.isNewRecord && movie.backdrop) {
+	if (movie.changed('backdrop') && movie.backdrop) {
 		const prefix = MD5('movie/backdrop').toString().substring(0, 2);
 		const backdrop = await saveImage(movie.backdrop, `${prefix}/${hash}`);
 		movie.set('backdrop', backdrop);
 	}
 
-	if (movie.isNewRecord && movie.poster) {
+	if (movie.changed('poster') && movie.poster) {
 		const prefix = MD5('movie/poster').toString().substring(0, 2);
 		const poster = await saveImage(movie.poster, `${prefix}/${hash}`);
 		movie.set('poster', poster);
@@ -118,12 +128,12 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	declare title: string;
 	declare titleOriginal: string;
 	declare releaseDate: string;
+	declare imdb: string;
+	declare tmdb: number;
 	declare runtime?: number | null;
 	declare overview?: string | null;
 	declare backdrop?: string | null;
 	declare poster?: string | null;
-	declare imdb?: string;
-	declare tmdb?: number;
 
 	declare readonly createdAt: Date;
 	declare readonly updatedAt: Date;
@@ -159,6 +169,6 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	};
 }
 
-Movie.init(attributes, {hooks: {beforeCreate}, sequelize: sequelizeConnection});
+Movie.init(attributes, {hooks: {beforeCreate: loadImages, beforeUpdate: loadImages}, sequelize: sequelizeConnection});
 
 export default Movie;

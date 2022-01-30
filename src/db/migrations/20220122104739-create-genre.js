@@ -14,6 +14,7 @@ module.exports = {
 				type: Sequelize.STRING
 			},
 			tmdb: {
+				allowNull: false,
 				type: Sequelize.INTEGER
 			},
 			createdAt: {
