@@ -1,14 +1,18 @@
 import {GraphQLObjectType, GraphQLSchema} from 'graphql';
 
 import {MovieMutation} from './mutations';
-import {MovieQuery} from './queries';
+import {GenreQuery, MovieQuery} from './queries';
 
 
+const genreQuery = new GenreQuery();
 const movieQuery = new MovieQuery();
 const movieMutation = new MovieMutation();
 const query = new GraphQLObjectType({
 	name: 'Query',
 	fields: {
+		// Genre
+		genre: genreQuery.get(),
+		genres: genreQuery.list(),
 		// Movie
 		movie: movieQuery.get(),
 		movies: movieQuery.list(),
