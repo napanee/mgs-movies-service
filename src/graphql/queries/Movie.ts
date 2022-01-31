@@ -1,7 +1,7 @@
 import {GraphQLID, GraphQLInt, GraphQLString} from 'graphql';
 
 import {movieConnection, movieNode} from '../types';
-import MovieResolver, {IArgsList} from '../resolvers/Movie';
+import MovieResolver, {IArgsGet, IArgsList} from '../resolvers/Movie';
 
 
 class MovieQuery {
@@ -15,7 +15,7 @@ class MovieQuery {
 					type: GraphQLID
 				}
 			},
-			resolve: () => this.resolver.get()
+			resolve: (_: any, args: IArgsGet) => this.resolver.get(args),
 		};
 	}
 
@@ -36,7 +36,7 @@ class MovieQuery {
 					defaultValue: 'title'
 				},
 			},
-			resolve: (source: any, args: IArgsList) => this.resolver.list(args),
+			resolve: (_: any, args: IArgsList) => this.resolver.list(args),
 		};
 	}
 }

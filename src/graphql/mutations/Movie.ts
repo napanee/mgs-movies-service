@@ -15,7 +15,7 @@ class MovieMutation {
 					type: new GraphQLNonNull(GraphQLInt)
 				},
 			},
-			resolve: (parent: any, args: IArgsCreate) => this.resolver.create(args)
+			resolve: (_: any, args: IArgsCreate) => this.resolver.create(args)
 		};
 	}
 
@@ -30,7 +30,7 @@ class MovieMutation {
 					type: movieUpdateInput
 				},
 			},
-			resolve: (parent: any, args: IArgsUpdate) => this.resolver.update(args)
+			resolve: (_: any, args: IArgsUpdate) => this.resolver.update(args)
 		};
 	}
 
@@ -45,7 +45,7 @@ class MovieMutation {
 					type: movieRefetchInput
 				},
 			},
-			resolve: (parent: any, args: IArgsRefetch) => this.resolver.refetch(args)
+			resolve: (_: any, args: IArgsRefetch) => this.resolver.refetch(args)
 		};
 	}
 
@@ -57,7 +57,7 @@ class MovieMutation {
 					type: new GraphQLNonNull(GraphQLID)
 				}
 			},
-			resolve: (parent: any, args: IArgsDelete) => this.resolver.delete(args)
+			resolve: (_: any, args: IArgsDelete) => this.resolver.delete(args)
 		};
 	}
 }

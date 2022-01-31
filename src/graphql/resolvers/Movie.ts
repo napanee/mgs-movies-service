@@ -1,4 +1,4 @@
-import {Includeable, Op, Order, WhereOptions} from 'sequelize';
+import {Includeable, IncludeOptions, Op, Order, WhereOptions} from 'sequelize';
 
 import Genre from '../../db/models/Genre';
 import Movie, {MovieInput, MovieOutput} from '../../db/models/Movie';
@@ -10,6 +10,11 @@ interface IOptions {
 	include?: Includeable | Includeable[];
 	oder?: Order;
 	where?: WhereOptions<MovieInput>;
+}
+
+export interface IArgsGet {
+	id?: number;
+	title?: string;
 }
 
 export interface IArgsList {
@@ -43,7 +48,7 @@ export interface IArgsDelete {
 
 interface IListResponse {
 	edges: {
-		node: MovieOutput
+		node: MovieOutput;
 	}[];
 	pageInfo: {
 		hasNextPage: () => boolean;
@@ -55,11 +60,28 @@ interface IListResponse {
 class MovieController {
 	private model = Movie;
 
-	async get(): Promise<MovieOutput | undefined> {
-		const options: IOptions = {};
-		const movie = await this.model.findOne(options);
+	async get({id, title}: IArgsGet): Promise<MovieOutput | null> {
+		if (id && title) {
+			throw new Error('You can only search by one attribute.');
+		}
 
-		return movie?.toJSON<MovieOutput>();
+		if (!id && !title) {
+			throw new Error('You must enter at least one attribute.');
+		}
+
+		const options: IOptions = {
+			where: {}
+		};
+
+		if (id) {
+			options.where = {id};
+		}
+
+		if (title) {
+			options.where = {title};
+		}
+
+		return this.model.findOne(options);
 	}
 
 	async list(args: IArgsList): Promise<IListResponse> {

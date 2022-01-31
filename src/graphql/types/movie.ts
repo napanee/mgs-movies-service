@@ -33,9 +33,6 @@ export const movieEdge = new GraphQLObjectType({
 		node: {
 			type: movieNode,
 		},
-		cursor: {
-			type: GraphQLString,
-		},
 	}),
 });
 
@@ -44,9 +41,6 @@ export const movieNode = new GraphQLObjectType({
 	fields: () => ({
 		id: {
 			type: GraphQLID,
-			resolve: () => {
-				return 'Foo';
-			}
 		},
 		title: {
 			type: GraphQLString,
