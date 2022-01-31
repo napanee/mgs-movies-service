@@ -98,6 +98,25 @@ export const movieNode = new GraphQLObjectType({
 				return personResolver.list(args);
 			}
 		},
+		directors: {
+			type: new GraphQLList(personNode),
+			resolve: (parent: MovieOutput) => {
+				const args: FindOptions = {
+					include: {
+						model: Movie,
+						where: {id: parent.id},
+						through: {
+							attributes: ['character'],
+							where: {
+								department: 'director',
+							},
+						},
+					},
+				};
+
+				return personResolver.list(args);
+			}
+		},
 		genres: {
 			type: new GraphQLList(genreNode),
 			resolve: (parent: MovieOutput) => {
