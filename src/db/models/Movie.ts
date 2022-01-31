@@ -23,6 +23,7 @@ import {sequelizeConnection} from '../connection';
 
 import Genre from './Genre';
 import Person from './Person';
+import MoviePeople from './MoviePeople';
 
 
 interface MovieAttributes {
@@ -36,6 +37,7 @@ interface MovieAttributes {
 	overview?: string | null;
 	backdrop?: string | null;
 	poster?: string | null;
+	character?: string;
 }
 
 export interface MovieInput extends Optional<MovieAttributes, 'id'|'tmdb'> {}
@@ -104,6 +106,12 @@ const attributes: ModelAttributes = {
 			},
 		},
 	},
+	character: {
+		type: DataTypes.VIRTUAL,
+		get(this: Movie): string | undefined {
+		  return this.People?.[0].MoviePeople?.character;
+		},
+	},
 };
 
 const loadImages = async (movie: Movie) => {
@@ -162,6 +170,7 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 
 	declare readonly Genres?: Genre[];
 	declare readonly People?: Person[];
+	declare readonly MoviePeople?: MoviePeople;
 
 	declare static associations: {
 		Genres: Association<Movie, Genre>;

@@ -1,11 +1,11 @@
-import {Order, WhereOptions, FindOptions} from 'sequelize';
+import {IncludeOptions, Order, WhereOptions, FindOptions} from 'sequelize';
 
-import Genre, {GenreInput, GenreOutput} from '../../db/models/Genre';
+import Person, {PersonInput, PersonOutput} from '../../db/models/Person';
 import {instanceOfFindOptions} from '../../utils/typecheck';
 
 
 interface IOptions {
-	where?: WhereOptions<GenreInput>;
+	where?: WhereOptions<PersonInput>;
 }
 
 export interface IArgsGet {
@@ -21,7 +21,7 @@ export interface IArgsList {
 
 interface IListResponse {
 	edges: {
-		node: GenreOutput;
+		node: PersonOutput;
 	}[];
 	pageInfo: {
 		hasNextPage: () => boolean;
@@ -30,10 +30,10 @@ interface IListResponse {
 	totalCount: number;
 }
 
-class GenreController {
-	private model = Genre;
+class PersonController {
+	private model = Person;
 
-	async get({id, name}: IArgsGet): Promise<GenreOutput | null> {
+	async get({id, name}: IArgsGet): Promise<PersonOutput | null> {
 		if (id && name) {
 			throw new Error('You can only search by one attribute.');
 		}
@@ -57,9 +57,9 @@ class GenreController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: FindOptions): Promise<GenreOutput[]>;
+	async list(args: FindOptions): Promise<PersonOutput[]>;
 	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList | FindOptions): Promise<IListResponse | GenreOutput[]> {
+	async list(args: IArgsList | FindOptions): Promise<IListResponse | PersonOutput[]> {
 		if (instanceOfFindOptions(args)) {
 			return this.model.findAll(args);
 		}
@@ -84,4 +84,4 @@ class GenreController {
 	}
 }
 
-export default GenreController;
+export default PersonController;

@@ -35,11 +35,12 @@ interface PersonAttributes {
 	deathday?: string | null;
 	placeOfBirth?: string | null;
 	image?: string | null;
+	character?: string;
 	Movies?: Movie[];
 }
 
 export interface PersonInput extends Optional<PersonAttributes, 'id'|'tmdb'> {}
-export interface PersonOutput extends Required<PersonAttributes> {}
+export interface PersonOutput extends Optional<PersonAttributes, 'biography'|'birthday'|'deathday'|'placeOfBirth'|'image'> {}
 
 const attributes: ModelAttributes = {
 	name: {
@@ -82,6 +83,12 @@ const attributes: ModelAttributes = {
 			},
 		},
 	},
+	character: {
+		type: DataTypes.VIRTUAL,
+		get(this: Person): string | undefined {
+		  return this.Movies?.[0].MoviePeople?.character;
+		},
+	},
 };
 
 const loadImages = async (person: Person) => {
@@ -100,6 +107,7 @@ const loadImages = async (person: Person) => {
 class Person extends Model<PersonAttributes, PersonInput> implements PersonAttributes {
 	declare id: string;
 	declare name: string;
+	declare character: string;
 	declare imdb: string;
 	declare tmdb: number;
 	declare biography?: string;
@@ -128,10 +136,6 @@ class Person extends Model<PersonAttributes, PersonInput> implements PersonAttri
 	declare static associations: {
 		Movies: Association<Person, Movie>;
 	};
-
-	public toJSON(): object {
-		return super.toJSON();
-	}
 }
 
 Person.init(attributes, {hooks: {beforeCreate: loadImages}, sequelize: sequelizeConnection});

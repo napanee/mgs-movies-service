@@ -5,19 +5,22 @@ import {
 	GraphQLInt,
 	GraphQLList,
 	GraphQLObjectType,
-	GraphQLString
+	GraphQLString,
 } from 'graphql';
-import {IncludeOptions} from 'sequelize';
+import {FindOptions} from 'sequelize';
 
-import {GenreResolver} from '../resolvers';
+import {GenreResolver, PersonResolver} from '../resolvers';
 import Movie, {MovieOutput} from '../../db/models/Movie';
+import MoviePeople from '../../db/models/MoviePeople';
 
 import {errorNode} from './error';
 import {pageInfo} from './base';
 import {genreNode} from './genre';
+import {personNode} from './person';
 
 
 const genreResolver = new GenreResolver();
+const personResolver = new PersonResolver();
 
 export const movieConnection = new GraphQLObjectType({
 	name: 'movieConnection',
@@ -70,12 +73,39 @@ export const movieNode = new GraphQLObjectType({
 		poster: {
 			type: GraphQLString,
 		},
+		character: {
+			type: GraphQLString,
+		},
+		cast: {
+			type: new GraphQLList(personNode),
+			resolve: (parent: MovieOutput) => {
+				const args: FindOptions = {
+					include: {
+						model: Movie,
+						where: {id: parent.id},
+						through: {
+							attributes: ['character'],
+							where: {
+								department: 'actor',
+							},
+						},
+					},
+					order: [
+						[Movie, MoviePeople, 'order', 'asc' ]
+					]
+				};
+
+				return personResolver.list(args);
+			}
+		},
 		genres: {
 			type: new GraphQLList(genreNode),
 			resolve: (parent: MovieOutput) => {
-				const args: IncludeOptions = {
-					model: Movie,
-					where: {id: parent.id},
+				const args: FindOptions = {
+					include: {
+						model: Movie,
+						where: {id: parent.id},
+					},
 				};
 
 				return genreResolver.list(args);

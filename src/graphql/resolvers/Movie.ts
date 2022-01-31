@@ -1,10 +1,10 @@
-import {Includeable, IncludeOptions, Op, Order, WhereOptions} from 'sequelize';
+import {FindOptions, Includeable, IncludeOptions, Op, Order, WhereOptions} from 'sequelize';
 
 import Genre from '../../db/models/Genre';
 import Movie, {MovieInput, MovieOutput} from '../../db/models/Movie';
 import Person from '../../db/models/Person';
 import {fetchMovieCredits, fetchMovieData, fetchPerson} from '../../utils';
-import {instanceOfIncludeOptions} from '../../utils/typecheck';
+import {instanceOfFindOptions} from '../../utils/typecheck';
 
 
 interface IOptions {
@@ -85,11 +85,11 @@ class MovieController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: IncludeOptions): Promise<MovieOutput[]>;
+	async list(args: FindOptions): Promise<MovieOutput[]>;
 	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList | IncludeOptions): Promise<IListResponse | MovieOutput[]> {
-		if (instanceOfIncludeOptions(args)) {
-			return this.model.findAll({include: args});
+	async list(args: IArgsList | FindOptions): Promise<IListResponse | MovieOutput[]> {
+		if (instanceOfFindOptions(args)) {
+			return this.model.findAll(args);
 		}
 
 		const limit = args.first;

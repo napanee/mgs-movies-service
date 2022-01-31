@@ -1,11 +1,12 @@
 import {GraphQLObjectType, GraphQLSchema} from 'graphql';
 
 import {MovieMutation} from './mutations';
-import {GenreQuery, MovieQuery} from './queries';
+import {GenreQuery, MovieQuery, PersonQuery} from './queries';
 
 
 const genreQuery = new GenreQuery();
 const movieQuery = new MovieQuery();
+const personQuery = new PersonQuery();
 const movieMutation = new MovieMutation();
 const query = new GraphQLObjectType({
 	name: 'Query',
@@ -16,6 +17,9 @@ const query = new GraphQLObjectType({
 		// Movie
 		movie: movieQuery.get(),
 		movies: movieQuery.list(),
+		// Person
+		person: personQuery.get(),
+		people: personQuery.list(),
 	}
 });
 const mutation = new GraphQLObjectType({
