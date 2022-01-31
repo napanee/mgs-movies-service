@@ -4,6 +4,7 @@ import Genre from '../../db/models/Genre';
 import Movie, {MovieInput, MovieOutput} from '../../db/models/Movie';
 import Person from '../../db/models/Person';
 import {fetchMovieCredits, fetchMovieData, fetchPerson} from '../../utils';
+import {instanceOfIncludeOptions} from '../../utils/typecheck';
 
 
 interface IOptions {
@@ -84,7 +85,13 @@ class MovieController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: IArgsList): Promise<IListResponse> {
+	async list(args: IncludeOptions): Promise<MovieOutput[]>;
+	async list(args: IArgsList): Promise<IListResponse>;
+	async list(args: IArgsList | IncludeOptions): Promise<IListResponse | MovieOutput[]> {
+		if (instanceOfIncludeOptions(args)) {
+			return this.model.findAll({include: args});
+		}
+
 		const limit = args.first;
 		const offset = args.offset;
 		const orderDirection = args.orderBy.startsWith('-') ? 'DESC' : 'ASC';
@@ -93,7 +100,9 @@ class MovieController {
 		const totalCount = await this.model.count();
 
 		return {
-			edges: movies.map((movie) => ({node: movie.toJSON()})),
+			edges: movies.map((node) => ({
+				node,
+			})),
 			pageInfo: {
 				hasNextPage: () => totalCount > limit + offset,
 				hasPreviousPage: () => offset > 0

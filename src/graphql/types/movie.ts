@@ -7,10 +7,17 @@ import {
 	GraphQLObjectType,
 	GraphQLString
 } from 'graphql';
+import {IncludeOptions} from 'sequelize';
+
+import {GenreResolver} from '../resolvers';
+import Movie, {MovieOutput} from '../../db/models/Movie';
 
 import {errorNode} from './error';
 import {pageInfo} from './base';
+import {genreNode} from './genre';
 
+
+const genreResolver = new GenreResolver();
 
 export const movieConnection = new GraphQLObjectType({
 	name: 'movieConnection',
@@ -62,6 +69,17 @@ export const movieNode = new GraphQLObjectType({
 		},
 		poster: {
 			type: GraphQLString,
+		},
+		genres: {
+			type: new GraphQLList(genreNode),
+			resolve: (parent: MovieOutput) => {
+				const args: IncludeOptions = {
+					model: Movie,
+					where: {id: parent.id},
+				};
+
+				return genreResolver.list(args);
+			}
 		},
 	}),
 });
