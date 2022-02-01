@@ -174,7 +174,7 @@ class MovieController {
 		}
 	}
 
-	async refetch({id, input: {withImages}}: IArgsRefetch) {
+	async refetch({id, input: {withImages} = {withImages: false}}: IArgsRefetch) {
 		const movieModel = await Movie.findByPk(id);
 
 		if (!movieModel) {

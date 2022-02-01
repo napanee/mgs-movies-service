@@ -21,30 +21,30 @@ type ImdbResponseType = {
 }
 
 type MovieDataType = {
-    backdrop_path: string,
-    genres: {
+	backdrop_path: string | null,
+	genres: {
 		id: number,
 		name: string,
 	}[],
-    id: number,
-    imdb_id: string,
-    original_title: string,
-    overview: string,
-    poster_path: string,
-    release_date: string,
-    runtime: number,
-    title: string,
+	id: number,
+	imdb_id: string,
+	original_title: string,
+	overview: string | null,
+	poster_path: string | null,
+	release_date: string,
+	runtime: number | null,
+	title: string,
 }
 
 type PersonType = {
-    biography: string,
-    birthday: string | null,
-    deathday: string | null,
-    id: number,
-    imdb_id: string,
-    name: string,
-    place_of_birth: string | null,
-    profile_path: string | null,
+	biography: string,
+	birthday: string | null,
+	deathday: string | null,
+	id: number,
+	imdb_id: string,
+	name: string,
+	place_of_birth: string | null,
+	profile_path: string | null,
 }
 
 type CastType = {
@@ -97,38 +97,52 @@ function __fetch<T extends JsonObject>(endpoint: string) {
 
 export function searchWithQuery(query: string) {
 	return __fetch<{results: QueryResponseType[]}>(`search/movie?query=${query}&language=de-DE`)
-		.then(({results}) => results.map((result) => transformKeys(result)));
+		.then(({results}) => {
+			return results
+				.map((result) => transformKeys(result))
+				.filter(({id, overview, posterPath, releaseDate, title}) => ({id, overview, posterPath, releaseDate, title}));
+		});
 }
 
 export function searchWithImdb(id: number) {
 	return __fetch<{movie_results: ImdbResponseType[]}>(`find/${id}?external_source=imdb_id&language=de-DE`)
-		.then(({movieResults}) => movieResults.map((result) => transformKeys(result)));
+		.then(({movieResults}) => {
+			return movieResults
+				.map((result) => transformKeys(result))
+				.filter(({id, overview, posterPath, releaseDate, title}) => ({id, overview, posterPath, releaseDate, title}));
+		});
 }
 
 export function fetchMovieData(id: number) {
 	return __fetch<MovieDataType>(`movie/${id}?language=de`)
-		.then(({id, imdbId, originalTitle, backdropPath, posterPath, ...rest}) =>
-			({tmdb: id, imdb: imdbId, titleOriginal: originalTitle, backdrop: backdropPath, poster: posterPath, ...rest}));
+		.then(({backdropPath: backdrop, genres, id: tmdb, imdbId: imdb, originalTitle: titleOriginal, overview, posterPath: poster, releaseDate, runtime, title}) => {
+			return {backdrop, genres, tmdb, imdb, titleOriginal, overview, poster, releaseDate, runtime, title};
+		});
 }
 
 export function fetchMovieCredits(id: number): Promise<{creditId: string; tmdb: number; department: string; character?: string; order?: number;}[]> {
 	return __fetch<MovieCreditsType>(`movie/${id}/credits?language=de`)
 		.then(({cast, crew}) => [
-			...cast.map(({id, ...rest}) => ({tmdb: id, department: 'actor', ...transformKeys<Omit<CastType, 'id'>>(rest)})),
+			...cast
+				.map((result) => transformKeys(result))
+				.map(({id: tmdb, character, creditId, order}) => ({tmdb, department: 'actor', character, creditId, order})),
 			...crew.filter(({job}) => job === 'Director')
-				.map(({id, job, ...rest}) => ({tmdb: id, department: job.toLowerCase(), ...transformKeys<Omit<CrewType, 'id'|'job'>>(rest)}))
+				.map((result) => transformKeys(result))
+				.map(({id: tmdb, job, creditId}) => ({tmdb, department: job.toLowerCase(), creditId}))
 		]);
 }
 
 export function fetchPerson(id: number) {
 	return __fetch<PersonType>(`person/${id}?language=de`)
-		.then(({id, imdbId, profilePath, ...rest}) => ({tmdb: id, imdb: imdbId, image: profilePath, ...rest}));
+		.then(({id: tmdb, imdbId: imdb, profilePath: image, biography, birthday, deathday, name, placeOfBirth}) => {
+			return {tmdb, imdb, image, biography, birthday, deathday, name, placeOfBirth};
+		});
 }
 
 export function fetchImages(id: number, lng?: string) {
 	return __fetch<MovieImagesType>(`movie/${id}/images${lng ? `?language=${lng}` : ''}`)
 		.then(({backdrops, posters}) => ({
-			backdrops: backdrops.map((backdrop) => transformKeys(backdrop)),
-			posters: posters.map((poster) => transformKeys(poster)),
+			backdrops: backdrops.map((backdrop) => transformKeys(backdrop)).map(({filePath, width, height}) => ({filePath, width, height})),
+			posters: posters.map((poster) => transformKeys(poster)).map(({filePath, width, height}) => ({filePath, width, height})),
 		}));
 }
