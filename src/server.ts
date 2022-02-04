@@ -1,7 +1,6 @@
 import express from 'express';
 
 import dbInit from './db/init';
-import {Movie, MoviePeople, Person} from './db/models';
 import routerGraphql from './routes/graphql';
 
 
@@ -11,35 +10,11 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use('/graphql', routerGraphql)
+app.use('/graphql', routerGraphql);
 app.get('/', async (req, res) => {
-	const movie = await Movie.findOne({
-		where: {
-			title: 'Matrix'
-		},
-		include: [
-			// {
-			// 	model: Genre,
-			// 	// as: 'genres'
-			// },
-			{
-				model: Person,
-				attributes: ['name'],
-				through: {
-					attributes: ['character'],
-					where: {
-						department: 'actor'
-					}
-				},
-			},
-		],
-		order: [
-			[Person, MoviePeople, 'order', 'asc' ]
-		]
-	});
-	console.log(movie?.People?.map((person) => person.toJSON()));
 	res.send('Server running...');
 });
 app.listen(process.env.PORT, () => {
+	// eslint-disable-next-line no-console
 	console.log(`App starts on port ${process.env.PORT}`);
 });

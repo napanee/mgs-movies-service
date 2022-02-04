@@ -3,13 +3,13 @@ import {Dialect} from 'sequelize';
 
 type Config = {
 	[key in typeof process.env.NODE_ENV]: {
-		username: string;
-		password: string;
 		database: string;
-		host: string;
 		dialect: Dialect;
+		host: string;
+		password: string;
+		username: string;
 	};
-}
+};
 
 const config: Config = {
 	development: {

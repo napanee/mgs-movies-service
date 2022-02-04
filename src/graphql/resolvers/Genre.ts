@@ -1,4 +1,4 @@
-import {Order, WhereOptions, FindOptions} from 'sequelize';
+import {FindOptions, Order, WhereOptions} from 'sequelize';
 
 import Genre, {GenreInput, GenreOutput} from '../../db/models/Genre';
 import {instanceOfFindOptions} from '../../utils/typecheck';
@@ -43,7 +43,7 @@ class GenreController {
 		}
 
 		const options: IOptions = {
-			where: {}
+			where: {},
 		};
 
 		if (id) {
@@ -77,9 +77,9 @@ class GenreController {
 			})),
 			pageInfo: {
 				hasNextPage: () => totalCount > limit + offset,
-				hasPreviousPage: () => offset > 0
+				hasPreviousPage: () => offset > 0,
 			},
-			totalCount
+			totalCount,
 		};
 	}
 }

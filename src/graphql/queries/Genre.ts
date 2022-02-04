@@ -1,7 +1,7 @@
 import {GraphQLID, GraphQLInt, GraphQLString} from 'graphql';
 
-import {genreConnection, genreNode} from '../types';
 import GenreResolver, {IArgsGet, IArgsList} from '../resolvers/Genre';
+import {genreConnection, genreNode} from '../types';
 
 
 class GenreQuery {
@@ -16,9 +16,9 @@ class GenreQuery {
 				},
 				name: {
 					type: GraphQLString,
-				}
+				},
 			},
-			resolve: (_: any, args: IArgsGet) => this.resolver.get(args),
+			resolve: (_: unknown, args: IArgsGet) => this.resolver.get(args),
 		};
 	}
 
@@ -36,10 +36,10 @@ class GenreQuery {
 				},
 				orderBy: {
 					type: GraphQLString,
-					defaultValue: 'name'
+					defaultValue: 'name',
 				},
 			},
-			resolve: (_: any, args: IArgsList) => this.resolver.list(args),
+			resolve: (_: unknown, args: IArgsList) => this.resolver.list(args),
 		};
 	}
 }

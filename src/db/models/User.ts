@@ -5,19 +5,19 @@ import {sequelizeConnection} from '../connection';
 
 
 interface UserAttributes {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  isActive: boolean;
-  token?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+	email: string;
+	firstName: string;
+	id: string;
+	isActive: boolean;
+	lastName: string;
+	password: string;
+	createdAt?: Date;
+	token?: string;
+	updatedAt?: Date;
 }
 
-export interface UserInput extends Optional<UserAttributes, 'id' | 'isActive'> {}
-export interface UserOutput extends Required<UserAttributes> {}
+export type UserInput = Optional<UserAttributes, 'id' | 'isActive'>;
+export type UserOutput = Required<UserAttributes>;
 
 const attributes: ModelAttributes = {
 	firstName: {
@@ -26,19 +26,19 @@ const attributes: ModelAttributes = {
 		validate: {
 			len: {
 				args: [1, 50],
-				msg: 'Name zu kurz oder lang'
+				msg: 'Name zu kurz oder lang',
 			},
 			notEmpty: {
-				msg: 'Field is required'
+				msg: 'Field is required',
 			},
 			notNull: {
-				msg: 'Field is required'
-			}
-		}
+				msg: 'Field is required',
+			},
+		},
 	},
 	lastName: {
 		allowNull: false,
-		type: DataTypes.STRING
+		type: DataTypes.STRING,
 	},
 	email: {
 		allowNull: false,

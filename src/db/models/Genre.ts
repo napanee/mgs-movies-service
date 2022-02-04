@@ -1,19 +1,19 @@
 import {
 	Association,
-	BelongsToManyGetAssociationsMixin,
 	BelongsToManyAddAssociationMixin,
 	BelongsToManyAddAssociationsMixin,
-	BelongsToManyHasAssociationMixin,
 	BelongsToManyCountAssociationsMixin,
 	BelongsToManyCreateAssociationMixin,
+	BelongsToManyGetAssociationsMixin,
+	BelongsToManyHasAssociationMixin,
+	BelongsToManyHasAssociationsMixin,
+	BelongsToManyRemoveAssociationMixin,
+	BelongsToManyRemoveAssociationsMixin,
+	BelongsToManySetAssociationsMixin,
 	DataTypes,
 	Model,
 	ModelAttributes,
 	Optional,
-	BelongsToManySetAssociationsMixin,
-	BelongsToManyRemoveAssociationMixin,
-	BelongsToManyRemoveAssociationsMixin,
-	BelongsToManyHasAssociationsMixin,
 } from 'sequelize';
 
 import Movie from './Movie';
@@ -27,8 +27,8 @@ interface GenreAttributes {
 	tmdb: number;
 }
 
-export interface GenreInput extends Optional<GenreAttributes, 'id'> {}
-export interface GenreOutput extends Required<GenreAttributes> {}
+export type GenreInput = Optional<GenreAttributes, 'id'>;
+export type GenreOutput = Required<GenreAttributes>;
 
 const attributes: ModelAttributes = {
 	name: {

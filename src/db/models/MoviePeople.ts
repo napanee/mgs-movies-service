@@ -1,4 +1,4 @@
-import {DataTypes, Model, ModelAttributes, Optional} from 'sequelize';
+import {DataTypes, Model, ModelAttributes} from 'sequelize';
 
 import Movie from './Movie';
 import Person from './Person';
@@ -7,16 +7,16 @@ import {sequelizeConnection} from '../connection';
 
 
 interface MoviePeopleAttributes {
-	movieId: string;
-	personId: string;
 	creditId: string;
 	department: string;
+	movieId: string;
+	personId: string;
 	character?: string;
 	order?: number;
 }
 
-export interface MoviePeopleInput extends Required<MoviePeopleAttributes> {}
-export interface MoviePeopleOutput extends Required<MoviePeopleAttributes> {}
+export type MoviePeopleInput = Required<MoviePeopleAttributes>;
+export type MoviePeopleOutput = Required<MoviePeopleAttributes>;
 
 const attributes: ModelAttributes = {
 	movieId: {

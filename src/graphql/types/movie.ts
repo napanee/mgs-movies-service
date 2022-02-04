@@ -9,14 +9,14 @@ import {
 } from 'graphql';
 import {FindOptions} from 'sequelize';
 
-import {GenreResolver, PersonResolver} from '../resolvers';
-import Movie, {MovieOutput} from '../../db/models/Movie';
-import MoviePeople from '../../db/models/MoviePeople';
-
-import {errorNode} from './error';
 import {pageInfo} from './base';
+import {errorNode} from './error';
 import {genreNode} from './genre';
 import {personNode} from './person';
+
+import Movie, {MovieOutput} from '../../db/models/Movie';
+import MoviePeople from '../../db/models/MoviePeople';
+import {GenreResolver, PersonResolver} from '../resolvers';
 
 
 const genreResolver = new GenreResolver();
@@ -32,8 +32,8 @@ export const movieConnection = new GraphQLObjectType({
 			type: pageInfo,
 		},
 		totalCount: {
-			type: GraphQLInt
-		}
+			type: GraphQLInt,
+		},
 	}),
 });
 
@@ -91,12 +91,12 @@ export const movieNode = new GraphQLObjectType({
 						},
 					},
 					order: [
-						[Movie, MoviePeople, 'order', 'asc' ]
-					]
+						[Movie, MoviePeople, 'order', 'asc' ],
+					],
 				};
 
 				return personResolver.list(args);
-			}
+			},
 		},
 		directors: {
 			type: new GraphQLList(personNode),
@@ -115,7 +115,7 @@ export const movieNode = new GraphQLObjectType({
 				};
 
 				return personResolver.list(args);
-			}
+			},
 		},
 		genres: {
 			type: new GraphQLList(genreNode),
@@ -128,36 +128,36 @@ export const movieNode = new GraphQLObjectType({
 				};
 
 				return genreResolver.list(args);
-			}
+			},
 		},
 	}),
 });
 
 const payload = {
 	movie: {
-		type: movieNode
+		type: movieNode,
 	},
 	ok: {
-		type: GraphQLBoolean
+		type: GraphQLBoolean,
 	},
 	errors: {
-		type: new GraphQLList(errorNode)
-	}
+		type: new GraphQLList(errorNode),
+	},
 };
 
 export const movieCreatePayload = new GraphQLObjectType({
 	name: 'movieCreatePayload',
-	fields: () => payload
+	fields: () => payload,
 });
 
 export const movieUpdatePayload = new GraphQLObjectType({
 	name: 'movieUpdatePayload',
-	fields: () => payload
+	fields: () => payload,
 });
 
 export const movieRefetchPayload = new GraphQLObjectType({
 	name: 'movieRefetchPayload',
-	fields: () => payload
+	fields: () => payload,
 });
 
 export const movieUpdateInput = new GraphQLInputObjectType({
@@ -169,7 +169,7 @@ export const movieUpdateInput = new GraphQLInputObjectType({
 		poster: {
 			type: GraphQLString,
 		},
-	})
+	}),
 });
 
 export const movieRefetchInput = new GraphQLInputObjectType({
@@ -179,17 +179,17 @@ export const movieRefetchInput = new GraphQLInputObjectType({
 			type: GraphQLBoolean,
 			defaultValue: false,
 		},
-	})
+	}),
 });
 
 export const movieDeletePayload = new GraphQLObjectType({
 	name: 'movieDeletePayload',
 	fields: () => ({
 		ok: {
-			type: GraphQLBoolean
+			type: GraphQLBoolean,
 		},
 		errors: {
-			type: new GraphQLList(errorNode)
-		}
-	})
+			type: new GraphQLList(errorNode),
+		},
+	}),
 });

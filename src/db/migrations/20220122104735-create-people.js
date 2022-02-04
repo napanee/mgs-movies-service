@@ -7,50 +7,50 @@ module.exports = {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
-				type: Sequelize.INTEGER
+				type: Sequelize.INTEGER,
 			},
 			name: {
 				allowNull: false,
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
 			},
 			biography: {
-				type: Sequelize.TEXT
+				type: Sequelize.TEXT,
 			},
 			birthday: {
-				type: Sequelize.DATEONLY
+				type: Sequelize.DATEONLY,
 			},
 			deathday: {
-				type: Sequelize.DATEONLY
+				type: Sequelize.DATEONLY,
 			},
 			placeOfBirth: {
 				field: 'place_of_birth',
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
 			},
 			image: {
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
 			},
 			imdb: {
 				allowNull: false,
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
 			},
 			tmdb: {
 				allowNull: false,
-				type: Sequelize.INTEGER
+				type: Sequelize.INTEGER,
 			},
 			createdAt: {
 				allowNull: false,
 				field: 'created_at',
-				type: Sequelize.DATE
+				type: Sequelize.DATE,
 			},
 			updatedAt: {
 				allowNull: false,
 				field: 'updated_at',
-				type: Sequelize.DATE
-			}
+				type: Sequelize.DATE,
+			},
 		});
 	},
 
-	down: (queryInterface, Sequelize) => {
+	down: (queryInterface) => {
 		return queryInterface.dropTable('people');
 	},
 };

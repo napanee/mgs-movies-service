@@ -20,7 +20,8 @@ export const saveImage = async (imagePath: string, detailPath: string) => {
 	mkdirSync(destFolder, {recursive: true});
 
 	const data = await result.arrayBuffer();
+
 	writeFileSync(`${destFolder}/${md5FileName}${ext}`, Buffer.from(data));
 
 	return `${detailPath}/${md5FileName}${ext}`;
-}
+};

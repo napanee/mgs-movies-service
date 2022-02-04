@@ -5,10 +5,10 @@ export const pageInfo = new GraphQLObjectType({
 	name: 'pageInfo',
 	fields: () => ({
 		hasNextPage: {
-			type: GraphQLBoolean
+			type: GraphQLBoolean,
 		},
 		hasPreviousPage: {
-			type: GraphQLBoolean
-		}
-	})
+			type: GraphQLBoolean,
+		},
+	}),
 });

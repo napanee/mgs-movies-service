@@ -1,7 +1,14 @@
-import {GraphQLNonNull, GraphQLID, GraphQLInt} from 'graphql';
+import {GraphQLID, GraphQLInt, GraphQLNonNull} from 'graphql';
 
-import {movieCreatePayload, movieDeletePayload, movieRefetchInput, movieRefetchPayload, movieUpdateInput, movieUpdatePayload} from '../types';
-import MovieResolver, {IArgsCreate, IArgsDelete, IArgsRefetch, IArgsUpdate} from '../resolvers/Movie';
+import MovieResolver, {IArgsCreate,IArgsDelete, IArgsRefetch, IArgsUpdate} from '../resolvers/Movie';
+import {
+	movieCreatePayload,
+	movieDeletePayload,
+	movieRefetchInput,
+	movieRefetchPayload,
+	movieUpdateInput,
+	movieUpdatePayload,
+} from '../types';
 
 
 class MovieMutation {
@@ -12,10 +19,10 @@ class MovieMutation {
 			type: movieCreatePayload,
 			args: {
 				tmdb: {
-					type: new GraphQLNonNull(GraphQLInt)
+					type: new GraphQLNonNull(GraphQLInt),
 				},
 			},
-			resolve: (_: any, args: IArgsCreate) => this.resolver.create(args)
+			resolve: (_: unknown, args: IArgsCreate) => this.resolver.create(args),
 		};
 	}
 
@@ -24,13 +31,13 @@ class MovieMutation {
 			type: movieUpdatePayload,
 			args: {
 				id: {
-					type: new GraphQLNonNull(GraphQLID)
+					type: new GraphQLNonNull(GraphQLID),
 				},
 				input: {
-					type: movieUpdateInput
+					type: movieUpdateInput,
 				},
 			},
-			resolve: (_: any, args: IArgsUpdate) => this.resolver.update(args)
+			resolve: (_: unknown, args: IArgsUpdate) => this.resolver.update(args),
 		};
 	}
 
@@ -39,13 +46,13 @@ class MovieMutation {
 			type: movieRefetchPayload,
 			args: {
 				id: {
-					type: new GraphQLNonNull(GraphQLID)
+					type: new GraphQLNonNull(GraphQLID),
 				},
 				input: {
-					type: movieRefetchInput
+					type: movieRefetchInput,
 				},
 			},
-			resolve: (_: any, args: IArgsRefetch) => this.resolver.refetch(args)
+			resolve: (_: unknown, args: IArgsRefetch) => this.resolver.refetch(args),
 		};
 	}
 
@@ -54,10 +61,10 @@ class MovieMutation {
 			type: movieDeletePayload,
 			args: {
 				id: {
-					type: new GraphQLNonNull(GraphQLID)
-				}
+					type: new GraphQLNonNull(GraphQLID),
+				},
 			},
-			resolve: (_: any, args: IArgsDelete) => this.resolver.delete(args)
+			resolve: (_: unknown, args: IArgsDelete) => this.resolver.delete(args),
 		};
 	}
 }

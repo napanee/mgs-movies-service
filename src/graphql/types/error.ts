@@ -5,10 +5,10 @@ export const errorNode = new GraphQLObjectType({
 	name: 'errorNode',
 	fields: () => ({
 		field: {
-			type: GraphQLString
+			type: GraphQLString,
 		},
 		message: {
-			type: GraphQLString
-		}
-	})
+			type: GraphQLString,
+		},
+	}),
 });

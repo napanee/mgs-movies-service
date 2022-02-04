@@ -15,32 +15,32 @@ import {
 	DataTypes,
 	Model,
 	ModelAttributes,
-	Optional
+	Optional,
 } from 'sequelize';
-import { MoviePeople } from '.';
+
+import Movie from './Movie';
+import MoviePeople from './MoviePeople';
 
 import {saveImage} from '../../utils';
 import {sequelizeConnection} from '../connection';
 
-import Movie from './Movie';
-
 
 interface PersonAttributes {
 	id: string;
-	name: string;
 	imdb: string;
+	name: string;
 	tmdb: number;
+	Movies?: Movie[];
 	biography?: string;
 	birthday?: string | null;
-	deathday?: string | null;
-	placeOfBirth?: string | null;
-	image?: string | null;
 	character?: string;
-	Movies?: Movie[];
+	deathday?: string | null;
+	image?: string | null;
+	placeOfBirth?: string | null;
 }
 
-export interface PersonInput extends Optional<PersonAttributes, 'id'|'tmdb'> {}
-export interface PersonOutput extends Optional<PersonAttributes, 'biography'|'birthday'|'deathday'|'placeOfBirth'|'image'> {}
+export type PersonInput = Optional<PersonAttributes, 'id'|'tmdb'>;
+export type PersonOutput = Optional<PersonAttributes, 'biography'|'birthday'|'deathday'|'placeOfBirth'|'image'>;
 
 const attributes: ModelAttributes = {
 	name: {
@@ -93,7 +93,7 @@ const attributes: ModelAttributes = {
 
 const loadImages = async (person: Person) => {
 	if (!person.isNewRecord || !person.image) {
-		return
+		return;
 	}
 
 	const birthday = dayjs(person.birthday, {format: 'YYYY-MM-DD'});
@@ -101,6 +101,7 @@ const loadImages = async (person: Person) => {
 	const hash = MD5(year.toString()).toString().substring(0, 5);
 	const prefix = MD5('person').toString().substring(0, 2);
 	const image = await saveImage(person.image, `${prefix}/${hash}`);
+
 	person.set('image', image);
 };
 

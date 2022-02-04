@@ -6,7 +6,7 @@ module.exports = {
 		[
 			'@babel/plugin-transform-typescript', {
 				allowDeclareFields: true,
-			}
+			},
 		],
 		[
 			'inline-dotenv', {

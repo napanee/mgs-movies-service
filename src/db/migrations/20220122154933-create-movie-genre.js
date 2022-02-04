@@ -11,8 +11,8 @@ module.exports = {
 				onDelete: 'CASCADE',
 				references: {
 					model: 'movies',
-					key: 'id'
-				}
+					key: 'id',
+				},
 			},
 			genreId: {
 				allowNull: false,
@@ -22,23 +22,23 @@ module.exports = {
 				onDelete: 'CASCADE',
 				references: {
 					model: 'genres',
-					key: 'id'
-				}
+					key: 'id',
+				},
 			},
 			createdAt: {
 				allowNull: false,
 				field: 'created_at',
-				type: Sequelize.DATE
+				type: Sequelize.DATE,
 			},
 			updatedAt: {
 				allowNull: false,
 				field: 'updated_at',
-				type: Sequelize.DATE
-			}
+				type: Sequelize.DATE,
+			},
 		});
 	},
 
-	down: (queryInterface, Sequelize) => {
+	down: (queryInterface) => {
 		return queryInterface.dropTable('movie_genres');
 	},
 };

@@ -15,33 +15,33 @@ import {
 	DataTypes,
 	Model,
 	ModelAttributes,
-	Optional
+	Optional,
 } from 'sequelize';
+
+import Genre from './Genre';
+import MoviePeople from './MoviePeople';
+import Person from './Person';
 
 import {saveImage} from '../../utils';
 import {sequelizeConnection} from '../connection';
 
-import Genre from './Genre';
-import Person from './Person';
-import MoviePeople from './MoviePeople';
-
 
 interface MovieAttributes {
 	id: string;
+	imdb: string;
+	releaseDate: string;
 	title: string;
 	titleOriginal: string;
-	releaseDate: string;
-	imdb: string;
 	tmdb: number;
-	runtime?: number | null;
-	overview?: string | null;
 	backdrop?: string | null;
-	poster?: string | null;
 	character?: string;
+	overview?: string | null;
+	poster?: string | null;
+	runtime?: number | null;
 }
 
-export interface MovieInput extends Optional<MovieAttributes, 'id'|'tmdb'> {}
-export interface MovieOutput extends Optional<MovieAttributes, 'runtime'|'overview'|'backdrop'|'poster'> {}
+export type MovieInput = Optional<MovieAttributes, 'id'|'tmdb'>;
+export type MovieOutput = Optional<MovieAttributes, 'runtime'|'overview'|'backdrop'|'poster'>;
 
 const attributes: ModelAttributes = {
 	title: {
@@ -121,12 +121,14 @@ const loadImages = async (movie: Movie) => {
 	if (movie.changed('backdrop') && movie.backdrop) {
 		const prefix = MD5('movie/backdrop').toString().substring(0, 2);
 		const backdrop = await saveImage(movie.backdrop, `${prefix}/${hash}`);
+
 		movie.set('backdrop', backdrop);
 	}
 
 	if (movie.changed('poster') && movie.poster) {
 		const prefix = MD5('movie/poster').toString().substring(0, 2);
 		const poster = await saveImage(movie.poster, `${prefix}/${hash}`);
+
 		movie.set('poster', poster);
 	}
 };

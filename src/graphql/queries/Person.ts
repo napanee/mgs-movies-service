@@ -1,7 +1,7 @@
 import {GraphQLID, GraphQLInt, GraphQLString} from 'graphql';
 
-import {personConnection, personNode} from '../types';
 import PersonResolver, {IArgsGet, IArgsList} from '../resolvers/Person';
+import {personConnection, personNode} from '../types';
 
 
 class PersonQuery {
@@ -16,9 +16,9 @@ class PersonQuery {
 				},
 				name: {
 					type: GraphQLString,
-				}
+				},
 			},
-			resolve: (_: any, args: IArgsGet) => this.resolver.get(args),
+			resolve: (_: unknown, args: IArgsGet) => this.resolver.get(args),
 		};
 	}
 
@@ -36,10 +36,10 @@ class PersonQuery {
 				},
 				orderBy: {
 					type: GraphQLString,
-					defaultValue: 'name'
+					defaultValue: 'name',
 				},
 			},
-			resolve: (_: any, args: IArgsList) => this.resolver.list(args),
+			resolve: (_: unknown, args: IArgsList) => this.resolver.list(args),
 		};
 	}
 }

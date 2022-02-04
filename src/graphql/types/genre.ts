@@ -3,15 +3,15 @@ import {
 	GraphQLInt,
 	GraphQLList,
 	GraphQLObjectType,
-	GraphQLString
+	GraphQLString,
 } from 'graphql';
 import {IncludeOptions} from 'sequelize';
 
-import {MovieResolver} from '../resolvers';
-import Genre, {GenreOutput} from '../../db/models/Genre';
-
 import {pageInfo} from './base';
 import {movieNode} from './movie';
+
+import Genre, {GenreOutput} from '../../db/models/Genre';
+import {MovieResolver} from '../resolvers';
 
 
 const movieResolver = new MovieResolver();
@@ -26,8 +26,8 @@ export const genreConnection = new GraphQLObjectType({
 			type: pageInfo,
 		},
 		totalCount: {
-			type: GraphQLInt
-		}
+			type: GraphQLInt,
+		},
 	}),
 });
 
@@ -61,7 +61,7 @@ export const genreNode: GraphQLObjectType = new GraphQLObjectType({
 				};
 
 				return movieResolver.list(args);
-			}
+			},
 		},
 	}),
 });

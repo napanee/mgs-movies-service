@@ -1,4 +1,4 @@
-import {IncludeOptions, Order, WhereOptions, FindOptions} from 'sequelize';
+import {FindOptions, Order, WhereOptions} from 'sequelize';
 
 import Person, {PersonInput, PersonOutput} from '../../db/models/Person';
 import {instanceOfFindOptions} from '../../utils/typecheck';
@@ -43,7 +43,7 @@ class PersonController {
 		}
 
 		const options: IOptions = {
-			where: {}
+			where: {},
 		};
 
 		if (id) {
@@ -77,9 +77,9 @@ class PersonController {
 			})),
 			pageInfo: {
 				hasNextPage: () => totalCount > limit + offset,
-				hasPreviousPage: () => offset > 0
+				hasPreviousPage: () => offset > 0,
 			},
-			totalCount
+			totalCount,
 		};
 	}
 }

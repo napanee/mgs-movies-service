@@ -7,12 +7,12 @@ import {sequelizeConnection} from '../connection';
 
 
 interface MovieGenreAttributes {
-	movieId: string;
 	genreId: string;
+	movieId: string;
 }
 
-export interface MovieGenreInput extends Required<MovieGenreAttributes> {}
-export interface MovieGenreOutput extends Required<MovieGenreAttributes> {}
+export type MovieGenreInput = Required<MovieGenreAttributes>;
+export type MovieGenreOutput = Required<MovieGenreAttributes>;
 
 const attributes: ModelAttributes = {
 	movieId: {

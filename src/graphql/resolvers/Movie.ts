@@ -1,4 +1,4 @@
-import {FindOptions, Includeable, IncludeOptions, Op, Order, WhereOptions} from 'sequelize';
+import {FindOptions, Includeable, Op, Order, WhereOptions} from 'sequelize';
 
 import Genre from '../../db/models/Genre';
 import Movie, {MovieInput, MovieOutput} from '../../db/models/Movie';
@@ -71,7 +71,7 @@ class MovieController {
 		}
 
 		const options: IOptions = {
-			where: {}
+			where: {},
 		};
 
 		if (id) {
@@ -105,15 +105,15 @@ class MovieController {
 			})),
 			pageInfo: {
 				hasNextPage: () => totalCount > limit + offset,
-				hasPreviousPage: () => offset > 0
+				hasPreviousPage: () => offset > 0,
 			},
-			totalCount
+			totalCount,
 		};
 	}
 
 	async create({tmdb: id}: IArgsCreate) {
 		const {genres, tmdb, ...defaults} = await fetchMovieData(id);
-		const [movieModel, isNew] = await Movie.findOrCreate({where: {tmdb: id}, defaults});
+		const [movieModel, isNew] = await Movie.findOrCreate({where: {tmdb}, defaults});
 
 		if (!isNew) {
 			return {
@@ -121,15 +121,15 @@ class MovieController {
 				movie: movieModel,
 				errors: [{
 					field: 'id',
-					message: 'This Movie already exists.'
-				}]
-			}
+					message: 'This Movie already exists.',
+				}],
+			};
 		}
 
 		const genreModels = await Genre.findAll({where: {tmdb: {[Op.in]: genres.map((genre) => genre.id)}}});
-		await movieModel.addGenres(genreModels);
-
 		const people = await fetchMovieCredits(id);
+
+		await movieModel.addGenres(genreModels);
 		await Promise.all(
 			people.map(async ({tmdb, ...data}) => {
 				const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
@@ -142,7 +142,7 @@ class MovieController {
 		return {
 			movie: movieModel,
 			ok: !!movieModel,
-		}
+		};
 	}
 
 	async update({id, input: {backdrop, poster}}: IArgsUpdate) {
@@ -153,9 +153,9 @@ class MovieController {
 				ok: false,
 				errors: [{
 					field: 'id',
-					message: 'Movie not found.'
-				}]
-			}
+					message: 'Movie not found.',
+				}],
+			};
 		}
 
 		if (backdrop) {
@@ -171,7 +171,7 @@ class MovieController {
 		return {
 			movie: newMovieModel,
 			ok: !!newMovieModel,
-		}
+		};
 	}
 
 	async refetch({id, input: {withImages} = {withImages: false}}: IArgsRefetch) {
@@ -182,20 +182,20 @@ class MovieController {
 				ok: false,
 				errors: [{
 					field: 'id',
-					message: 'Movie not found.'
-				}]
-			}
+					message: 'Movie not found.',
+				}],
+			};
 		}
 
 		await movieModel.removeGenres();
 		await movieModel.removePeople();
 
 		const {genres, ...movieData} = await fetchMovieData(movieModel.tmdb);
-		await movieModel.update(movieData, {hooks: withImages});
 		const genreModels = await Genre.findAll({where: {tmdb: {[Op.in]: genres.map((genre) => genre.id)}}});
-		await movieModel.addGenres(genreModels);
-
 		const people = await fetchMovieCredits(movieModel.tmdb);
+
+		await movieModel.update(movieData, {hooks: withImages});
+		await movieModel.addGenres(genreModels);
 		await Promise.all(
 			people.map(async ({tmdb, ...data}) => {
 				const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
@@ -208,7 +208,7 @@ class MovieController {
 		return {
 			movie: movieModel,
 			ok: !!movieModel,
-		}
+		};
 	}
 
 	async delete({id}: IArgsDelete) {
@@ -217,16 +217,16 @@ class MovieController {
 		if (deleted === 1) {
 			return {
 				ok: true,
-			}
+			};
 		}
 
 		return {
 			ok: false,
 			errors: [{
 				field: 'id',
-				message: 'Error during movie delete.'
-			}]
-		}
+				message: 'Error during movie delete.',
+			}],
+		};
 	}
 }
 

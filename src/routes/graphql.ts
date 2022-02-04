@@ -8,7 +8,7 @@ const
 	router = express.Router()
 ;
 
-router.use('/', graphqlHTTP((req) => ({
+router.use('/', graphqlHTTP(() => ({
 	schema: GraphQLSchema,
 	graphiql: process.env.NODE_ENV === 'development',
 })));

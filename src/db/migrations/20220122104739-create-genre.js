@@ -7,30 +7,30 @@ module.exports = {
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
-				type: Sequelize.INTEGER
+				type: Sequelize.INTEGER,
 			},
 			name: {
 				allowNull: false,
-				type: Sequelize.STRING
+				type: Sequelize.STRING,
 			},
 			tmdb: {
 				allowNull: false,
-				type: Sequelize.INTEGER
+				type: Sequelize.INTEGER,
 			},
 			createdAt: {
 				allowNull: false,
 				field: 'created_at',
-				type: Sequelize.DATE
+				type: Sequelize.DATE,
 			},
 			updatedAt: {
 				allowNull: false,
 				field: 'updated_at',
-				type: Sequelize.DATE
-			}
+				type: Sequelize.DATE,
+			},
 		});
 	},
 
-	down: (queryInterface, Sequelize) => {
+	down: (queryInterface) => {
 		return queryInterface.dropTable('genres');
 	},
 };

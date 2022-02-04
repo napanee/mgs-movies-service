@@ -20,7 +20,7 @@ const query = new GraphQLObjectType({
 		// Person
 		person: personQuery.get(),
 		people: personQuery.list(),
-	}
+	},
 });
 const mutation = new GraphQLObjectType({
 	name: 'Mutation',
@@ -30,7 +30,7 @@ const mutation = new GraphQLObjectType({
 		movieDelete: movieMutation.delete(),
 		movieUpdate: movieMutation.update(),
 		movieRefetch: movieMutation.refetch(),
-	}
+	},
 });
 const graphQLSchema = new GraphQLSchema({
 	query,
