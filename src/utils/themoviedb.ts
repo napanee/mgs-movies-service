@@ -37,7 +37,7 @@ type MovieDataType = {
 };
 
 type PersonType = {
-	biography: string;
+	biography: string | null;
 	birthday: string | null;
 	deathday: string | null;
 	id: number;

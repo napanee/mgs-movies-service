@@ -30,7 +30,7 @@ interface PersonAttributes {
 	deathday: string | null;
 	id: string;
 	image: string | null;
-	imdb: string;
+	imdb: string | null;
 	name: string;
 	placeOfBirth: string | null;
 	tmdb: number;
@@ -65,7 +65,6 @@ const attributes: ModelAttributes = {
 		type: DataTypes.STRING,
 	},
 	imdb: {
-		allowNull: false,
 		type: DataTypes.STRING,
 		validate: {
 			notEmpty: {
@@ -104,7 +103,7 @@ class Person extends Model<PersonAttributes, PersonInput> implements PersonAttri
 	declare deathday: string | null;
 	declare id: string;
 	declare image: string | null;
-	declare imdb: string;
+	declare imdb: string | null;
 	declare name: string;
 	declare placeOfBirth: string | null;
 	declare tmdb: number;

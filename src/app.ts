@@ -1,7 +1,10 @@
 import express, {Application} from 'express';
 
+import dbInit from './db/init';
 import routerGraphql from './routes/graphql';
 
+
+dbInit();
 
 const app: Application = express();
 
