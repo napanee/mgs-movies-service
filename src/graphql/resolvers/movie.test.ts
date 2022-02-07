@@ -227,7 +227,7 @@ describe('The movie resolver', () => {
 			const result = await movieResolver.update({id: 1, input: {backdrop: 'backdrop'}});
 
 			expect(result).toEqual(expectedResponse);
-			expect(result.movie?.backdrop).toBe('new-backdrop');
+			expect(result.movie?.backdrop).toBe('mo/20222/new-backdrop');
 		});
 
 		test('should update poster', async () => {
@@ -238,7 +238,7 @@ describe('The movie resolver', () => {
 			const result = await movieResolver.update({id: 1, input: {poster: 'poster'}});
 
 			expect(result).toEqual(expectedResponse);
-			expect(result.movie?.poster).toBe('new-poster');
+			expect(result.movie?.poster).toBe('mo/20222/new-poster');
 		});
 	});
 

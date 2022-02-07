@@ -1,3 +1,4 @@
+import cryptoJs from 'crypto-js';
 import {Sequelize} from 'sequelize';
 
 import Movie from './Movie';
@@ -8,6 +9,7 @@ import {sequelizeConnection} from '../connection';
 
 jest.mock('../../utils/save-image');
 const mockedSaveImage = saveImage as jest.MockedFunction<typeof saveImage>;
+const mockedMD5 = cryptoJs.MD5 as jest.MockedFunction<typeof cryptoJs.MD5>;
 
 const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};
 const movieDataDefault = {
@@ -37,6 +39,7 @@ describe('The movie model', () => {
 
 	afterEach(() => {
 		mockedSaveImage.mockClear();
+		mockedMD5.mockClear();
 	});
 
 	test('should save backdrop', async () => {
@@ -46,7 +49,7 @@ describe('The movie model', () => {
 		});
 
 		expect(mockedSaveImage).toBeCalledTimes(1);
-		expect(movie.backdrop).toBe('new-backdrop');
+		expect(movie.backdrop).toBe('mo/20222/new-backdrop');
 		expect(movie.poster).toBeNull();
 	});
 
@@ -58,7 +61,7 @@ describe('The movie model', () => {
 
 		expect(mockedSaveImage).toBeCalledTimes(1);
 		expect(movie.backdrop).toBeNull();
-		expect(movie.poster).toBe('new-poster');
+		expect(movie.poster).toBe('mo/20222/new-poster');
 	});
 
 	test('should save backdrop and poster', async () => {
@@ -69,8 +72,8 @@ describe('The movie model', () => {
 		});
 
 		expect(mockedSaveImage).toBeCalledTimes(2);
-		expect(movie.backdrop).toBe('new-backdrop');
-		expect(movie.poster).toBe('new-poster');
+		expect(movie.backdrop).toBe('mo/20222/new-backdrop');
+		expect(movie.poster).toBe('mo/20222/new-poster');
 	});
 
 	test('should update backdrop', async () => {
@@ -81,7 +84,7 @@ describe('The movie model', () => {
 		await movie.update({backdrop: 'backdrop'});
 
 		expect(mockedSaveImage).toBeCalledTimes(1);
-		expect(movie.backdrop).toBe('new-backdrop');
+		expect(movie.backdrop).toBe('mo/20222/new-backdrop');
 	});
 
 	test('should update poster', async () => {
@@ -92,7 +95,7 @@ describe('The movie model', () => {
 		await movie.update({poster: 'poster'});
 
 		expect(mockedSaveImage).toBeCalledTimes(1);
-		expect(movie.poster).toBe('new-poster');
+		expect(movie.poster).toBe('mo/20222/new-poster');
 	});
 
 	test('should update backdrop and poster', async () => {
@@ -104,7 +107,7 @@ describe('The movie model', () => {
 		await movie.update({backdrop: 'backdrop', poster: 'poster'});
 
 		expect(mockedSaveImage).toBeCalledTimes(2);
-		expect(movie.backdrop).toBe('new-backdrop');
-		expect(movie.poster).toBe('new-poster');
+		expect(movie.backdrop).toBe('mo/20222/new-backdrop');
+		expect(movie.poster).toBe('mo/20222/new-poster');
 	});
 });

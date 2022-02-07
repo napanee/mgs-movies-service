@@ -1,3 +1,4 @@
+import cryptoJs from 'crypto-js';
 import {Sequelize} from 'sequelize';
 
 import Person from './Person';
@@ -6,8 +7,10 @@ import {saveImage} from '../../utils/save-image';
 import {sequelizeConnection} from '../connection';
 
 
+jest.mock('dayjs');
 jest.mock('../../utils/save-image');
 const mockedSaveImage = saveImage as jest.MockedFunction<typeof saveImage>;
+const mockedMD5 = cryptoJs.MD5 as jest.MockedFunction<typeof cryptoJs.MD5>;
 
 describe('The person model', () => {
 	const db: Sequelize = sequelizeConnection;
@@ -22,9 +25,26 @@ describe('The person model', () => {
 
 	afterEach(() => {
 		mockedSaveImage.mockClear();
+		mockedMD5.mockClear();
 	});
 
-	test('should save image', async () => {
+	test('should save image with birthday data', async () => {
+		const person = await Person.create({
+			imdb: 'tt1',
+			name: 'Foo',
+			tmdb: 1,
+			image: 'image',
+			biography: null,
+			birthday: '2022-01-01',
+			deathday: null,
+			placeOfBirth: null,
+		});
+
+		expect(mockedSaveImage).toBeCalledTimes(1);
+		expect(person.image).toBe('pe/20222/new-image');
+	});
+
+	test('should save image without birthday data', async () => {
 		const person = await Person.create({
 			imdb: 'tt1',
 			name: 'Foo',
@@ -37,7 +57,7 @@ describe('The person model', () => {
 		});
 
 		expect(mockedSaveImage).toBeCalledTimes(1);
-		expect(person.image).toBe('new-image');
+		expect(person.image).toBe('pe/19841/new-image');
 	});
 
 	test('should update image', async () => {
@@ -57,6 +77,6 @@ describe('The person model', () => {
 		await person.update({image: 'image'});
 
 		expect(mockedSaveImage).toBeCalledTimes(1);
-		expect(person.image).toBe('new-image');
+		expect(person.image).toBe('pe/19841/new-image');
 	});
 });
