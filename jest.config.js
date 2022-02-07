@@ -16,6 +16,8 @@ module.exports = {
 	],
 	setupFiles: [
 		'./src/__setup__/bcrypt.ts',
+		'./src/__setup__/crypto-js.ts',
+		'./src/__setup__/dayjs.ts',
 		'./src/__setup__/fetch.ts',
 	],
 	// globalSetup: '<rootDir>/src/__setup__/globalSetup.ts',
