@@ -1,10 +1,9 @@
 import {FindOptions, Includeable, Op, Order, WhereOptions} from 'sequelize';
 
-import Genre from '../../db/models/Genre';
-import Movie, {MovieInput, MovieOutput} from '../../db/models/Movie';
-import Person from '../../db/models/Person';
-import {fetchMovieCredits, fetchMovieData, fetchPerson} from '../../utils';
-import {instanceOfFindOptions} from '../../utils/typecheck';
+import Genre from '@models/Genre';
+import Movie, {MovieInput, MovieOutput} from '@models/Movie';
+import Person from '@models/Person';
+import {fetchMovieCredits, fetchMovieData, fetchPerson, instanceOfFindOptions} from '@utils/index';
 
 
 interface IOptions {

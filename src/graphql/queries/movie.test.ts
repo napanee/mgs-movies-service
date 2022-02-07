@@ -1,10 +1,11 @@
 import {FindOptions} from 'sequelize';
 import supertest from 'supertest';
 
-import app from '../../app';
-import {GenreOutput} from '../../db/models/Genre';
-import {MovieOutput} from '../../db/models/Movie';
-import {PersonOutput} from '../../db/models/Person';
+import {GenreOutput} from '@models/Genre';
+import {MovieOutput} from '@models/Movie';
+import {PersonOutput} from '@models/Person';
+import app from '@src/app';
+
 import GenreResolver from '../resolvers/Genre';
 import MovieResolver from '../resolvers/Movie';
 import PersonResolver from '../resolvers/Person';
@@ -132,9 +133,7 @@ describe('The movie query', () => {
 			}
 		}`;
 
-		const response = await request.post('/graphql')
-			.send({query})
-			.set("Accept", "application/json");
+		const response = await request.post('/graphql').send({query});
 
 		expect(MovieResolver.prototype.list).toHaveBeenCalledTimes(1);
 		expect(GenreResolver.prototype.get).toHaveBeenCalledTimes(1);
@@ -168,9 +167,7 @@ describe('The movie query', () => {
 			}
 		}`;
 
-		const response = await request.post('/graphql')
-			.send({query})
-			.set("Accept", "application/json");
+		const response = await request.post('/graphql').send({query});
 
 		expect(MovieResolver.prototype.list).toHaveBeenCalledTimes(1);
 		expect(PersonResolver.prototype.get).toHaveBeenCalledTimes(1);

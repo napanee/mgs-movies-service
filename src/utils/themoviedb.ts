@@ -1,7 +1,7 @@
 import 'cross-fetch/polyfill';
 import {CamelCasedProperties, JsonObject, SnakeCasedProperties} from 'type-fest';
 
-import {transformKeys} from '../utils';
+import {transformKeys} from './transformer';
 
 
 type QueryResponseType = {

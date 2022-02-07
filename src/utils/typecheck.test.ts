@@ -1,8 +1,8 @@
 import {FindOptions, IncludeOptions} from 'sequelize';
 
-import {instanceOfFindOptions, instanceOfIncludeOptions} from './typecheck';
+import User from '@models/User';
 
-import User from '../db/models/User';
+import {instanceOfFindOptions, instanceOfIncludeOptions} from './typecheck';
 
 
 describe('The typechecker', () => {

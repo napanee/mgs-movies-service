@@ -1,14 +1,15 @@
 import cryptoJs from 'crypto-js';
 import {Sequelize} from 'sequelize';
 
+import {saveImage} from '@utils/index';
+
 import Person from './Person';
 
-import {saveImage} from '../../utils/save-image';
 import {sequelizeConnection} from '../connection';
 
 
 jest.mock('dayjs');
-jest.mock('../../utils/save-image');
+jest.mock('@utils/save-image');
 const mockedSaveImage = saveImage as jest.MockedFunction<typeof saveImage>;
 const mockedMD5 = cryptoJs.MD5 as jest.MockedFunction<typeof cryptoJs.MD5>;
 

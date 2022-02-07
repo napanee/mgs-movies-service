@@ -13,5 +13,16 @@ module.exports = {
 				path: './localhost.env',
 			},
 		],
+		[
+			'module-resolver', {
+				'alias': {
+					'@src': './src',
+					'@db': './src/db',
+					'@models': './src/db/models',
+					'@graphql': './src/graphql',
+					'@utils': './src/utils',
+				},
+			},
+		],
 	],
 };

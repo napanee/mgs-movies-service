@@ -1,4 +1,4 @@
-import {FindOptions, IncludeOptions} from "sequelize";
+import {FindOptions, IncludeOptions} from 'sequelize';
 
 
 export function instanceOfIncludeOptions(data: IncludeOptions | Record<string, unknown>): data is IncludeOptions {

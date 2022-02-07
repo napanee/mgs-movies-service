@@ -1,7 +1,7 @@
 import {FindOptions, Order, WhereOptions} from 'sequelize';
 
-import Person, {PersonInput, PersonOutput} from '../../db/models/Person';
-import {instanceOfFindOptions} from '../../utils/typecheck';
+import Person, {PersonInput, PersonOutput} from '@models/Person';
+import {instanceOfFindOptions} from '@utils/index';
 
 
 interface IOptions {

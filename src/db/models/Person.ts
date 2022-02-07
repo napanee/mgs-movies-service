@@ -18,9 +18,10 @@ import {
 	Optional,
 } from 'sequelize';
 
+import {saveImage} from '@utils/index';
+
 import Movie from './Movie';
 
-import {saveImage} from '../../utils';
 import {sequelizeConnection} from '../connection';
 
 

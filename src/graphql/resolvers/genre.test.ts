@@ -1,9 +1,9 @@
 import {FindOptions, Sequelize} from 'sequelize';
 
-import GenreController from './Genre';
+import {sequelizeConnection} from '@db/connection';
+import {Genre as ModelGenre, Movie as ModelMovie} from '@models/index';
 
-import {sequelizeConnection} from '../../db/connection';
-import {Genre as ModelGenre, Movie as ModelMovie} from '../../db/models';
+import GenreController from './Genre';
 
 
 const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};

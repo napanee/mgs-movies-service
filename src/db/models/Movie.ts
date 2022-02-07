@@ -18,10 +18,11 @@ import {
 	Optional,
 } from 'sequelize';
 
+import {saveImage} from '@utils/index';
+
 import Genre from './Genre';
 import Person from './Person';
 
-import {saveImage} from '../../utils';
 import {sequelizeConnection} from '../connection';
 
 

@@ -1,9 +1,9 @@
 import {FindOptions, Sequelize} from 'sequelize';
 
-import PersonController from './Person';
+import {sequelizeConnection} from '@db/connection';
+import {Movie as ModelMovie, Person as ModelPerson} from '@models/index';
 
-import {sequelizeConnection} from '../../db/connection';
-import {Movie as ModelMovie, Person as ModelPerson} from '../../db/models';
+import PersonController from './Person';
 
 
 const nullablePersonProperties = {biography: null, birthday: null, deathday: null, image: null, placeOfBirth: null};

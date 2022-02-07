@@ -9,13 +9,14 @@ import {
 } from 'graphql';
 import {FindOptions} from 'sequelize';
 
+import Movie, {MovieOutput} from '@models/Movie';
+import MoviePeople from '@models/MoviePeople';
+
 import {pageInfo} from './base';
 import {errorNode} from './error';
 import {genreNode} from './genre';
 import {personNode} from './person';
 
-import Movie, {MovieOutput} from '../../db/models/Movie';
-import MoviePeople from '../../db/models/MoviePeople';
 import {GenreResolver, PersonResolver} from '../resolvers';
 
 

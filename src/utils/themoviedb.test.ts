@@ -32,7 +32,7 @@ describe('The image saver', () => {
 			expect.anything(),
 			expect.objectContaining({
 				headers: expect.objectContaining({
-					Authorization: `Bearer 12345`,
+					Authorization: 'Bearer 12345',
 				}),
 			})
 		);

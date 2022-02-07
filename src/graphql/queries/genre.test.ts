@@ -1,9 +1,10 @@
 import {FindOptions} from 'sequelize';
 import supertest from 'supertest';
 
-import app from '../../app';
-import {GenreOutput} from '../../db/models/Genre';
-import {MovieOutput} from '../../db/models/Movie';
+import {GenreOutput} from '@models/Genre';
+import {MovieOutput} from '@models/Movie';
+import app from '@src/app';
+
 import GenreResolver from '../resolvers/Genre';
 import MovieResolver from '../resolvers/Movie';
 
@@ -119,9 +120,7 @@ describe('The genre query', () => {
 			}
 		}`;
 
-		const response = await request.post('/graphql')
-			.send({query})
-			.set("Accept", "application/json");
+		const response = await request.post('/graphql').send({query});
 
 		expect(MovieResolver.prototype.get).toHaveBeenCalledTimes(1);
 		expect(GenreResolver.prototype.list).toHaveBeenCalledTimes(1);

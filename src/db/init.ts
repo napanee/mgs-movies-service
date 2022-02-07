@@ -1,4 +1,4 @@
-import {Genre, Movie, MovieGenres, MoviePeople, Person, User} from './models';
+import {Genre, Movie, MovieGenres, MoviePeople, Person, User} from '@models/index';
 
 
 const isDev = process.env.NODE_ENV === 'development';

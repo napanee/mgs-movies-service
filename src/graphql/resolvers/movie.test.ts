@@ -1,14 +1,14 @@
 import {FindOptions, Sequelize} from 'sequelize';
 
+import {sequelizeConnection} from '@db/connection';
+import {Movie as ModelMovie, Person as ModelPerson} from '@models/index';
+import {fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
+
 import MovieController from './Movie';
 
-import {sequelizeConnection} from '../../db/connection';
-import {Movie as ModelMovie, Person as ModelPerson} from '../../db/models';
-import {fetchMovieCredits, fetchMovieData, fetchPerson} from '../../utils/themoviedb';
 
-
-jest.mock('../../utils/themoviedb');
-jest.mock('../../utils/save-image');
+jest.mock('@utils/themoviedb');
+jest.mock('@utils/save-image');
 
 const nullablePersonProperties = {biography: null, birthday: null, deathday: null, image: null, placeOfBirth: null};
 const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};

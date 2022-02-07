@@ -57,6 +57,7 @@ module.exports = {
 		],
 		'object-curly-spacing': ['error', 'never'],
 		'one-var': ['error', 'never'],
+		'quotes': ['error', 'single'],
 		'sort-imports': [
 			'error',
 			{

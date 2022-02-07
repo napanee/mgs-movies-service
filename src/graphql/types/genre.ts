@@ -7,10 +7,11 @@ import {
 } from 'graphql';
 import {FindOptions} from 'sequelize';
 
+import Genre, {GenreOutput} from '@models/Genre';
+
 import {pageInfo} from './base';
 import {movieNode} from './movie';
 
-import Genre, {GenreOutput} from '../../db/models/Genre';
 import {MovieResolver} from '../resolvers';
 
 

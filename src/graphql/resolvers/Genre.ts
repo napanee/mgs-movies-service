@@ -1,7 +1,7 @@
 import {FindOptions, Order, WhereOptions} from 'sequelize';
 
-import Genre, {GenreInput, GenreOutput} from '../../db/models/Genre';
-import {instanceOfFindOptions} from '../../utils/typecheck';
+import Genre, {GenreInput, GenreOutput} from '@models/Genre';
+import {instanceOfFindOptions} from '@utils/index';
 
 
 interface IOptions {
