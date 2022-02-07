@@ -19,7 +19,6 @@ import {
 } from 'sequelize';
 
 import Genre from './Genre';
-import MoviePeople from './MoviePeople';
 import Person from './Person';
 
 import {saveImage} from '../../utils';
@@ -27,17 +26,16 @@ import {sequelizeConnection} from '../connection';
 
 
 interface MovieAttributes {
+	backdrop: string | null;
 	id: string;
 	imdb: string;
+	overview: string | null;
+	poster: string | null;
 	releaseDate: string;
+	runtime: number | null;
 	title: string;
 	titleOriginal: string;
 	tmdb: number;
-	backdrop?: string | null;
-	character?: string;
-	overview?: string | null;
-	poster?: string | null;
-	runtime?: number | null;
 }
 
 export type MovieInput = Optional<MovieAttributes, 'id'|'tmdb'>;
@@ -63,7 +61,6 @@ const attributes: ModelAttributes = {
 		},
 	},
 	runtime: {
-		allowNull: false,
 		type: DataTypes.INTEGER,
 		validate: {
 			notEmpty: {
@@ -81,7 +78,6 @@ const attributes: ModelAttributes = {
 		},
 	},
 	overview: {
-		allowNull: false,
 		type: DataTypes.TEXT,
 	},
 	backdrop: {
@@ -91,6 +87,7 @@ const attributes: ModelAttributes = {
 		type: DataTypes.STRING,
 	},
 	imdb: {
+		allowNull: false,
 		type: DataTypes.STRING,
 		validate: {
 			notEmpty: {
@@ -99,17 +96,12 @@ const attributes: ModelAttributes = {
 		},
 	},
 	tmdb: {
+		allowNull: false,
 		type: DataTypes.INTEGER,
 		validate: {
 			notEmpty: {
 				msg: 'This field cannot be empty.',
 			},
-		},
-	},
-	character: {
-		type: DataTypes.VIRTUAL,
-		get(this: Movie): string | undefined {
-		  return this.People?.[0].MoviePeople?.character;
 		},
 	},
 };
@@ -134,16 +126,16 @@ const loadImages = async (movie: Movie) => {
 };
 
 class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttributes {
+	declare backdrop: string | null;
 	declare id: string;
+	declare imdb: string;
+	declare overview: string | null;
+	declare poster: string | null;
+	declare releaseDate: string;
+	declare runtime: number | null;
 	declare title: string;
 	declare titleOriginal: string;
-	declare releaseDate: string;
-	declare imdb: string;
 	declare tmdb: number;
-	declare runtime?: number | null;
-	declare overview?: string | null;
-	declare backdrop?: string | null;
-	declare poster?: string | null;
 
 	declare readonly createdAt: Date;
 	declare readonly updatedAt: Date;
@@ -170,16 +162,15 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	declare hasPeople: BelongsToManyHasAssociationsMixin<Person, string>;
 	declare countPeople: BelongsToManyCountAssociationsMixin;
 
-	declare readonly Genres?: Genre[];
-	declare readonly People?: Person[];
-	declare readonly MoviePeople?: MoviePeople;
+	declare readonly genres?: Genre[];
+	declare readonly people?: Person[];
 
 	declare static associations: {
-		Genres: Association<Movie, Genre>;
-		People: Association<Movie, Person>;
+		genres: Association<Movie, Genre>;
+		people: Association<Movie, Person>;
 	};
 }
 
-Movie.init(attributes, {hooks: {beforeCreate: loadImages, beforeUpdate: loadImages}, sequelize: sequelizeConnection});
+Movie.init(attributes, {hooks: {beforeSave: loadImages}, sequelize: sequelizeConnection});
 
 export default Movie;

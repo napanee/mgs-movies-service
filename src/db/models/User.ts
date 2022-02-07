@@ -11,12 +11,12 @@ interface UserAttributes {
 	isActive: boolean;
 	lastName: string;
 	password: string;
+	token: string | null;
 	createdAt?: Date;
-	token?: string;
 	updatedAt?: Date;
 }
 
-export type UserInput = Optional<UserAttributes, 'id' | 'isActive'>;
+export type UserInput = Optional<UserAttributes, 'id'|'isActive'|'token'>;
 export type UserOutput = Required<UserAttributes>;
 
 const attributes: ModelAttributes = {
@@ -59,7 +59,7 @@ const attributes: ModelAttributes = {
 	},
 };
 
-const beforeCreate = (user: User) => {
+const hashPassword = (user: User) => {
 	if (user.changed('password')) {
 		const salt = bcrypt.genSaltSync(10);
 		const encryptPassword = bcrypt.hashSync(user.getDataValue('password'), salt);
@@ -69,18 +69,18 @@ const beforeCreate = (user: User) => {
 };
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
-	declare id: string;
-	declare firstName: string;
-	declare lastName: string;
 	declare email: string;
-	declare password: string;
+	declare firstName: string;
+	declare id: string;
 	declare isActive: boolean;
-	declare token?: string;
+	declare lastName: string;
+	declare password: string;
+	declare token: string | null;
 
 	declare readonly createdAt: Date;
 	declare readonly updatedAt: Date;
 }
 
-User.init(attributes, {hooks: {beforeCreate}, sequelize: sequelizeConnection});
+User.init(attributes, {hooks: {beforeSave: hashPassword}, sequelize: sequelizeConnection});
 
 export default User;

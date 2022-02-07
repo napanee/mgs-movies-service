@@ -5,7 +5,7 @@ import {
 	GraphQLObjectType,
 	GraphQLString,
 } from 'graphql';
-import {IncludeOptions} from 'sequelize';
+import {FindOptions} from 'sequelize';
 
 import {pageInfo} from './base';
 import {movieNode} from './movie';
@@ -55,9 +55,11 @@ export const genreNode: GraphQLObjectType = new GraphQLObjectType({
 		movies: {
 			type: new GraphQLList(movieNode),
 			resolve: (parent: GenreOutput) => {
-				const args: IncludeOptions = {
-					model: Genre,
-					where: {id: parent.id},
+				const args: FindOptions = {
+					include: {
+						model: Genre,
+						where: {id: parent.id},
+					},
 				};
 
 				return movieResolver.list(args);

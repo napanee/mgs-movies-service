@@ -1,6 +1,6 @@
 import Genre from './Genre';
 import Movie from './Movie';
-import MovieGenre from './MovieGenre';
+import MovieGenres from './MovieGenres';
 import MoviePeople from './MoviePeople';
 import Person from './Person';
 import User from './User';
@@ -9,7 +9,7 @@ import User from './User';
 export {
 	Genre,
 	Movie,
-	MovieGenre,
+	MovieGenres,
 	MoviePeople,
 	Person,
 	User,

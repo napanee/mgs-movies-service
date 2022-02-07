@@ -14,6 +14,9 @@ class MovieQuery {
 				id: {
 					type: GraphQLID,
 				},
+				title: {
+					type: GraphQLString,
+				},
 			},
 			resolve: (_: unknown, args: IArgsGet) => this.resolver.get(args),
 		};

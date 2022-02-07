@@ -1,4 +1,4 @@
-import fetch from 'cross-fetch';
+import 'cross-fetch/polyfill';
 import {CamelCasedProperties, JsonObject, SnakeCasedProperties} from 'type-fest';
 
 import {transformKeys} from '../utils';
@@ -47,24 +47,24 @@ type PersonType = {
 	profile_path: string | null;
 };
 
-interface ICredit extends JsonObject {
+type CreditType = {
 	credit_id: string;
 	id: number;
-}
+};
 
-interface ICast extends ICredit {
+type CastType = {
 	character: string;
 	order: number;
-}
+} & CreditType;
 
-interface ICrew extends ICredit {
+type CrewType = {
 	job: string;
-}
+} & CreditType;
 
-interface IMovieCredits extends JsonObject {
-	cast: ICast[];
-	crew: ICrew[];
-}
+type MovieCreditsType = {
+	cast: CastType[];
+	crew: CrewType[];
+};
 
 type MovieImageType = {
 	file_path: string;
@@ -78,9 +78,12 @@ type MovieImagesType = {
 };
 
 // eslint-disable-next-line max-len
-interface IMovieCreditsResponse extends Omit<ICredit, 'id'>, Partial<Omit<ICast, keyof ICredit>>, Partial<Omit<ICrew, keyof ICredit>> {
+interface IMovieCreditsResponse extends Omit<CreditType, 'id'>, Partial<Omit<CastType, keyof CreditType>>, Partial<Omit<CrewType, keyof CreditType>> {
+	credit_id: string;
 	department: string;
 	tmdb: number;
+	character?: string;
+	order?: number;
 }
 
 function __fetch<T extends JsonObject>(endpoint: string) {
@@ -107,17 +110,17 @@ export function searchWithQuery(query: string) {
 		.then(({results}) => {
 			return results
 				.map((result) => transformKeys(result))
-				.filter(({id, overview, posterPath, releaseDate, title}) =>
+				.map(({id, overview, posterPath, releaseDate, title}) =>
 					({id, overview, posterPath, releaseDate, title}));
 		});
 }
 
-export function searchWithImdb(id: number) {
+export function searchWithImdb(id: string) {
 	return __fetch<{movie_results: ImdbResponseType[]}>(`find/${id}?external_source=imdb_id&language=de-DE`)
 		.then(({movieResults}) => {
 			return movieResults
 				.map((result) => transformKeys(result))
-				.filter(({id, overview, posterPath, releaseDate, title}) =>
+				.map(({id, overview, posterPath, releaseDate, title}) =>
 					({id, overview, posterPath, releaseDate, title}));
 		});
 }
@@ -141,7 +144,7 @@ export function fetchMovieData(id: number) {
 }
 
 export function fetchMovieCredits(id: number): Promise<CamelCasedProperties<IMovieCreditsResponse>[]> {
-	return __fetch<IMovieCredits>(`movie/${id}/credits?language=de`)
+	return __fetch<MovieCreditsType>(`movie/${id}/credits?language=de`)
 		.then(({cast, crew}) => [
 			...cast
 				.map((result) => transformKeys(result))

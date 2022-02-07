@@ -28,7 +28,6 @@ const attributes: ModelAttributes = {
 		type: DataTypes.UUID,
 	},
 	character: {
-		allowNull: true,
 		type: DataTypes.STRING,
 	},
 	creditId: {
@@ -40,7 +39,6 @@ const attributes: ModelAttributes = {
 		type: DataTypes.STRING,
 	},
 	order: {
-		allowNull: true,
 		type: DataTypes.INTEGER,
 	},
 };
@@ -48,10 +46,10 @@ const attributes: ModelAttributes = {
 class MoviePeople extends Model<MoviePeopleAttributes, MoviePeopleInput> implements MoviePeopleAttributes {
 	declare movieId: string;
 	declare personId: string;
-	declare character: string;
+	declare character?: string;
 	declare creditId: string;
 	declare department: string;
-	declare order: number;
+	declare order?: number;
 
 	declare readonly createdAt: Date;
 	declare readonly updatedAt: Date;

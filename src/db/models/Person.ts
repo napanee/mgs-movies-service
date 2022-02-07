@@ -19,28 +19,25 @@ import {
 } from 'sequelize';
 
 import Movie from './Movie';
-import MoviePeople from './MoviePeople';
 
 import {saveImage} from '../../utils';
 import {sequelizeConnection} from '../connection';
 
 
 interface PersonAttributes {
+	biography: string | null;
+	birthday: string | null;
+	deathday: string | null;
 	id: string;
+	image: string | null;
 	imdb: string;
 	name: string;
+	placeOfBirth: string | null;
 	tmdb: number;
-	Movies?: Movie[];
-	biography?: string;
-	birthday?: string | null;
-	character?: string;
-	deathday?: string | null;
-	image?: string | null;
-	placeOfBirth?: string | null;
 }
 
 export type PersonInput = Optional<PersonAttributes, 'id'|'tmdb'>;
-export type PersonOutput = Optional<PersonAttributes, 'biography'|'birthday'|'deathday'|'placeOfBirth'|'image'>;
+export type PersonOutput = Required<PersonAttributes>;
 
 const attributes: ModelAttributes = {
 	name: {
@@ -68,6 +65,7 @@ const attributes: ModelAttributes = {
 		type: DataTypes.STRING,
 	},
 	imdb: {
+		allowNull: false,
 		type: DataTypes.STRING,
 		validate: {
 			notEmpty: {
@@ -76,6 +74,7 @@ const attributes: ModelAttributes = {
 		},
 	},
 	tmdb: {
+		allowNull: false,
 		type: DataTypes.INTEGER,
 		validate: {
 			notEmpty: {
@@ -83,16 +82,10 @@ const attributes: ModelAttributes = {
 			},
 		},
 	},
-	character: {
-		type: DataTypes.VIRTUAL,
-		get(this: Person): string | undefined {
-		  return this.Movies?.[0].MoviePeople?.character;
-		},
-	},
 };
 
-const loadImages = async (person: Person) => {
-	if (!person.isNewRecord || !person.image) {
+const loadImage = async (person: Person) => {
+	if (!person.changed('image') || !person.image) {
 		return;
 	}
 
@@ -106,16 +99,15 @@ const loadImages = async (person: Person) => {
 };
 
 class Person extends Model<PersonAttributes, PersonInput> implements PersonAttributes {
+	declare biography: string | null;
+	declare birthday: string | null;
+	declare deathday: string | null;
 	declare id: string;
-	declare name: string;
-	declare character: string;
+	declare image: string | null;
 	declare imdb: string;
+	declare name: string;
+	declare placeOfBirth: string | null;
 	declare tmdb: number;
-	declare biography?: string;
-	declare birthday?: string | null;
-	declare deathday?: string | null;
-	declare placeOfBirth?: string | null;
-	declare image?: string;
 
 	declare readonly createdAt: Date;
 	declare readonly updatedAt: Date;
@@ -131,14 +123,13 @@ class Person extends Model<PersonAttributes, PersonInput> implements PersonAttri
 	declare hasMovies: BelongsToManyHasAssociationsMixin<Movie, string>;
 	declare countMovies: BelongsToManyCountAssociationsMixin;
 
-	declare readonly Movies?: Movie[];
-	declare readonly MoviePeople?: MoviePeople;
+	declare readonly movies?: Movie[];
 
 	declare static associations: {
-		Movies: Association<Person, Movie>;
+		movies: Association<Person, Movie>;
 	};
 }
 
-Person.init(attributes, {hooks: {beforeCreate: loadImages}, sequelize: sequelizeConnection});
+Person.init(attributes, {hooks: {beforeSave: loadImage}, sequelize: sequelizeConnection});
 
 export default Person;

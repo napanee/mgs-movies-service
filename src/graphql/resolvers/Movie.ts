@@ -31,14 +31,14 @@ export interface IArgsCreate {
 export interface IArgsUpdate {
 	id: number;
 	input: {
-		backdrop: string;
-		poster: string;
+		backdrop?: string;
+		poster?: string;
 	};
 }
 
 export interface IArgsRefetch {
 	id: number;
-	input: {
+	input?: {
 		withImages: boolean;
 	};
 }
@@ -212,7 +212,7 @@ class MovieController {
 	}
 
 	async delete({id}: IArgsDelete) {
-		const deleted = await Movie.destroy({where: {id}, truncate: true});
+		const deleted = await Movie.destroy({where: {id}, cascade: true});
 
 		if (deleted === 1) {
 			return {
