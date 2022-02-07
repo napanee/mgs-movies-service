@@ -30,6 +30,10 @@ describe('The person model', () => {
 			name: 'Foo',
 			tmdb: 1,
 			image: 'image',
+			biography: null,
+			birthday: null,
+			deathday: null,
+			placeOfBirth: null,
 		});
 
 		expect(mockedSaveImage).toBeCalledTimes(1);
@@ -41,6 +45,11 @@ describe('The person model', () => {
 			imdb: 'tt1',
 			name: 'Foo',
 			tmdb: 1,
+			image: null,
+			biography: null,
+			birthday: null,
+			deathday: null,
+			placeOfBirth: null,
 		});
 
 		expect(person.image).toBeNull();

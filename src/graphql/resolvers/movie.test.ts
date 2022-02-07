@@ -10,7 +10,10 @@ import {fetchMovieCredits, fetchMovieData, fetchPerson} from '../../utils/themov
 jest.mock('../../utils/themoviedb');
 jest.mock('../../utils/save-image');
 
+const nullablePersonProperties = {biography: null, birthday: null, deathday: null, image: null, placeOfBirth: null};
+const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};
 const movieDataDefault = {
+	...nullableMovieProperties,
 	backdrop: null,
 	genres: [
 		{id: 1, name: 'foo'},
@@ -23,13 +26,9 @@ const movieDataDefault = {
 	runtime: 1,
 	title: 'title',
 };
-const personDatadefault = {
-	biography: '',
-	birthday: null,
-	deathday: null,
-	image: null,
+const personDataDefault = {
+	...nullablePersonProperties,
 	name: 'Foo',
-	placeOfBirth: null,
 };
 
 const mockedFetchMovieCredits = fetchMovieCredits as jest.MockedFunction<typeof fetchMovieCredits>;
@@ -43,11 +42,11 @@ describe('The movie resolver', () => {
 	beforeAll(async () => {
 		await db.sync({alter: true, force: true});
 
-		const person = await ModelPerson.create({imdb: 'tt1', name: 'Foo', tmdb: 1});
+		const person = await ModelPerson.create({...personDataDefault, imdb: 'tt1', name: 'Foo', tmdb: 1});
 		const movies = await ModelMovie.bulkCreate([
-			{imdb: 'tt1', tmdb: 1, title: 'Foo', releaseDate: '2022-01-01', titleOriginal: 'Foo'},
-			{imdb: 'tt2', tmdb: 2, title: 'Bar', releaseDate: '2022-01-01', titleOriginal: 'Bar'},
-			{imdb: 'tt3', tmdb: 3, title: 'Baz', releaseDate: '2022-01-01', titleOriginal: 'Baz'},
+			{...movieDataDefault, imdb: 'tt1', tmdb: 1, title: 'Foo', titleOriginal: 'Foo'},
+			{...movieDataDefault, imdb: 'tt2', tmdb: 2, title: 'Bar', titleOriginal: 'Bar'},
+			{...movieDataDefault, imdb: 'tt3', tmdb: 3, title: 'Baz', titleOriginal: 'Baz'},
 		]);
 
 		await person.addMovie(movies[0], {through: {character: 'Foo', creditId: '1', department: 'actor'}});
@@ -183,7 +182,7 @@ describe('The movie resolver', () => {
 				{creditId: '1', department: 'Foo', tmdb: 1},
 			]);
 			mockedFetchPerson.mockResolvedValue({
-				...personDatadefault,
+				...personDataDefault,
 				imdb: 'tt1',
 				tmdb: 1,
 			});
@@ -273,7 +272,7 @@ describe('The movie resolver', () => {
 				{creditId: '1', department: 'Foo', tmdb: 1},
 			]);
 			mockedFetchPerson.mockResolvedValue({
-				...personDatadefault,
+				...personDataDefault,
 				imdb: 'tt1',
 				tmdb: 1,
 			});

@@ -6,6 +6,8 @@ import {sequelizeConnection} from '../../db/connection';
 import {Genre as ModelGenre, Movie as ModelMovie} from '../../db/models';
 
 
+const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};
+
 describe('The genre resolver', () => {
 	const db: Sequelize = sequelizeConnection;
 	const genreResolver = new GenreController();
@@ -20,6 +22,8 @@ describe('The genre resolver', () => {
 		]);
 
 		const movie = await ModelMovie.create({
+			...nullableMovieProperties,
+			tmdb: 1,
 			imdb: 'tt1',
 			title: 'Foo',
 			releaseDate: '2022-01-01',

@@ -9,6 +9,21 @@ import {sequelizeConnection} from '../connection';
 jest.mock('../../utils/save-image');
 const mockedSaveImage = saveImage as jest.MockedFunction<typeof saveImage>;
 
+const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};
+const movieDataDefault = {
+	...nullableMovieProperties,
+	tmdb: 1,
+	imdb: 'tt1',
+	genres: [
+		{id: 1, name: 'foo'},
+		{id: 2, name: 'bar'},
+	],
+	titleOriginal: 'titleOriginal',
+	releaseDate: '2022-01-01',
+	runtime: 1,
+	title: 'title',
+};
+
 describe('The movie model', () => {
 	const db: Sequelize = sequelizeConnection;
 
@@ -26,10 +41,7 @@ describe('The movie model', () => {
 
 	test('should save backdrop', async () => {
 		const movie = await Movie.create({
-			imdb: 'tt1',
-			title: 'Foo',
-			releaseDate: '2022-01-01',
-			titleOriginal: 'Foo',
+			...movieDataDefault,
 			backdrop: 'backdrop',
 		});
 
@@ -40,10 +52,7 @@ describe('The movie model', () => {
 
 	test('should save poster', async () => {
 		const movie = await Movie.create({
-			imdb: 'tt1',
-			title: 'Foo',
-			releaseDate: '2022-01-01',
-			titleOriginal: 'Foo',
+			...movieDataDefault,
 			poster: 'poster',
 		});
 
@@ -54,10 +63,7 @@ describe('The movie model', () => {
 
 	test('should save backdrop and poster', async () => {
 		const movie = await Movie.create({
-			imdb: 'tt1',
-			title: 'Foo',
-			releaseDate: '2022-01-01',
-			titleOriginal: 'Foo',
+			...movieDataDefault,
 			backdrop: 'backdrop',
 			poster: 'poster',
 		});
@@ -68,12 +74,7 @@ describe('The movie model', () => {
 	});
 
 	test('should update backdrop', async () => {
-		const movie = await Movie.create({
-			imdb: 'tt1',
-			title: 'Foo',
-			releaseDate: '2022-01-01',
-			titleOriginal: 'Foo',
-		});
+		const movie = await Movie.create(movieDataDefault);
 
 		expect(movie.backdrop).toBeNull();
 
@@ -84,12 +85,7 @@ describe('The movie model', () => {
 	});
 
 	test('should update poster', async () => {
-		const movie = await Movie.create({
-			imdb: 'tt1',
-			title: 'Foo',
-			releaseDate: '2022-01-01',
-			titleOriginal: 'Foo',
-		});
+		const movie = await Movie.create(movieDataDefault);
 
 		expect(movie.poster).toBeNull();
 
@@ -100,12 +96,7 @@ describe('The movie model', () => {
 	});
 
 	test('should update backdrop and poster', async () => {
-		const movie = await Movie.create({
-			imdb: 'tt1',
-			title: 'Foo',
-			releaseDate: '2022-01-01',
-			titleOriginal: 'Foo',
-		});
+		const movie = await Movie.create(movieDataDefault);
 
 		expect(movie.backdrop).toBeNull();
 		expect(movie.poster).toBeNull();

@@ -6,6 +6,9 @@ import {sequelizeConnection} from '../../db/connection';
 import {Movie as ModelMovie, Person as ModelPerson} from '../../db/models';
 
 
+const nullablePersonProperties = {biography: null, birthday: null, deathday: null, image: null, placeOfBirth: null};
+const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};
+
 describe('The person resolver', () => {
 	const db: Sequelize = sequelizeConnection;
 	const personResolver = new PersonController();
@@ -14,12 +17,14 @@ describe('The person resolver', () => {
 		await db.sync({alter: true, force: true});
 
 		const people = await ModelPerson.bulkCreate([
-			{imdb: 'tt1', name: 'Foo', tmdb: 1},
-			{imdb: 'tt2', name: 'Bar', tmdb: 2},
-			{imdb: 'tt3', name: 'Baz', tmdb: 3},
+			{...nullablePersonProperties, imdb: 'tt1', name: 'Foo', tmdb: 1},
+			{...nullablePersonProperties, imdb: 'tt2', name: 'Bar', tmdb: 2},
+			{...nullablePersonProperties, imdb: 'tt3', name: 'Baz', tmdb: 3},
 		]);
 
 		const movie = await ModelMovie.create({
+			...nullableMovieProperties,
+			tmdb: 1,
 			imdb: 'tt1',
 			title: 'Foo',
 			releaseDate: '2022-01-01',
