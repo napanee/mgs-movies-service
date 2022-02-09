@@ -59,6 +59,7 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-import-alias": "^1.2.0",
     "eslint-plugin-typescript-sort-keys": "^2.1.0",
     "fetch-mock": "^9.11.0",
     "jest": "^27.4.7",

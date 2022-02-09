@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
 	parser: '@typescript-eslint/parser',
-	plugins: ['import', '@typescript-eslint', 'typescript-sort-keys'],
+	plugins: ['import', 'import-alias', '@typescript-eslint', 'typescript-sort-keys'],
 	env: {
 		browser: true,
 		jest: true,
@@ -78,6 +78,20 @@ module.exports = {
 			},
 		],
 		'space-in-parens': ['error', 'never'],
+
+		'import-alias/import-alias': [
+			'error',
+			{
+				'relativeDepth': 1,
+				'aliases': [
+					{'alias': '@models', 'matcher': '^src\/db\/models'}, // src/db/models/* -> @models/*
+					{'alias': '@graphql', 'matcher': '^src\/(graphql)'}, // src/graphql/* -> @graphql/*
+					{'alias': '@utils', 'matcher': '^src\/(utils)'}, // src/utils/* -> @utils/*
+					{'alias': '@db', 'matcher': '^src\/db'}, // src/db/* -> @db/*
+					{'alias': '@src', 'matcher': '^src'},
+				]
+			}
+		],
 
 		'import/newline-after-import': ['error', {'count': 2}],
 		'import/no-extraneous-dependencies': 'off',
