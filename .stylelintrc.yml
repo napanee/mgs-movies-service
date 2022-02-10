@@ -1,0 +1,349 @@
+processors:
+  - stylelint-processor-styled-components
+extends:
+  - stylelint-config-standard-scss
+  - stylelint-config-styled-components
+plugins:
+  - stylelint-declaration-use-variable
+  - stylelint-order
+  - stylelint-scss
+rules:
+  sh-waqar/declaration-use-variable:
+    -
+      - /color/
+      - z-index
+      - ignoreValues:
+        - inherit
+        - transparent
+
+  alpha-value-notation: number
+  at-rule-no-unknown: null # defined by stylelint-scss
+  at-rule-empty-line-before:
+    - always
+    -
+      ignore:
+        - after-comment
+      ignoreAtRules:
+        - import
+        - else
+      except:
+        - first-nested
+        - blockless-after-blockless
+  at-rule-name-case: lower
+  at-rule-name-newline-after: null
+  at-rule-semicolon-newline-after: always
+  at-rule-semicolon-space-before: never
+  block-closing-brace-empty-line-before: never
+  block-closing-brace-newline-after:
+    - always
+    -
+      ignoreAtRules:
+        - if
+        - else
+  block-closing-brace-newline-before: always
+  block-opening-brace-newline-after: always
+  block-opening-brace-newline-before: never-single-line
+  block-no-empty: true
+  color-function-notation: legacy
+  color-hex-case: upper
+  color-hex-length: long
+  color-named: never
+  color-no-hex: null
+  color-no-invalid-hex: true
+  comment-no-empty: true
+  custom-property-pattern: null
+  declaration-bang-space-before: always
+  declaration-bang-space-after: never
+  declaration-block-no-duplicate-properties:
+    - true
+    - ignore:
+      - consecutive-duplicates
+  declaration-block-no-redundant-longhand-properties: null
+  declaration-block-no-shorthand-property-overrides: true
+  declaration-block-single-line-max-declarations: null
+  declaration-block-semicolon-newline-before: never-multi-line
+  declaration-block-semicolon-space-before: never
+  declaration-block-semicolon-newline-after: always
+  declaration-block-trailing-semicolon: always
+  declaration-colon-newline-after: always-multi-line
+  declaration-colon-space-before: never
+  declaration-colon-space-after: always-single-line
+  declaration-empty-line-before:
+    - never
+    - ignore:
+      - after-comment
+  declaration-no-important: true
+  declaration-property-unit-allowed-list:
+    border:
+      - px
+      - em
+      - rem
+    font:
+      - em
+      - rem
+      - vw
+    line-height: []
+    margin:
+      - px
+      - em
+      - rem
+      - '%'
+    padding:
+      - px
+      - em
+      - rem
+      - vh
+      - vw
+      - '%'
+  declaration-property-value-disallowed-list:
+    - border:
+      - /^none/
+  font-family-no-duplicate-names: true
+  font-family-no-missing-generic-family-keyword: true
+  font-weight-notation: numeric
+  function-allowed-list: null
+  function-calc-no-unspaced-operator: true
+  function-comma-newline-before: never-multi-line
+  function-comma-newline-after: never-multi-line
+  function-comma-space-before: never
+  function-comma-space-after: always
+  function-disallowed-list: null
+  function-linear-gradient-no-nonstandard-direction: true
+  function-max-empty-lines: 0
+  function-name-case: lower
+  function-parentheses-newline-inside: never-multi-line
+  function-parentheses-space-inside: never
+  function-url-no-scheme-relative: true
+  function-url-quotes: always
+  hue-degree-notation: null
+  indentation: tab
+  keyframe-declaration-no-important: true
+  keyframes-name-pattern: null
+  length-zero-no-unit: true
+  max-empty-lines: 1
+  max-nesting-depth: 8
+  media-feature-name-no-unknown: true
+  no-descending-specificity: null
+  no-duplicate-at-import-rules: true
+  no-duplicate-selectors:
+    - true
+    - disallowInList: false
+  no-extra-semicolons: true
+  no-empty-first-line: true
+  no-invalid-double-slash-comments: true
+  number-leading-zero: always
+  number-max-precision: 2
+  number-no-trailing-zeros: true
+  property-case: lower
+  property-no-unknown:
+    - true
+    - checkPrefixed: true
+  rule-empty-line-before:
+    - always
+    - except:
+      - after-single-line-comment
+      - first-nested
+  shorthand-property-no-redundant-values: true
+  selector-attribute-brackets-space-inside: never
+  selector-attribute-operator-space-after: never
+  selector-attribute-operator-space-before: never
+  selector-attribute-quotes: always
+  selector-combinator-space-after: always
+  selector-combinator-space-before: always
+  selector-descendant-combinator-no-non-space: true
+  selector-pseudo-class-case: lower
+  selector-pseudo-class-parentheses-space-inside: never
+  selector-pseudo-element-case: lower
+  selector-type-case: lower
+  selector-list-comma-newline-after: always
+  selector-list-comma-newline-before: never-multi-line
+  selector-list-comma-space-after: null
+  selector-list-comma-space-before: null
+  selector-max-empty-lines: 0
+  selector-max-compound-selectors: null
+  selector-no-qualifying-type: null
+  selector-no-vendor-prefix:
+    - true
+    - ignoreSelectors:
+      - '::-webkit-input-placeholder'
+      - '::-moz-placeholder'
+  selector-pseudo-class-no-unknown:
+    - true
+    - ignorePseudoClasses:
+      - export
+      - import
+      - global
+      - local
+      - external
+  selector-pseudo-element-colon-notation: double
+  selector-pseudo-element-no-unknown: true
+  selector-type-no-unknown: true
+  string-no-newline: true
+  string-quotes: single
+  time-min-milliseconds: null
+  unit-allowed-list:
+    # Font-relative lengths
+    - em
+    - rem
+    # Absolute lengths
+    - px
+    # Viewport-percentage lengths
+    - vh
+    - vw
+    - vmin
+    - vmax
+    # Angle
+    - deg
+    - grad
+    - rad
+    - turn
+    # Duration
+    - ms
+    - s
+    # Resolution
+    - dpi
+    - dpcm
+    - dppx
+    # Other
+    - 'fr'
+    - '%'
+  unit-case: lower
+  unit-no-unknown: true
+  value-keyword-case: lower
+  value-list-comma-newline-before: never-multi-line
+  value-list-comma-newline-after: never-multi-line
+  value-list-comma-space-before: never
+  value-list-comma-space-after: always
+  value-list-max-empty-lines: 0
+  value-no-vendor-prefix: true
+
+  scss/at-rule-no-unknown: true
+
+  order/order: null
+  order/properties-alphabetical-order: null
+  order/properties-order:
+    - animation
+    - animation-name
+    - animation-duration
+    - animation-delay
+    - animation-direction
+    - animation-fill-mode
+    - animation-iteration-count
+    - animation-play-state
+    - animation-timing-function
+    - transition
+    - transition-delay
+    - transition-duration
+    - transition-property
+    - transition-timing-function
+
+    - appearance
+    - content
+    - speak
+    - counter-reset
+    - counter-increment
+    - cursor
+    - pointer-events
+    - user-select
+    - touch-action
+    - touch-callout
+    - tap-highlight-color
+
+    - box-sizing
+    - zoom
+    - display
+    - table-layout
+    - flex
+    - flex-basis
+    - flex-direction
+    - flex-grow
+    - flex-shrink
+    - flex-wrap
+    - align-self
+    - align-content
+    - align-items
+    - justify-content
+    - order
+    - overflow
+    - overflow-x
+    - overflow-y
+    - overflow-scrolling
+    - visibility
+    - opacity
+    - float
+    - clear
+    - backface-visibility
+    - transform
+    - transform-origin
+    - transform-style
+    - perspective
+    - perspective-origin
+    - position
+    - top
+    - right
+    - bottom
+    - left
+    - z-index
+    - margin
+    - margin-top
+    - margin-right
+    - margin-bottom
+    - margin-left
+    - padding
+    - padding-top
+    - padding-right
+    - padding-bottom
+    - padding-left
+    - width
+    - min-width
+    - max-width
+    - height
+    - min-height
+    - max-height
+
+    - background
+    - background-color
+    - background-image
+    - background-repeat
+    - background-position
+    - background-attachment
+    - background-size
+    - border
+    - border-top
+    - border-right
+    - border-bottom
+    - border-left
+    - border-width
+    - border-style
+    - border-color
+    - border-image
+    - border-radius
+    - outline
+    - outline-width
+    - outline-style
+    - outline-color
+    - outline-offset
+    - box-shadow
+
+    - color
+    - font
+    - font-family
+    - font-size
+    - font-weight
+    - font-style
+    - font-variant
+    - line-height
+    - list-style
+    - list-style-type
+    - list-style-position
+    - list-style-image
+    - text-align
+    - text-transform
+    - text-decoration
+    - text-indent
+    - text-shadow
+    - vertical-align
+    - white-space
+    - word-break
+    - word-spacing
+    - word-wrap

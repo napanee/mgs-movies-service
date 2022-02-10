@@ -1,10 +1,18 @@
-import * as React from 'react';
+import {FC, ReactElement} from 'react';
+import styled from 'styled-components';
 
 
-function app() {
+const Title = styled.h1`
+	position: relative;
+	color: ${({theme}) => theme.palette.error.main};
+	font-size: 1.5em;
+	text-align: center;
+`;
+
+const app: FC = (): ReactElement => {
 	return (
-		<h1>Start</h1>
+		<Title>Start</Title>
 	);
-}
+};
 
 export default app;
