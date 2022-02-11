@@ -25,7 +25,8 @@ export default {
 	],
 	resolve: {
 		alias: {
-			components: join(rootDir, 'src', 'components'),
+			'@components': join(rootDir, 'client', 'js', 'components'),
+			'@utils': join(rootDir, 'client', 'js', 'utils'),
 		},
 		extensions: ['.tsx', '.ts', '.js'],
 	},

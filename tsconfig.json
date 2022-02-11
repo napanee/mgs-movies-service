@@ -22,7 +22,7 @@
 			"@db/*": ["src/db/*"],
 			"@models/*": ["src/db/models/*"],
 			"@graphql/*": ["src/graphql/*"],
-			"@utils/*": ["src/utils/*"],
+			"@utils/*": ["src/utils/*", "client/js/utils/*"],
 		},
 		"typeRoots": ["./node_modules/@types", "./@types"],
 		"allowSyntheticDefaultImports": true,
