@@ -47,6 +47,7 @@ module.exports = {
 				maxEOF: 1,
 			},
 		],
+		'no-duplicate-imports': 'error',
 		'no-trailing-spaces': 'error',
 		'no-whitespace-before-property': 'error',
 		'object-curly-newline': [

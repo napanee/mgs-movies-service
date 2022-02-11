@@ -1,8 +1,7 @@
 import fs from 'fs';
 
 import {MD5} from 'crypto-js';
-import {enableFetchMocks} from 'jest-fetch-mock';
-import fetch from 'jest-fetch-mock';
+import fetch, {enableFetchMocks} from 'jest-fetch-mock';
 
 import {saveImage} from './save-image';
 

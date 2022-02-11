@@ -1,5 +1,4 @@
-import {enableFetchMocks} from 'jest-fetch-mock';
-import fetch from 'jest-fetch-mock';
+import fetch, {enableFetchMocks} from 'jest-fetch-mock';
 
 import {
 	fetchImages,
