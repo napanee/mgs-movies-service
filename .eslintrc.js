@@ -90,6 +90,8 @@ module.exports = {
 					{'alias': '@utils', 'matcher': '^src\/(utils)'}, // src/utils/* -> @utils/*
 					{'alias': '@db', 'matcher': '^src\/db'}, // src/db/* -> @db/*
 					{'alias': '@src', 'matcher': '^src'},
+					{'alias': '@pages', 'matcher': '^client\/js\/(pages)'}, // client/js/pages/* -> @pages/*
+					{'alias': '@components', 'matcher': '^client\/js\/(components)'}, // client/js/components/* -> @components/*
 				]
 			}
 		],
@@ -104,6 +106,13 @@ module.exports = {
 					caseInsensitive: true,
 				},
 				groups: ['builtin', 'external', 'internal', 'sibling', 'index', 'parent'],
+				pathGroups: [
+					{
+						pattern: '@pages/**',
+						group: 'internal',
+						position: 'before'
+					}
+				],
 				'newlines-between': 'always',
 			},
 		],

@@ -27,6 +27,7 @@ export default {
 		alias: {
 			'@components': join(rootDir, 'client', 'js', 'components'),
 			'@utils': join(rootDir, 'client', 'js', 'utils'),
+			'@pages': join(rootDir, 'client', 'js', 'pages'),
 		},
 		extensions: ['.tsx', '.ts', '.js'],
 	},

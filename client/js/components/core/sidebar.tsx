@@ -15,6 +15,7 @@ import {
 	ListItemText as MuiListItemText,
 } from '@mui/material';
 import {styled as muiStyled} from '@mui/material/styles';
+import {NavLink} from 'react-router-dom';
 import styled from 'styled-components';
 
 import {drawerWidth} from '@utils/constants';
@@ -55,19 +56,19 @@ const Sidebar = ({isOpen, toggleDrawer: handleClick}: SidebarProps) => {
 			</DrawerHeader>
 			<MuiDivider />
 			<MuiList>
-				<MuiListItemButton selected={true}>
+				<MuiListItemButton component={NavLink} to="/">
 					<MuiListItemIcon><IconDashboardOutlined /></MuiListItemIcon>
 					<MuiListItemText primary="Dashboard" />
 				</MuiListItemButton>
-				<MuiListItemButton>
+				<MuiListItemButton component={NavLink} to="/movies">
 					<MuiListItemIcon><IconLocalMoviesOutlined /></MuiListItemIcon>
 					<MuiListItemText primary="Movies" />
 				</MuiListItemButton>
-				<MuiListItemButton>
+				<MuiListItemButton component={NavLink} to="/actors">
 					<MuiListItemIcon><IconPeopleOutlined /></MuiListItemIcon>
 					<MuiListItemText primary="Actors" />
 				</MuiListItemButton>
-				<MuiListItemButton>
+				<MuiListItemButton component={NavLink} to="/directors">
 					<MuiListItemIcon><IconRecordVoiceOverOutlined /></MuiListItemIcon>
 					<MuiListItemText primary="Directors" />
 				</MuiListItemButton>

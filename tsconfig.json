@@ -23,6 +23,8 @@
 			"@models/*": ["src/db/models/*"],
 			"@graphql/*": ["src/graphql/*"],
 			"@utils/*": ["src/utils/*", "client/js/utils/*"],
+			"@pages/*": ["client/js/pages/*"],
+			"@components/*": ["client/js/components/*"],
 		},
 		"typeRoots": ["./node_modules/@types", "./@types"],
 		"allowSyntheticDefaultImports": true,

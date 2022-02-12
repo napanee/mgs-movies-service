@@ -1,10 +1,16 @@
-import {Box as MuiBox, Typography as MuiTypography} from '@mui/material';
+import {Box as MuiBox} from '@mui/material';
 import {useState} from 'react';
+import {Route, Routes} from 'react-router-dom';
 import styled from 'styled-components';
 
-import Header from './core/header';
-import Sidebar, {DrawerHeader} from './core/sidebar';
-import Main from './layout/main';
+import Actors from '@pages/actors';
+import Dashboard from '@pages/dashboard';
+import Directors from '@pages/directors';
+import Movies from '@pages/movies';
+
+import Header from '@components/core/header';
+import Sidebar, {DrawerHeader} from '@components/core/sidebar';
+import Main from '@components/layout/main';
 
 
 const Box = styled(MuiBox)`
@@ -23,20 +29,12 @@ const App = () => {
 			<Sidebar isOpen={isOpen} toggleDrawer={toggleDrawer} />
 			<Main open={isOpen}>
 				<DrawerHeader />
-				<MuiTypography paragraph>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-					tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-					enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-					imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-					Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-					Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-					adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-					nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-					leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-					feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-					consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-					sapien faucibus et molestie ac.
-				</MuiTypography>
+				<Routes>
+					<Route path="/" element={<Dashboard />} />
+					<Route path="movies" element={<Movies />} />
+					<Route path="actors" element={<Actors />} />
+					<Route path="directors" element={<Directors />} />
+				</Routes>
 			</Main>
 		</Box>
 	);
