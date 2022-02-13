@@ -1,5 +1,6 @@
 import {
 	ChevronLeft as IconChevronLeft,
+	ClassOutlined as IconClassOutlined,
 	DashboardOutlined as IconDashboardOutlined,
 	LocalMoviesOutlined as IconLocalMoviesOutlined,
 	PeopleOutlined as IconPeopleOutlined,
@@ -63,6 +64,10 @@ const Sidebar = ({isOpen, toggleDrawer: handleClick}: SidebarProps) => {
 				<MuiListItemButton component={NavLink} to="/movies">
 					<MuiListItemIcon><IconLocalMoviesOutlined /></MuiListItemIcon>
 					<MuiListItemText primary="Movies" />
+				</MuiListItemButton>
+				<MuiListItemButton component={NavLink} to="/genres">
+					<MuiListItemIcon><IconClassOutlined /></MuiListItemIcon>
+					<MuiListItemText primary="Genres" />
 				</MuiListItemButton>
 				<MuiListItemButton component={NavLink} to="/actors">
 					<MuiListItemIcon><IconPeopleOutlined /></MuiListItemIcon>

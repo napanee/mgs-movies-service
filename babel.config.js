@@ -20,7 +20,7 @@ module.exports = {
 		],
 		[
 			'inline-dotenv', {
-				path: './localhost.env',
+				path: './.env',
 			},
 		],
 		[
