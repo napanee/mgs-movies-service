@@ -1,18 +1,12 @@
-import {
-	GraphQLID,
-	GraphQLInt,
-	GraphQLList,
-	GraphQLObjectType,
-	GraphQLString,
-} from 'graphql';
-import {FindOptions} from 'sequelize';
+import {GraphQLID, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql';
 
-import Person, {PersonOutput} from '@models/Person';
+import MoviePeople from '@models/MoviePeople';
+import {PersonOutput} from '@models/Person';
 
 import {pageInfo} from './base';
-import {movieNode} from './movie';
+import {filmographyNode} from './filmography';
 
-import {MovieResolver} from '../resolvers';
+import MovieResolver, {IArgsList as IArgsListMovie} from '../resolvers/Movie';
 
 
 const movieResolver = new MovieResolver();
@@ -65,29 +59,25 @@ export const personNode: GraphQLObjectType = new GraphQLObjectType({
 		placeOfBirth: {
 			type: GraphQLString,
 		},
-		image: {
+		images: {
 			type: GraphQLString,
 		},
-		character: {
-			type: GraphQLString,
-		},
-		movies: {
-			type: new GraphQLList(movieNode),
+		filmography: {
+			type: new GraphQLList(filmographyNode),
 			resolve: (parent: PersonOutput) => {
-				const args: FindOptions = {
+				const args: IArgsListMovie = {
+					attributes: ['title'],
 					include: {
-						model: Person,
-						where: {id: parent.id},
-						through: {
-							attributes: ['character'],
-							where: {
-								department: 'actor',
-							},
+						model: MoviePeople,
+						as: 'filmography',
+						attributes: ['character'],
+						where: {
+							personId: parent.id,
 						},
 					},
 				};
 
-				return movieResolver.list(args);
+				return movieResolver.list(args, true);
 			},
 		},
 	}),

@@ -20,6 +20,10 @@ const query = new GraphQLObjectType({
 		// Person
 		person: personQuery.get(),
 		people: personQuery.list(),
+		// Actor
+		actors: personQuery.list('actor'),
+		// Director
+		directors: personQuery.list('director'),
 	},
 });
 const mutation = new GraphQLObjectType({

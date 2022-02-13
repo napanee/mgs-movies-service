@@ -28,6 +28,7 @@ import {sequelizeConnection} from '../connection';
 interface PersonAttributes {
 	biography: string | null;
 	birthday: string | null;
+	character: string;
 	deathday: string | null;
 	id: string;
 	image: string | null;
@@ -37,8 +38,10 @@ interface PersonAttributes {
 	tmdb: number;
 }
 
-export type PersonInput = Optional<PersonAttributes, 'id'|'tmdb'>;
-export type PersonOutput = Required<PersonAttributes>;
+type OptionalAttributes = 'biography'|'birthday'|'character'|'deathday'|'id'|'image'|'imdb'|'placeOfBirth';
+
+export type PersonInput = Optional<PersonAttributes, OptionalAttributes>;
+export type PersonOutput = Optional<PersonAttributes, 'character'>;
 
 const attributes: ModelAttributes = {
 	name: {
@@ -82,6 +85,15 @@ const attributes: ModelAttributes = {
 			},
 		},
 	},
+	character: {
+		type: DataTypes.VIRTUAL,
+		get(this: Person): string | undefined {
+			return this.movieData?.[0].character;
+		},
+		set(value) {
+			throw new Error(`Do not try to set the \`character\` with ${value}!`);
+		},
+	},
 };
 
 const loadImage = async (person: Person) => {
@@ -101,6 +113,7 @@ const loadImage = async (person: Person) => {
 class Person extends Model<PersonAttributes, PersonInput> implements PersonAttributes {
 	declare biography: string | null;
 	declare birthday: string | null;
+	declare character: string;
 	declare deathday: string | null;
 	declare id: string;
 	declare image: string | null;
@@ -124,6 +137,9 @@ class Person extends Model<PersonAttributes, PersonInput> implements PersonAttri
 	declare countMovies: BelongsToManyCountAssociationsMixin;
 
 	declare readonly movies?: Movie[];
+	declare readonly movieData?: {
+		character?: string;
+	}[];
 
 	declare static associations: {
 		movies: Association<Person, Movie>;

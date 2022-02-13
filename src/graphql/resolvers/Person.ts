@@ -1,7 +1,7 @@
-import {FindOptions, Order, WhereOptions} from 'sequelize';
+import {FindOptions, Includeable, Order, WhereOptions} from 'sequelize';
 
+import MoviePeople from '@models/MoviePeople';
 import Person, {PersonInput, PersonOutput} from '@models/Person';
-import {instanceOfFindOptions} from '@utils/index';
 
 
 interface IOptions {
@@ -13,13 +13,14 @@ export interface IArgsGet {
 	name?: string;
 }
 
-export interface IArgsList {
-	first: number;
-	offset: number;
-	orderBy: string;
+export type PersonType = 'actor' | 'director';
+
+export interface IArgsList extends FindOptions<PersonInput> {
+	orderBy?: string;
+	type?: PersonType;
 }
 
-interface IListResponse {
+export interface IListResponse {
 	edges: {
 		node: PersonOutput;
 	}[];
@@ -57,29 +58,41 @@ class PersonController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: FindOptions): Promise<PersonOutput[]>;
 	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList | FindOptions): Promise<IListResponse | PersonOutput[]> {
-		if (instanceOfFindOptions(args)) {
-			return this.model.findAll(args);
+	async list(args: IArgsList, plain: boolean): Promise<PersonOutput[]>;
+	async list({orderBy, type, ...options}: IArgsList, plain = false): Promise<IListResponse | PersonOutput[]> {
+		if (type) {
+			const include: Includeable = {
+				model: MoviePeople,
+				as: 'movieData',
+				where: {department: type},
+			};
+
+			options.include = include;
 		}
 
-		const limit = args.first;
-		const offset = args.offset;
-		const orderDirection = args.orderBy.startsWith('-') ? 'DESC' : 'ASC';
-		const order: Order = [[args.orderBy.replace('-', ''), orderDirection]];
-		const genres = await this.model.findAll({limit, offset, order});
-		const totalCount = await this.model.count();
+		if (orderBy) {
+			const orderDirection = orderBy.startsWith('-') ? 'DESC' : 'ASC';
+			const order: Order = [[orderBy.replace('-', ''), orderDirection]];
+
+			options.order = order;
+		}
+
+		const {rows, count} = await this.model.findAndCountAll(options);
+
+		if (plain) {
+			return rows;
+		}
 
 		return {
-			edges: genres.map((node) => ({
+			edges: rows.map((node) => ({
 				node,
 			})),
 			pageInfo: {
-				hasNextPage: () => totalCount > limit + offset,
-				hasPreviousPage: () => offset > 0,
+				hasNextPage: () => count > (options.offset || 0) + rows.length,
+				hasPreviousPage: () => !!options.offset && options.offset > 0,
 			},
-			totalCount,
+			totalCount: count,
 		};
 	}
 }

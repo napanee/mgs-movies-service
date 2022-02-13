@@ -3,7 +3,7 @@ import {FindOptions, Includeable, Op, Order, WhereOptions} from 'sequelize';
 import Genre from '@models/Genre';
 import Movie, {MovieInput, MovieOutput} from '@models/Movie';
 import Person from '@models/Person';
-import {fetchMovieCredits, fetchMovieData, fetchPerson, instanceOfFindOptions} from '@utils/index';
+import {fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
 
 
 interface IOptions {
@@ -17,10 +17,8 @@ export interface IArgsGet {
 	title?: string;
 }
 
-export interface IArgsList {
-	first: number;
-	offset: number;
-	orderBy: string;
+export interface IArgsList extends FindOptions<MovieInput> {
+	orderBy?: string;
 }
 
 export interface IArgsCreate {
@@ -46,7 +44,7 @@ export interface IArgsDelete {
 	id: number;
 }
 
-interface IListResponse {
+export interface IListResponse {
 	edges: {
 		node: MovieOutput;
 	}[];
@@ -84,35 +82,35 @@ class MovieController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: FindOptions): Promise<MovieOutput[]>;
 	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList | FindOptions): Promise<IListResponse | MovieOutput[]> {
-		if (instanceOfFindOptions(args)) {
-			return this.model.findAll(args);
+	async list(args: IArgsList, plain: boolean): Promise<MovieOutput[]>;
+	async list({orderBy, ...options}: IArgsList, plain = false): Promise<IListResponse | MovieOutput[]> {
+		if (orderBy) {
+			const orderDirection = orderBy.startsWith('-') ? 'DESC' : 'ASC';
+			const order: Order = [[orderBy.replace('-', ''), orderDirection]];
+
+			options.order = order;
 		}
 
-		const limit = args.first;
-		const offset = args.offset;
-		const orderDirection = args.orderBy.startsWith('-') ? 'DESC' : 'ASC';
-		const order: Order = [[args.orderBy.replace('-', ''), orderDirection]];
-		const movies = await this.model.findAll({limit, offset, order});
-		const totalCount = await this.model.count();
+		const {rows, count} = await this.model.findAndCountAll(options);
+
+		if (plain) {
+			return rows;
+		}
 
 		return {
-			edges: movies.map((node) => ({
-				node,
-			})),
+			edges: rows.map((node) => ({node})),
 			pageInfo: {
-				hasNextPage: () => totalCount > limit + offset,
-				hasPreviousPage: () => offset > 0,
+				hasNextPage: () => count > (options.offset || 0) + rows.length,
+				hasPreviousPage: () => !!options.offset && options.offset > 0,
 			},
-			totalCount,
+			totalCount: count,
 		};
 	}
 
 	async create({tmdb: id}: IArgsCreate) {
 		const {genres, tmdb, ...defaults} = await fetchMovieData(id);
-		const [movieModel, isNew] = await Movie.findOrCreate({where: {tmdb}, defaults});
+		const [movieModel, isNew] = await Movie.findOrCreate({where: {tmdb}, defaults: {...defaults, tmdb}});
 
 		if (!isNew) {
 			return {
@@ -132,7 +130,7 @@ class MovieController {
 		await Promise.all(
 			people.map(async ({tmdb, ...data}) => {
 				const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
-				const [personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults});
+				const [personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults: {...defaults, tmdb}});
 
 				await movieModel.addPerson(personModel, {through: {...data}});
 			})
@@ -198,7 +196,7 @@ class MovieController {
 		await Promise.all(
 			people.map(async ({tmdb, ...data}) => {
 				const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
-				const [personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults});
+				const [personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults: {...defaults, tmdb}});
 
 				await movieModel.addPerson(personModel, {through: {...data}});
 			})

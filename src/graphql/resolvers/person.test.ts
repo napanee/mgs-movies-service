@@ -1,9 +1,9 @@
-import {FindOptions, Sequelize} from 'sequelize';
+import {Sequelize} from 'sequelize';
 
 import {sequelizeConnection} from '@db/connection';
 import {Movie as ModelMovie, Person as ModelPerson} from '@models/index';
 
-import PersonController from './Person';
+import PersonController, {IArgsList} from './Person';
 
 
 const nullablePersonProperties = {biography: null, birthday: null, deathday: null, image: null, placeOfBirth: null};
@@ -31,7 +31,17 @@ describe('The person resolver', () => {
 			titleOriginal: 'Foo',
 		});
 
-		await movie.addPerson(people[0], {through: {character: 'Foo', creditId: '1', department: 'actor'}});
+		await Promise.all(
+			people.map(async (person, index) => {
+				await movie.addPerson(person, {
+					through: {
+						character: index === 0 ? null : `character_${index}`,
+						creditId: `credit${index}`,
+						department: index === 0 ? 'director' : 'actor',
+					},
+				});
+			})
+		);
 	});
 
 	afterAll(async () => {
@@ -70,7 +80,7 @@ describe('The person resolver', () => {
 				{node: expect.objectContaining({name: 'Foo'})},
 			],
 		};
-		const args = {first: 3, offset: 0, orderBy: 'name'};
+		const args = {limit: 3, offset: 0, orderBy: 'name'};
 
 		await expect(personResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
@@ -84,14 +94,39 @@ describe('The person resolver', () => {
 				{node: expect.objectContaining({name: 'Bar'})},
 			],
 		};
-		const args = {first: 3, offset: 0, orderBy: '-name'};
+		const args = {limit: 3, offset: 0, orderBy: '-name'};
+
+		await expect(personResolver.list(args)).resolves
+			.toMatchObject(expectedResponse);
+	});
+
+	test('should response actor list', async () => {
+		const expectedResponse = {
+			edges: [
+				{node: expect.objectContaining({name: 'Bar'})},
+				{node: expect.objectContaining({name: 'Baz'})},
+			],
+		};
+		const args: IArgsList = {type: 'actor', orderBy: 'name'};
+
+		await expect(personResolver.list(args)).resolves
+			.toMatchObject(expectedResponse);
+	});
+
+	test('should response director list', async () => {
+		const expectedResponse = {
+			edges: [
+				{node: expect.objectContaining({name: 'Foo'})},
+			],
+		};
+		const args: IArgsList = {type: 'director'};
 
 		await expect(personResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
 	});
 
 	test('should response person list with next pages', async () => {
-		const args = {first: 1, offset: 0, orderBy: 'name'};
+		const args = {limit: 1, offset: 0, orderBy: 'name'};
 		const response = await personResolver.list(args);
 
 		expect(response.pageInfo.hasNextPage()).toBeTruthy();
@@ -99,7 +134,7 @@ describe('The person resolver', () => {
 	});
 
 	test('should response person list with previous pages', async () => {
-		const args = {first: 1, offset: 2, orderBy: 'name'};
+		const args = {limit: 1, offset: 2, orderBy: 'name'};
 		const response = await personResolver.list(args);
 
 		expect(response.pageInfo.hasNextPage()).toBeFalsy();
@@ -113,11 +148,9 @@ describe('The person resolver', () => {
 			expect.objectContaining({name: 'Baz'}),
 		];
 
-		const args: FindOptions = {
-			include: [],
-		};
+		const args = {};
 
-		await expect(personResolver.list(args)).resolves
+		await expect(personResolver.list(args, true)).resolves
 			.toMatchObject(expectedResponse);
 	});
 });

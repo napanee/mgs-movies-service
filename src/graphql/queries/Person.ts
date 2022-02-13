@@ -1,6 +1,6 @@
 import {GraphQLID, GraphQLInt, GraphQLString} from 'graphql';
 
-import PersonResolver, {IArgsGet, IArgsList} from '../resolvers/Person';
+import PersonResolver, {IArgsGet, IArgsList, PersonType} from '../resolvers/Person';
 import {personConnection, personNode} from '../types';
 
 
@@ -22,13 +22,12 @@ class PersonQuery {
 		};
 	}
 
-	list() {
+	list(type?: PersonType) {
 		return {
 			type: personConnection,
 			args: {
-				first: {
+				limit: {
 					type: GraphQLInt,
-					defaultValue: 10,
 				},
 				offset: {
 					type: GraphQLInt,
@@ -39,7 +38,7 @@ class PersonQuery {
 					defaultValue: 'name',
 				},
 			},
-			resolve: (_: unknown, args: IArgsList) => this.resolver.list(args),
+			resolve: (_: unknown, args: Omit<IArgsList, 'type'>) => this.resolver.list({...args, type}),
 		};
 	}
 }

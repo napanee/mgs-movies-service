@@ -28,6 +28,7 @@ import {sequelizeConnection} from '../connection';
 
 interface MovieAttributes {
 	backdrop: string | null;
+	character: string;
 	id: string;
 	imdb: string;
 	overview: string | null;
@@ -39,8 +40,10 @@ interface MovieAttributes {
 	tmdb: number;
 }
 
-export type MovieInput = Optional<MovieAttributes, 'id'|'tmdb'>;
-export type MovieOutput = Optional<MovieAttributes, 'runtime'|'overview'|'backdrop'|'poster'>;
+type OptionalAttributes = 'backdrop'|'character'|'id'|'overview'|'poster'|'runtime';
+
+export type MovieInput = Optional<MovieAttributes, OptionalAttributes>;
+export type MovieOutput = Optional<MovieAttributes, 'character'>;
 
 const attributes: ModelAttributes = {
 	title: {
@@ -105,6 +108,15 @@ const attributes: ModelAttributes = {
 			},
 		},
 	},
+	character: {
+		type: DataTypes.VIRTUAL,
+		get(this: Movie): string | undefined {
+			return this.filmography?.[0].character;
+		},
+		set(value) {
+			throw new Error(`Do not try to set the \`character\` with ${value}!`);
+		},
+	},
 };
 
 const loadImages = async (movie: Movie) => {
@@ -128,6 +140,7 @@ const loadImages = async (movie: Movie) => {
 
 class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttributes {
 	declare backdrop: string | null;
+	declare character: string;
 	declare id: string;
 	declare imdb: string;
 	declare overview: string | null;
@@ -165,6 +178,9 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 
 	declare readonly genres?: Genre[];
 	declare readonly people?: Person[];
+	declare readonly filmography?: {
+		character?: string;
+	}[];
 
 	declare static associations: {
 		genres: Association<Movie, Genre>;

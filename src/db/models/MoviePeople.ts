@@ -11,8 +11,8 @@ interface MoviePeopleAttributes {
 	department: string;
 	movieId: string;
 	personId: string;
-	character?: string;
-	order?: number;
+	character?: string | null;
+	order?: number | null;
 }
 
 export type MoviePeopleInput = Required<MoviePeopleAttributes>;
@@ -57,7 +57,10 @@ class MoviePeople extends Model<MoviePeopleAttributes, MoviePeopleInput> impleme
 
 MoviePeople.init(attributes, {sequelize: sequelizeConnection});
 
-Movie.belongsToMany(Person, {through: MoviePeople, foreignKey: 'movieId', otherKey: 'personId'});
-Person.belongsToMany(Movie, {through: MoviePeople, foreignKey: 'personId', otherKey: 'movieId'});
+Movie.belongsToMany(Person, {through: MoviePeople, as: 'people', foreignKey: 'movieId', otherKey: 'personId'});
+Person.belongsToMany(Movie, {through: MoviePeople, as: 'movies', foreignKey: 'personId', otherKey: 'movieId'});
+
+Person.hasMany(MoviePeople, {as: 'movieData'});
+Movie.hasMany(MoviePeople, {as: 'filmography'});
 
 export default MoviePeople;

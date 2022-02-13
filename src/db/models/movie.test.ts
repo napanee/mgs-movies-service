@@ -4,6 +4,8 @@ import {Sequelize} from 'sequelize';
 import {saveImage} from '@utils/index';
 
 import Movie from './Movie';
+import MoviePeople from './MoviePeople';
+import Person from './Person';
 
 import {sequelizeConnection} from '../connection';
 
@@ -110,5 +112,49 @@ describe('The movie model', () => {
 		expect(mockedSaveImage).toBeCalledTimes(2);
 		expect(movie.backdrop).toBe('mo/20222/new-backdrop');
 		expect(movie.poster).toBe('mo/20222/new-poster');
+	});
+
+	test('should get character name from person', async () => {
+		const movie = await Movie.create({
+			...movieDataDefault,
+			title: 'FooWithCharacter',
+		});
+
+		const person = await Person.create({
+			imdb: 'tt1',
+			name: 'Foo',
+			tmdb: 1,
+			image: null,
+			biography: null,
+			birthday: null,
+			deathday: null,
+			placeOfBirth: null,
+		});
+
+		await person.addMovie(movie, {through: {character: 'Foo', creditId: '1', department: 'actor'}});
+
+		const result = await Movie.findOne({
+			where: {title: 'FooWithCharacter'},
+			include: {
+				model: MoviePeople,
+				as: 'filmography',
+				where: {
+					personId: person.id,
+				},
+			},
+		});
+
+		expect(result?.character).toBe('Foo');
+	});
+
+	test('should throw error, if character would set directly', async () => {
+		const error = 'Do not try to set the `character` with Foo!';
+		const movieCreate = Movie.create({
+			...movieDataDefault,
+			title: 'FooWithCharacter',
+			character: 'Foo',
+		});
+
+		await expect(movieCreate).rejects.toThrow(error);
 	});
 });

@@ -1,4 +1,3 @@
-import {FindOptions} from 'sequelize';
 import supertest from 'supertest';
 
 import {MovieOutput} from '@models/Movie';
@@ -6,7 +5,7 @@ import {PersonOutput} from '@models/Person';
 import app from '@src/app';
 
 import MovieResolver from '../resolvers/Movie';
-import PersonResolver from '../resolvers/Person';
+import PersonResolver, {IArgsList, IListResponse} from '../resolvers/Person';
 
 
 const movieList = [...Array(10)].map((_, index): MovieOutput => ({
@@ -16,6 +15,10 @@ const movieList = [...Array(10)].map((_, index): MovieOutput => ({
 	title: `Foo${index}`,
 	titleOriginal: `Foo${index}`,
 	tmdb: index,
+	backdrop: null,
+	overview: null,
+	poster: null,
+	runtime: null,
 }));
 
 const peopleList = [...Array(10)].map((_, index): PersonOutput => ({
@@ -71,7 +74,11 @@ describe('The person query', () => {
 	});
 
 	test('should response people list', async () => {
-		const mockFn = jest.spyOn(PersonResolver.prototype, 'list').mockResolvedValue({
+		type ListSpy = (args: IArgsList) => Promise<IListResponse>;
+
+		const mockFn = jest.spyOn(PersonResolver.prototype, 'list') as unknown as jest.MockedFunction<ListSpy>;
+
+		mockFn.mockResolvedValue({
 			edges: peopleList.map((node) => ({node})),
 			pageInfo: {
 				hasNextPage: () => true,
@@ -103,7 +110,7 @@ describe('The person query', () => {
 	});
 
 	test('should response movie with actors', async () => {
-		type ListSpy = (args: FindOptions) => Promise<PersonOutput[]>;
+		type ListSpy = (args: IArgsList, plain: boolean) => Promise<PersonOutput[]>;
 
 		const movie = movieList[0];
 		const mockFnMovieResolver = jest.spyOn(MovieResolver.prototype, 'get').mockResolvedValue(movie);
@@ -137,7 +144,7 @@ describe('The person query', () => {
 	});
 
 	test('should response movie with directors', async () => {
-		type ListSpy = (args: FindOptions) => Promise<PersonOutput[]>;
+		type ListSpy = (args: IArgsList, plain: boolean) => Promise<PersonOutput[]>;
 
 		const movie = movieList[0];
 		const mockFnMovieResolver = jest.spyOn(MovieResolver.prototype, 'get').mockResolvedValue(movie);

@@ -1,4 +1,4 @@
-import {FindOptions, Sequelize} from 'sequelize';
+import {Sequelize} from 'sequelize';
 
 import {sequelizeConnection} from '@db/connection';
 import {Movie as ModelMovie, Person as ModelPerson} from '@models/index';
@@ -83,21 +83,6 @@ describe('The movie resolver', () => {
 	});
 
 	describe('list function', () => {
-		test('should response plain movie list', async () => {
-			const expectedResponse = [
-				expect.objectContaining({title: 'Foo'}),
-				expect.objectContaining({title: 'Bar'}),
-				expect.objectContaining({title: 'Baz'}),
-			];
-
-			const args: FindOptions = {
-				include: [],
-			};
-
-			await expect(movieResolver.list(args)).resolves
-				.toMatchObject(expectedResponse);
-		});
-
 		test('should response movie list', async () => {
 			const expectedResponse = {
 				edges: [
@@ -106,7 +91,7 @@ describe('The movie resolver', () => {
 					{node: expect.objectContaining({title: 'Foo'})},
 				],
 			};
-			const args = {first: 3, offset: 0, orderBy: 'title'};
+			const args = {limit: 3, offset: 0, orderBy: 'title'};
 
 			await expect(movieResolver.list(args)).resolves
 				.toMatchObject(expectedResponse);
@@ -120,14 +105,14 @@ describe('The movie resolver', () => {
 					{node: expect.objectContaining({title: 'Bar'})},
 				],
 			};
-			const args = {first: 3, offset: 0, orderBy: '-title'};
+			const args = {limit: 3, offset: 0, orderBy: '-title'};
 
 			await expect(movieResolver.list(args)).resolves
 				.toMatchObject(expectedResponse);
 		});
 
 		test('should response movie list with next pages', async () => {
-			const args = {first: 1, offset: 0, orderBy: 'title'};
+			const args = {limit: 1, offset: 0, orderBy: 'title'};
 			const result = await movieResolver.list(args);
 
 			expect(result.pageInfo.hasNextPage()).toBeTruthy();
@@ -135,11 +120,24 @@ describe('The movie resolver', () => {
 		});
 
 		test('should response movie list with previous pages', async () => {
-			const args = {first: 1, offset: 2, orderBy: 'title'};
+			const args = {limit: 1, offset: 2, orderBy: 'title'};
 			const result = await movieResolver.list(args);
 
 			expect(result.pageInfo.hasNextPage()).toBeFalsy();
 			expect(result.pageInfo.hasPreviousPage()).toBeTruthy();
+		});
+
+		test('should response plain movie list', async () => {
+			const expectedResponse = [
+				expect.objectContaining({title: 'Foo'}),
+				expect.objectContaining({title: 'Bar'}),
+				expect.objectContaining({title: 'Baz'}),
+			];
+
+			const args = {};
+
+			await expect(movieResolver.list(args, true)).resolves
+				.toMatchObject(expectedResponse);
 		});
 	});
 

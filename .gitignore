@@ -1,6 +1,5 @@
 .env
 .vscode
-localhost.env
 build
 node_modules
 /web

@@ -1,7 +1,6 @@
 import {FindOptions, Order, WhereOptions} from 'sequelize';
 
 import Genre, {GenreInput, GenreOutput} from '@models/Genre';
-import {instanceOfFindOptions} from '@utils/index';
 
 
 interface IOptions {
@@ -13,13 +12,11 @@ export interface IArgsGet {
 	name?: string;
 }
 
-export interface IArgsList {
-	first: number;
-	offset: number;
-	orderBy: string;
+export interface IArgsList extends FindOptions<GenreInput> {
+	orderBy?: string;
 }
 
-interface IListResponse {
+export interface IListResponse {
 	edges: {
 		node: GenreOutput;
 	}[];
@@ -57,29 +54,31 @@ class GenreController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: FindOptions): Promise<GenreOutput[]>;
 	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList | FindOptions): Promise<IListResponse | GenreOutput[]> {
-		if (instanceOfFindOptions(args)) {
-			return this.model.findAll(args);
+	async list(args: IArgsList, plain?: boolean): Promise<GenreOutput[]>;
+	async list({orderBy, ...options}: IArgsList, plain = false): Promise<IListResponse | GenreOutput[]> {
+		if (orderBy) {
+			const orderDirection = orderBy.startsWith('-') ? 'DESC' : 'ASC';
+			const order: Order = [[orderBy.replace('-', ''), orderDirection]];
+
+			options.order = order;
 		}
 
-		const limit = args.first;
-		const offset = args.offset;
-		const orderDirection = args.orderBy.startsWith('-') ? 'DESC' : 'ASC';
-		const order: Order = [[args.orderBy.replace('-', ''), orderDirection]];
-		const genres = await this.model.findAll({limit, offset, order});
-		const totalCount = await this.model.count();
+		const {rows, count} = await this.model.findAndCountAll(options);
+
+		if (plain) {
+			return rows;
+		}
 
 		return {
-			edges: genres.map((node) => ({
+			edges: rows.map((node) => ({
 				node,
 			})),
 			pageInfo: {
-				hasNextPage: () => totalCount > limit + offset,
-				hasPreviousPage: () => offset > 0,
+				hasNextPage: () => count > (options.offset || 0) + rows.length,
+				hasPreviousPage: () => !!options.offset && options.offset > 0,
 			},
-			totalCount,
+			totalCount: count,
 		};
 	}
 }

@@ -27,7 +27,9 @@ interface GenreAttributes {
 	tmdb: number;
 }
 
-export type GenreInput = Optional<GenreAttributes, 'id'>;
+type OptionalAttributes = 'id';
+
+export type GenreInput = Optional<GenreAttributes, OptionalAttributes>;
 export type GenreOutput = Required<GenreAttributes>;
 
 const attributes: ModelAttributes = {

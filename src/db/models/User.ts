@@ -16,7 +16,9 @@ interface UserAttributes {
 	updatedAt?: Date;
 }
 
-export type UserInput = Optional<UserAttributes, 'id'|'isActive'|'token'>;
+type OptionalAttributes = 'id'|'isActive'|'token';
+
+export type UserInput = Optional<UserAttributes, OptionalAttributes>;
 export type UserOutput = Required<UserAttributes>;
 
 const attributes: ModelAttributes = {

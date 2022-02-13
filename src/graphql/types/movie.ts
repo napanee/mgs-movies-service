@@ -7,17 +7,18 @@ import {
 	GraphQLObjectType,
 	GraphQLString,
 } from 'graphql';
-import {FindOptions} from 'sequelize';
 
 import Movie, {MovieOutput} from '@models/Movie';
 import MoviePeople from '@models/MoviePeople';
 
+import {actorNode} from './actor';
 import {pageInfo} from './base';
+import {directorNode} from './director';
 import {errorNode} from './error';
 import {genreNode} from './genre';
-import {personNode} from './person';
 
-import {GenreResolver, PersonResolver} from '../resolvers';
+import GenreResolver, {IArgsList as IArgsListGenre} from '../resolvers/Genre';
+import PersonResolver, {IArgsList as IArgsListPerson} from '../resolvers/Person';
 
 
 const genreResolver = new GenreResolver();
@@ -74,37 +75,34 @@ export const movieNode = new GraphQLObjectType({
 		poster: {
 			type: GraphQLString,
 		},
-		character: {
-			type: GraphQLString,
-		},
 		cast: {
-			type: new GraphQLList(personNode),
+			type: new GraphQLList(actorNode),
 			resolve: (parent: MovieOutput) => {
-				const args: FindOptions = {
+				const args: IArgsListPerson = {
 					include: {
-						model: Movie,
-						where: {id: parent.id},
-						through: {
-							attributes: ['character'],
-							where: {
-								department: 'actor',
-							},
+						model: MoviePeople,
+						as: 'movieData',
+						attributes: ['character'],
+						where: {
+							department: 'actor',
+							movieId: parent.id,
 						},
 					},
 					order: [
-						[Movie, MoviePeople, 'order', 'asc' ],
+						['movieData', 'order', 'asc' ],
 					],
 				};
 
-				return personResolver.list(args);
+				return personResolver.list(args, true);
 			},
 		},
 		directors: {
-			type: new GraphQLList(personNode),
+			type: new GraphQLList(directorNode),
 			resolve: (parent: MovieOutput) => {
-				const args: FindOptions = {
+				const args: IArgsListPerson = {
 					include: {
 						model: Movie,
+						as: 'movies',
 						where: {id: parent.id},
 						through: {
 							attributes: ['character'],
@@ -115,20 +113,20 @@ export const movieNode = new GraphQLObjectType({
 					},
 				};
 
-				return personResolver.list(args);
+				return personResolver.list(args, true);
 			},
 		},
 		genres: {
 			type: new GraphQLList(genreNode),
 			resolve: (parent: MovieOutput) => {
-				const args: FindOptions = {
+				const args: IArgsListGenre = {
 					include: {
 						model: Movie,
 						where: {id: parent.id},
 					},
 				};
 
-				return genreResolver.list(args);
+				return genreResolver.list(args, true);
 			},
 		},
 	}),

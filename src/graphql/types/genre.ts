@@ -5,14 +5,13 @@ import {
 	GraphQLObjectType,
 	GraphQLString,
 } from 'graphql';
-import {FindOptions} from 'sequelize';
 
 import Genre, {GenreOutput} from '@models/Genre';
 
 import {pageInfo} from './base';
 import {movieNode} from './movie';
 
-import {MovieResolver} from '../resolvers';
+import MovieResolver, {IArgsList as IArgsListMovie} from '../resolvers/Movie';
 
 
 const movieResolver = new MovieResolver();
@@ -56,14 +55,14 @@ export const genreNode: GraphQLObjectType = new GraphQLObjectType({
 		movies: {
 			type: new GraphQLList(movieNode),
 			resolve: (parent: GenreOutput) => {
-				const args: FindOptions = {
+				const args: IArgsListMovie = {
 					include: {
 						model: Genre,
 						where: {id: parent.id},
 					},
 				};
 
-				return movieResolver.list(args);
+				return movieResolver.list(args, true);
 			},
 		},
 	}),

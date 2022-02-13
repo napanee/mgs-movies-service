@@ -1,11 +1,10 @@
-import {FindOptions} from 'sequelize';
 import supertest from 'supertest';
 
 import {GenreOutput} from '@models/Genre';
 import {MovieOutput} from '@models/Movie';
 import app from '@src/app';
 
-import GenreResolver from '../resolvers/Genre';
+import GenreResolver, {IArgsList, IListResponse} from '../resolvers/Genre';
 import MovieResolver from '../resolvers/Movie';
 
 
@@ -16,6 +15,10 @@ const movieList = [...Array(10)].map((_, index): MovieOutput => ({
 	title: `Foo${index}`,
 	titleOriginal: `Foo${index}`,
 	tmdb: index,
+	backdrop: null,
+	overview: null,
+	poster: null,
+	runtime: null,
 }));
 
 const genreList = [...Array(10)].map((_, index): GenreOutput => ({
@@ -65,7 +68,11 @@ describe('The genre query', () => {
 	});
 
 	test('should response genre list', async () => {
-		const mockFn = jest.spyOn(GenreResolver.prototype, 'list').mockResolvedValue({
+		type ListSpy = (args: IArgsList) => Promise<IListResponse>;
+
+		const mockFn = jest.spyOn(GenreResolver.prototype, 'list') as unknown as jest.MockedFunction<ListSpy>;
+
+		mockFn.mockResolvedValue({
 			edges: genreList.map((node) => ({node})),
 			pageInfo: {
 				hasNextPage: () => true,
@@ -97,7 +104,7 @@ describe('The genre query', () => {
 	});
 
 	test('should response movie with genres', async () => {
-		type ListSpy = (args: FindOptions) => Promise<GenreOutput[]>;
+		type ListSpy = (args: IArgsList, plain: boolean) => Promise<GenreOutput[]>;
 
 		const movie = movieList[0];
 		const mockFnMovieResolver = jest.spyOn(MovieResolver.prototype, 'get').mockResolvedValue(movie);

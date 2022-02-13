@@ -1,4 +1,3 @@
-import {FindOptions} from 'sequelize';
 import supertest from 'supertest';
 
 import {GenreOutput} from '@models/Genre';
@@ -7,7 +6,7 @@ import {PersonOutput} from '@models/Person';
 import app from '@src/app';
 
 import GenreResolver from '../resolvers/Genre';
-import MovieResolver from '../resolvers/Movie';
+import MovieResolver, {IArgsList, IListResponse} from '../resolvers/Movie';
 import PersonResolver from '../resolvers/Person';
 
 
@@ -36,6 +35,10 @@ const movieList = [...Array(10)].map((_, index): MovieOutput => ({
 	title: `Foo${index}`,
 	titleOriginal: `Foo${index}`,
 	tmdb: index,
+	backdrop: null,
+	overview: null,
+	poster: null,
+	runtime: null,
 }));
 
 describe('The movie query', () => {
@@ -78,7 +81,11 @@ describe('The movie query', () => {
 	});
 
 	test('should response movie list', async () => {
-		const mockFn = jest.spyOn(MovieResolver.prototype, 'list').mockResolvedValue({
+		type ListSpy = (args: IArgsList) => Promise<IListResponse>;
+
+		const mockFn = jest.spyOn(MovieResolver.prototype, 'list') as unknown as jest.MockedFunction<ListSpy>;
+
+		mockFn.mockResolvedValue({
 			edges: movieList.map((node) => ({node})),
 			pageInfo: {
 				hasNextPage: () => true,
@@ -110,7 +117,7 @@ describe('The movie query', () => {
 	});
 
 	test('should response genre with movies', async () => {
-		type ListSpy = (args: FindOptions) => Promise<MovieOutput[]>;
+		type ListSpy = (args: IArgsList, plain: boolean) => Promise<MovieOutput[]>;
 
 		const genre = genreList[0];
 		// eslint-disable-next-line max-len
@@ -143,26 +150,71 @@ describe('The movie query', () => {
 		mockFnMovieResolver.mockRestore();
 	});
 
-	test('should response person with movies', async () => {
-		type ListSpy = (args: FindOptions) => Promise<MovieOutput[]>;
+	test('should response actors with movies', async () => {
+		type ListSpy = (args: IArgsList, plain: boolean) => Promise<MovieOutput[]>;
 
 		const person = peopleList[0];
 		// eslint-disable-next-line max-len
 		const mockFnMovieResolver = jest.spyOn(MovieResolver.prototype, 'list') as unknown as jest.MockedFunction<ListSpy>;
 		const mockFnPersonResolver = jest.spyOn(PersonResolver.prototype, 'get').mockResolvedValue(person);
 
-		mockFnMovieResolver.mockResolvedValue(movieList);
+		mockFnMovieResolver.mockResolvedValue(movieList.map((movie) => ({
+			...movie,
+			character: 'character',
+		})));
 		const expectedResponse = {
 			person: {
 				name: person.name,
-				movies: movieList.map((movie) => ({title: movie.title})),
+				filmography: movieList.map((movie) => ({
+					character: 'character',
+					title: movie.title,
+				})),
 			},
 		};
 		const query = `{
 			person(id: 1) {
 				name
-				movies {
-					title
+				filmography {
+					... on filmographyActorNode {
+						character
+						title
+					}
+				}
+			}
+		}`;
+
+		const response = await request.post('/graphql').send({query});
+
+		expect(MovieResolver.prototype.list).toHaveBeenCalledTimes(1);
+		expect(PersonResolver.prototype.get).toHaveBeenCalledTimes(1);
+		expect(response.body.data).toEqual(expectedResponse);
+
+		mockFnPersonResolver.mockRestore();
+		mockFnMovieResolver.mockRestore();
+	});
+
+	test('should response directors with movies', async () => {
+		type ListSpy = (args: IArgsList, plain: boolean) => Promise<MovieOutput[]>;
+
+		const person = peopleList[0];
+		// eslint-disable-next-line max-len
+		const mockFnMovieResolver = jest.spyOn(MovieResolver.prototype, 'list') as unknown as jest.MockedFunction<ListSpy>;
+		const mockFnPersonResolver = jest.spyOn(PersonResolver.prototype, 'get').mockResolvedValue(person);
+
+		mockFnMovieResolver.mockResolvedValue(movieList.map((movie) => movie));
+		const expectedResponse = {
+			person: {
+				name: person.name,
+				filmography: movieList.map((movie) => ({title: movie.title})),
+			},
+		};
+		const query = `{
+			person(id: 1) {
+				name
+				filmography {
+					... on filmographyDirectorNode {
+						title
+					}
 				}
 			}
 		}`;

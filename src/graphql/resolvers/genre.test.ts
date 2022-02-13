@@ -1,4 +1,4 @@
-import {FindOptions, Sequelize} from 'sequelize';
+import {Sequelize} from 'sequelize';
 
 import {sequelizeConnection} from '@db/connection';
 import {Genre as ModelGenre, Movie as ModelMovie} from '@models/index';
@@ -69,7 +69,7 @@ describe('The genre resolver', () => {
 				{node: expect.objectContaining({name: 'Foo'})},
 			],
 		};
-		const args = {first: 3, offset: 0, orderBy: 'name'};
+		const args = {limit: 3, offset: 0, orderBy: 'name'};
 
 		await expect(genreResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
@@ -83,14 +83,14 @@ describe('The genre resolver', () => {
 				{node: expect.objectContaining({name: 'Bar'})},
 			],
 		};
-		const args = {first: 3, offset: 0, orderBy: '-name'};
+		const args = {limit: 3, offset: 0, orderBy: '-name'};
 
 		await expect(genreResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
 	});
 
 	test('should response genre list with next pages', async () => {
-		const args = {first: 1, offset: 0, orderBy: 'name'};
+		const args = {limit: 1, offset: 0, orderBy: 'name'};
 		const response = await genreResolver.list(args);
 
 		expect(response.pageInfo.hasNextPage()).toBeTruthy();
@@ -98,7 +98,7 @@ describe('The genre resolver', () => {
 	});
 
 	test('should response genre list with previous pages', async () => {
-		const args = {first: 1, offset: 2, orderBy: 'name'};
+		const args = {limit: 1, offset: 2, orderBy: 'name'};
 		const response = await genreResolver.list(args);
 
 		expect(response.pageInfo.hasNextPage()).toBeFalsy();
@@ -112,11 +112,9 @@ describe('The genre resolver', () => {
 			expect.objectContaining({name: 'Baz'}),
 		];
 
-		const args: FindOptions = {
-			include: [],
-		};
+		const args = {};
 
-		await expect(genreResolver.list(args)).resolves
+		await expect(genreResolver.list(args, true)).resolves
 			.toMatchObject(expectedResponse);
 	});
 });
