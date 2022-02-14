@@ -92,6 +92,7 @@ module.exports = {
 					{'alias': '@src', 'matcher': '^src'},
 					{'alias': '@pages', 'matcher': '^client\/js\/(pages)'}, // client/js/pages/* -> @pages/*
 					{'alias': '@components', 'matcher': '^client\/js\/(components)'}, // client/js/components/* -> @components/*
+					{'alias': '@hooks', 'matcher': '^client\/js\/(hooks)'}, // client/js/hooks/* -> @hooks/*
 				]
 			}
 		],
