@@ -1,5 +1,6 @@
-import {FindOptions, Includeable, Order, WhereOptions} from 'sequelize';
+import {FindAndCountOptions, Includeable, Order, WhereOptions} from 'sequelize';
 
+import Movie from '@models/Movie';
 import MoviePeople from '@models/MoviePeople';
 import Person, {PersonInput, PersonOutput} from '@models/Person';
 
@@ -15,7 +16,7 @@ export interface IArgsGet {
 
 export type PersonType = 'actor' | 'director';
 
-export interface IArgsList extends FindOptions<PersonInput> {
+export interface IArgsList extends FindAndCountOptions<PersonInput> {
 	orderBy?: string;
 	type?: PersonType;
 }
@@ -63,12 +64,16 @@ class PersonController {
 	async list({orderBy, type, ...options}: IArgsList, plain = false): Promise<IListResponse | PersonOutput[]> {
 		if (type) {
 			const include: Includeable = {
-				model: MoviePeople,
-				as: 'movieData',
-				where: {department: type},
+				attributes: [],
+				model: Movie,
+				as: 'movies',
+				through: {
+					where: {department: type},
+				},
 			};
 
 			options.include = include;
+			options.distinct = true;
 		}
 
 		if (orderBy) {
