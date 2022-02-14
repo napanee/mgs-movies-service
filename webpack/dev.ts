@@ -1,6 +1,8 @@
+import {join} from 'path';
+
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
-import {defaultPort, devServerHost} from './utils/env';
+import {defaultPort, devServerHost, rootDir} from './utils/env';
 
 import {Configuration} from '../webpack.config.babel';
 
@@ -19,6 +21,12 @@ const config: Configuration = {
 		host: devServerHost,
 		hot: true,
 		port: defaultPort,
+		static: [
+			{
+				directory: join(rootDir, 'web', 'media'),
+				publicPath: '/media',
+			},
+		],
 	},
 	output: {
 		publicPath: `http://${devServerHost}:${defaultPort}/`,
