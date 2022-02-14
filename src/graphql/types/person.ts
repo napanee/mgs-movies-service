@@ -59,7 +59,7 @@ export const personNode: GraphQLObjectType = new GraphQLObjectType({
 		placeOfBirth: {
 			type: GraphQLString,
 		},
-		images: {
+		imageUrl: {
 			type: GraphQLString,
 		},
 		filmography: {

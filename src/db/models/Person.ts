@@ -18,6 +18,7 @@ import {
 	Optional,
 } from 'sequelize';
 
+import {MEDIA_URL} from '@src/config';
 import {saveImage} from '@utils/index';
 
 import Movie from './Movie';
@@ -92,6 +93,15 @@ const attributes: ModelAttributes = {
 		},
 		set(value) {
 			throw new Error(`Do not try to set the \`character\` with ${value}!`);
+		},
+	},
+	imageUrl: {
+		type: DataTypes.VIRTUAL,
+		get(this: Person): string | null {
+			return this.image ? `${MEDIA_URL}${this.image}` : null;
+		},
+		set(value) {
+			throw new Error(`Do not try to set the \`imageUrl\` with ${value}!`);
 		},
 	},
 };

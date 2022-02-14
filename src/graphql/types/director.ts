@@ -22,7 +22,7 @@ export const directorNode: GraphQLObjectType = new GraphQLObjectType({
 		placeOfBirth: {
 			type: GraphQLString,
 		},
-		image: {
+		imageUrl: {
 			type: GraphQLString,
 		},
 	}),
