@@ -11,7 +11,7 @@ declare module 'styled-components' {
 
 declare module '@mui/material/styles/createPalette' {
 	export interface PaletteOptions {
-		type: {
+		type?: {
 			[key in PaletteType]: {
 				dark: string;
 				light: string;
