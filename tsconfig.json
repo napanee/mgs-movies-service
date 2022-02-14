@@ -25,6 +25,7 @@
 			"@utils/*": ["src/utils/*", "client/js/utils/*"],
 			"@pages/*": ["client/js/pages/*"],
 			"@components/*": ["client/js/components/*"],
+			"@hooks/*": ["client/js/hooks/*"],
 		},
 		"typeRoots": ["./node_modules/@types", "./@types"],
 		"allowSyntheticDefaultImports": true,

@@ -26,6 +26,7 @@ export default {
 	resolve: {
 		alias: {
 			'@components': join(rootDir, 'client', 'js', 'components'),
+			'@hooks': join(rootDir, 'client', 'js', 'hooks'),
 			'@utils': join(rootDir, 'client', 'js', 'utils'),
 			'@pages': join(rootDir, 'client', 'js', 'pages'),
 		},
