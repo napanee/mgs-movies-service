@@ -72,6 +72,7 @@ rules:
     - never
     - ignore:
       - after-comment
+      - after-declaration
   declaration-no-important: true
   declaration-property-unit-allowed-list:
     border:

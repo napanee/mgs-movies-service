@@ -1,17 +1,30 @@
-import {PaletteOptions, Theme} from '@mui/material';
-
-import {PaletteType} from '../client/js/theme';
+import {PaletteType} from '~/theme';
 
 
-declare module 'styled-components' {
-	export interface DefaultTheme extends Theme {
-		palette: PaletteOptions;
+declare module '@mui/material/styles' {
+	interface Theme {
+		drawer: {
+			width: number;
+		};
 	}
-}
 
-declare module '@mui/material/styles/createPalette' {
-	export interface PaletteOptions {
-		type?: {
+	interface ThemeOptions {
+		drawer: {
+			width: number;
+		};
+	}
+
+	interface Palette {
+		type: {
+			[key in PaletteType]: {
+				dark: string;
+				light: string;
+			}
+		};
+	}
+
+	interface PaletteOptions {
+		type: {
 			[key in PaletteType]: {
 				dark: string;
 				light: string;

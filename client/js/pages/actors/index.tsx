@@ -3,9 +3,8 @@ import {Grid as MuiGrid} from '@mui/material';
 import {ChangeEvent, Fragment} from 'react';
 
 import Item from '@components/actors/item';
+import {Pagination} from '@generic/index';
 import {useLocationQuery} from '@hooks/useLocationQuery';
-
-import Pagination from '../generic/pagination/Pagination';
 
 
 type QueryData = {

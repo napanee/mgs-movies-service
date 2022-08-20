@@ -1,11 +1,9 @@
-import styled, {DefaultTheme} from 'styled-components';
-
-import {drawerWidth} from '@utils/constants';
+import {Theme, css, styled} from '@mui/material/styles';
 
 
 type MainProps = {
 	open: boolean;
-	theme: DefaultTheme;
+	theme: Theme;
 };
 
 const marginTransition = ({open, theme}: MainProps) => {
@@ -17,17 +15,23 @@ const marginTransition = ({open, theme}: MainProps) => {
 		duration = theme.transitions.duration.enteringScreen;
 	}
 
-	const transition = theme.transitions.create('margin', {easing, duration});
+	const transition = theme.transitions
+		.create('margin', {easing, duration});
 
-	return `transition: ${transition};`;
+	return css`
+		transition: ${transition};
+	`;
 };
 
-const Main = styled.main`
+const Main = styled('main')<{open: boolean}>`
 	${marginTransition}
 	flex: 1 1 auto;
-	margin-left: -${drawerWidth}px;
+	margin-left: -${({theme}) => theme.drawer.width}px;
 	padding: ${({theme}) => theme.spacing(3)};
-	${({open}) => open && 'margin-left: 0'};
+
+	${({open}) => open && css`
+		margin-left: 0
+	`};
 `;
 
 export default Main;

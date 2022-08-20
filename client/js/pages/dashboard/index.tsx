@@ -7,19 +7,17 @@ import {
 	SvgIconComponent,
 } from '@mui/icons-material';
 import {
-	Box as MuiBox,
 	Button as MuiButton,
-	Card as MuiCard,
 	CardContent as MuiCardContent,
-	Divider as MuiDivider,
 	Grid as MuiGrid,
 	Typography as MuiTypography,
 } from '@mui/material';
 import {Fragment} from 'react';
 import {Link} from 'react-router-dom';
-import styled, {DefaultTheme} from 'styled-components';
 
-import {PaletteType} from '../theme';
+import {PaletteType} from '~/theme';
+
+import * as S from './styles';
 
 
 type QueryData = {
@@ -60,37 +58,6 @@ const GET_COUNTS = gql`
 		movies {
 			totalCount
 		}
-	}
-`;
-
-const Divider = styled(MuiDivider)`
-	margin: ${({theme}) => theme.spacing(2, 0)};
-	height: 1px;
-	background-image: linear-gradient(to right, rgba(52, 71, 103, 0), rgba(52, 71, 103, 0.4), rgba(52, 71, 103, 0));
-	border: 0;
-`;
-
-const Card = styled(MuiCard)`
-	overflow: visible;
-	height: 100%;
-`;
-
-const Box = styled(MuiBox)`
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	${({isInner}: {isInner?: boolean}) => isInner && 'flex-direction: column; align-items: flex-end;'}
-`;
-
-const BoxIcon = styled(MuiBox)`
-	transform: translateY(-50%);
-	padding: ${({theme}) => theme.spacing(1.5)};
-	background: ${({theme, type}: {theme: DefaultTheme; type: PaletteType}) =>
-		`linear-gradient(to bottom right, ${theme.palette.type[type].dark}, ${theme.palette.type[type].light})`};
-	border-radius: ${({theme}) => `${theme.shape.borderRadius}px`};
-
-	svg {
-		display: block;
 	}
 `;
 
@@ -138,19 +105,19 @@ const Dashboard = () => {
 				{items.map(({label, Icon, routeList, routeAdd, type, countData}) => {
 					return (
 						<MuiGrid key={type} item xs={3}>
-							<Card>
+							<S.Card>
 								<MuiCardContent>
-									<Box>
-										<BoxIcon type={type}><Icon /></BoxIcon>
-										<Box isInner={true}>
+									<S.Box>
+										<S.BoxIcon type={type}><Icon /></S.BoxIcon>
+										<S.Box isInner={true}>
 											<MuiTypography gutterBottom variant="button">{label}</MuiTypography>
 											<MuiTypography variant="h4">
 												{!isLoading && data ? countData(data) : 0}
 											</MuiTypography>
-										</Box>
-									</Box>
-									<Divider />
-									<Box>
+										</S.Box>
+									</S.Box>
+									<S.Divider />
+									<S.Box>
 										{routeList && (
 											<MuiButton component={Link} to={routeList} variant="outlined" size="small">
 												List
@@ -161,9 +128,9 @@ const Dashboard = () => {
 												Add
 											</MuiButton>
 										)}
-									</Box>
+									</S.Box>
 								</MuiCardContent>
-							</Card>
+							</S.Card>
 						</MuiGrid>
 					);
 				})}

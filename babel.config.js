@@ -9,11 +9,6 @@ module.exports = {
 	],
 	'plugins': [
 		[
-			'babel-plugin-styled-components', {
-				'ssr': false,
-			},
-		],
-		[
 			'@babel/plugin-transform-typescript', {
 				allowDeclareFields: true,
 			},

@@ -1,7 +1,6 @@
 import {FindAndCountOptions, Includeable, Order, WhereOptions} from 'sequelize';
 
 import Movie from '@models/Movie';
-import MoviePeople from '@models/MoviePeople';
 import Person, {PersonInput, PersonOutput} from '@models/Person';
 
 

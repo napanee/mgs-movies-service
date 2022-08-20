@@ -3,7 +3,7 @@ import {Options, Sequelize} from 'sequelize';
 import dbConfig from './config';
 
 
-const ENV = process.env.NODE_ENV;
+const ENV = process.env.NODE_ENV || 'development';
 const {database, dialect, host, password, username} = dbConfig[ENV];
 
 // eslint-disable-next-line no-console
