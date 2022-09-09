@@ -12,7 +12,6 @@ interface MovieGenresAttributes {
 }
 
 export type MovieGenresInput = Required<MovieGenresAttributes>;
-export type MovieGenresOutput = Required<MovieGenresAttributes>;
 
 const attributes: ModelAttributes = {
 	movieId: {

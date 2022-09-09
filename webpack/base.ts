@@ -17,6 +17,7 @@ export default {
 		rules: [
 			rules.typescriptRule,
 			rules.htmlRule,
+			rules.graphQLRule,
 		],
 	},
 	plugins: [

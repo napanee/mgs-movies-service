@@ -146,15 +146,4 @@ describe('The movie model', () => {
 
 		expect(result?.character).toBe('Foo');
 	});
-
-	test('should throw error, if character would set directly', async () => {
-		const error = 'Do not try to set the `character` with Foo!';
-		const movieCreate = Movie.create({
-			...movieDataDefault,
-			title: 'FooWithCharacter',
-			character: 'Foo',
-		});
-
-		await expect(movieCreate).rejects.toThrow(error);
-	});
 });

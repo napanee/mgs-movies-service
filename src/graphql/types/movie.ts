@@ -1,15 +1,16 @@
 import {
 	GraphQLBoolean,
-	GraphQLID,
 	GraphQLInputObjectType,
 	GraphQLInt,
 	GraphQLList,
+	GraphQLNonNull,
 	GraphQLObjectType,
 	GraphQLString,
 } from 'graphql';
+import {FindAndCountOptions, WhereOptions} from 'sequelize/types';
 
-import Movie, {MovieOutput} from '@models/Movie';
-import MoviePeople from '@models/MoviePeople';
+import Movie, {MovieInput} from '@models/Movie';
+import MoviePeople, {MoviePeopleInput} from '@models/MoviePeople';
 
 import {actorNode} from './actor';
 import {pageInfo} from './base';
@@ -17,54 +18,55 @@ import {directorNode} from './director';
 import {errorNode} from './error';
 import {genreNode} from './genre';
 
-import GenreResolver, {IArgsList as IArgsListGenre} from '../resolvers/Genre';
-import PersonResolver, {IArgsList as IArgsListPerson} from '../resolvers/Person';
+import GenreResolver from '../resolvers/Genre';
+import PersonResolver from '../resolvers/Person';
 
 
 const genreResolver = new GenreResolver();
 const personResolver = new PersonResolver();
 
-export const movieConnection = new GraphQLObjectType({
+// eslint-disable-next-line max-len
+export const movieConnection: GraphQLObjectType = new GraphQLObjectType({
 	name: 'movieConnection',
 	fields: () => ({
 		edges: {
-			type: new GraphQLList(movieEdge),
+			type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(movieEdge))),
 		},
 		pageInfo: {
-			type: pageInfo,
+			type: new GraphQLNonNull(pageInfo),
 		},
 		totalCount: {
-			type: GraphQLInt,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 	}),
 });
 
-export const movieEdge = new GraphQLObjectType({
+export const movieEdge: GraphQLObjectType = new GraphQLObjectType({
 	name: 'movieEdge',
 	fields: () => ({
 		node: {
-			type: movieNode,
+			type: new GraphQLNonNull(movieNode),
 		},
 	}),
 });
 
-export const movieNode = new GraphQLObjectType({
+export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 	name: 'movieNode',
 	fields: () => ({
 		id: {
-			type: GraphQLID,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 		title: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		titleOriginal: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		runtime: {
 			type: GraphQLInt,
 		},
 		releaseDate: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		overview: {
 			type: GraphQLString,
@@ -77,89 +79,105 @@ export const movieNode = new GraphQLObjectType({
 		},
 		cast: {
 			type: new GraphQLList(actorNode),
-			resolve: (parent: MovieOutput) => {
-				const args: IArgsListPerson = {
+			resolve: (movie) => {
+				const options: FindAndCountOptions = {
 					include: {
 						model: MoviePeople,
 						as: 'movieData',
 						attributes: ['character'],
 						where: {
 							department: 'actor',
-							movieId: parent.id,
-						},
+							movieId: movie.id,
+						} as WhereOptions<MoviePeopleInput>,
 					},
-					order: [
-						['movieData', 'order', 'asc' ],
-					],
+					order: ['movieData', 'order', 'asc'],
 				};
 
-				return personResolver.list(args, true);
+				return personResolver.list(options, true);
 			},
 		},
 		directors: {
 			type: new GraphQLList(directorNode),
-			resolve: (parent: MovieOutput) => {
-				const args: IArgsListPerson = {
+			resolve: (movie) => {
+				const options: FindAndCountOptions = {
 					include: {
 						model: Movie,
 						as: 'movies',
-						where: {id: parent.id},
+						where: {id: movie.id} as WhereOptions<MovieInput>,
 						through: {
 							attributes: ['character'],
 							where: {
 								department: 'director',
-							},
+							} as WhereOptions<MoviePeopleInput>,
 						},
 					},
 				};
 
-				return personResolver.list(args, true);
+				return personResolver.list(options, true);
 			},
 		},
 		genres: {
 			type: new GraphQLList(genreNode),
-			resolve: (parent: MovieOutput) => {
-				const args: IArgsListGenre = {
+			resolve: (parent) => {
+				const options: FindAndCountOptions = {
 					include: {
 						model: Movie,
-						where: {id: parent.id},
+						where: {id: parent.id} as WhereOptions<MovieInput>,
 					},
 				};
 
-				return genreResolver.list(args, true);
+				return genreResolver.list(options, true);
 			},
 		},
 	}),
 });
 
-const payload = {
-	movie: {
-		type: movieNode,
-	},
-	ok: {
-		type: GraphQLBoolean,
-	},
-	errors: {
-		type: new GraphQLList(errorNode),
-	},
-};
-
-export const movieCreatePayload = new GraphQLObjectType({
+export const movieCreatePayload: GraphQLObjectType = new GraphQLObjectType({
 	name: 'movieCreatePayload',
-	fields: () => payload,
+	fields: () => ({
+		movie: {
+			type: new GraphQLNonNull(movieNode),
+		},
+		ok: {
+			type: new GraphQLNonNull(GraphQLBoolean),
+		},
+		errors: {
+			type: new GraphQLList(new GraphQLNonNull(errorNode)),
+		},
+	}),
 });
 
-export const movieUpdatePayload = new GraphQLObjectType({
+export const movieUpdatePayload: GraphQLObjectType = new GraphQLObjectType({
 	name: 'movieUpdatePayload',
-	fields: () => payload,
+	fields: () => ({
+		movie: {
+			type: movieNode,
+		},
+		ok: {
+			type: new GraphQLNonNull(GraphQLBoolean),
+		},
+		errors: {
+			type: new GraphQLList(new GraphQLNonNull(errorNode)),
+		},
+	}),
 });
 
-export const movieRefetchPayload = new GraphQLObjectType({
+export const movieRefetchPayload: GraphQLObjectType = new GraphQLObjectType({
 	name: 'movieRefetchPayload',
-	fields: () => payload,
+	fields: () => ({
+		movie: {
+			type: movieNode,
+		},
+		ok: {
+			type: new GraphQLNonNull(GraphQLBoolean),
+		},
+		errors: {
+			type: new GraphQLList(new GraphQLNonNull(errorNode)),
+		},
+	}),
 });
 
-export const movieUpdateInput = new GraphQLInputObjectType({
+export const movieUpdateInput: GraphQLInputObjectType = new GraphQLInputObjectType({
 	name: 'movieUpdateInput',
 	fields: () => ({
 		backdrop: {
@@ -171,7 +189,7 @@ export const movieUpdateInput = new GraphQLInputObjectType({
 	}),
 });
 
-export const movieRefetchInput = new GraphQLInputObjectType({
+export const movieRefetchInput: GraphQLInputObjectType = new GraphQLInputObjectType({
 	name: 'movieRefetchInput',
 	fields: () => ({
 		withImages: {
@@ -181,14 +199,14 @@ export const movieRefetchInput = new GraphQLInputObjectType({
 	}),
 });
 
-export const movieDeletePayload = new GraphQLObjectType({
+export const movieDeletePayload: GraphQLObjectType = new GraphQLObjectType({
 	name: 'movieDeletePayload',
 	fields: () => ({
 		ok: {
-			type: GraphQLBoolean,
+			type: new GraphQLNonNull(GraphQLBoolean),
 		},
 		errors: {
-			type: new GraphQLList(errorNode),
+			type: new GraphQLList(new GraphQLNonNull(errorNode)),
 		},
 	}),
 });

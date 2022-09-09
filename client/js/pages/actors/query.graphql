@@ -1,0 +1,10 @@
+query actors($limit: Int, $offset: Int) {
+	actors(limit: $limit, offset: $offset) @connection(key: "actors") {
+		edges {
+			node {
+				...actorNode
+			}
+		}
+		totalCount
+	}
+}

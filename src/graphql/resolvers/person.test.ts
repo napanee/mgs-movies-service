@@ -1,9 +1,11 @@
 import {Sequelize} from 'sequelize';
 
 import {sequelizeConnection} from '@db/connection';
-import {Movie as ModelMovie, Person as ModelPerson} from '@models/index';
+import {Movie as ModelMovie, Person as ModelPerson} from '@db/models';
 
-import PersonController, {IArgsList} from './Person';
+import PersonController from './Person';
+
+import {PeopleOrderByEnumType} from '../queries/Person';
 
 
 const nullablePersonProperties = {biography: null, birthday: null, deathday: null, image: null, placeOfBirth: null};
@@ -80,7 +82,7 @@ describe('The person resolver', () => {
 				{node: expect.objectContaining({name: 'Foo'})},
 			],
 		};
-		const args = {limit: 3, offset: 0, orderBy: 'name'};
+		const args = {limit: 3, offset: 0, order: [PeopleOrderByEnumType.getValue('NAME_ASC')?.value]};
 
 		await expect(personResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
@@ -94,51 +96,26 @@ describe('The person resolver', () => {
 				{node: expect.objectContaining({name: 'Bar'})},
 			],
 		};
-		const args = {limit: 3, offset: 0, orderBy: '-name'};
-
-		await expect(personResolver.list(args)).resolves
-			.toMatchObject(expectedResponse);
-	});
-
-	test('should response actor list', async () => {
-		const expectedResponse = {
-			edges: [
-				{node: expect.objectContaining({name: 'Bar'})},
-				{node: expect.objectContaining({name: 'Baz'})},
-			],
-		};
-		const args: IArgsList = {type: 'actor', orderBy: 'name'};
-
-		await expect(personResolver.list(args)).resolves
-			.toMatchObject(expectedResponse);
-	});
-
-	test('should response director list', async () => {
-		const expectedResponse = {
-			edges: [
-				{node: expect.objectContaining({name: 'Foo'})},
-			],
-		};
-		const args: IArgsList = {type: 'director'};
+		const args = {limit: 3, offset: 0, order: [PeopleOrderByEnumType.getValue('NAME_DESC')?.value]};
 
 		await expect(personResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
 	});
 
 	test('should response person list with next pages', async () => {
-		const args = {limit: 1, offset: 0, orderBy: 'name'};
+		const args = {limit: 1, offset: 0, order: [PeopleOrderByEnumType.getValue('NAME_ASC')?.value]};
 		const response = await personResolver.list(args);
 
-		expect(response.pageInfo.hasNextPage()).toBeTruthy();
-		expect(response.pageInfo.hasPreviousPage()).toBeFalsy();
+		expect(response.pageInfo.hasNextPage).toBeTruthy();
+		expect(response.pageInfo.hasPreviousPage).toBeFalsy();
 	});
 
 	test('should response person list with previous pages', async () => {
-		const args = {limit: 1, offset: 2, orderBy: 'name'};
+		const args = {limit: 1, offset: 2, order: [PeopleOrderByEnumType.getValue('NAME_ASC')?.value]};
 		const response = await personResolver.list(args);
 
-		expect(response.pageInfo.hasNextPage()).toBeFalsy();
-		expect(response.pageInfo.hasPreviousPage()).toBeTruthy();
+		expect(response.pageInfo.hasNextPage).toBeFalsy();
+		expect(response.pageInfo.hasPreviousPage).toBeTruthy();
 	});
 
 	test('should response plain person list', async () => {

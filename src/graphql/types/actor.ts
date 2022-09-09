@@ -1,14 +1,16 @@
-import {GraphQLID, GraphQLObjectType, GraphQLString} from 'graphql';
+import {GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql';
+
+import {ActorNodeResolvers} from '@src/graphql-types';
 
 
-export const actorNode: GraphQLObjectType = new GraphQLObjectType({
+export const actorNode: GraphQLObjectType<ActorNodeResolvers> = new GraphQLObjectType<ActorNodeResolvers>({
 	name: 'actorNode',
 	fields: () => ({
 		id: {
-			type: GraphQLID,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 		name: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		biography: {
 			type: GraphQLString,
@@ -26,7 +28,7 @@ export const actorNode: GraphQLObjectType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		character: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 	}),
 });

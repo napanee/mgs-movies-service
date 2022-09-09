@@ -22,15 +22,12 @@ import {sequelizeConnection} from '../connection';
 
 
 interface GenreAttributes {
-	id: string;
+	id: number;
 	name: string;
 	tmdb: number;
 }
 
-type OptionalAttributes = 'id';
-
-export type GenreInput = Optional<GenreAttributes, OptionalAttributes>;
-export type GenreOutput = Required<GenreAttributes>;
+export type GenreInput = Optional<GenreAttributes, 'id'>;
 
 const attributes: ModelAttributes = {
 	name: {
@@ -54,7 +51,7 @@ const attributes: ModelAttributes = {
 };
 
 class Genre extends Model<GenreAttributes, GenreInput> implements GenreAttributes {
-	declare id: string;
+	declare id: number;
 	declare name: string;
 	declare tmdb: number;
 
@@ -72,7 +69,7 @@ class Genre extends Model<GenreAttributes, GenreInput> implements GenreAttribute
 	declare hasMovies: BelongsToManyHasAssociationsMixin<Movie, string>;
 	declare countMovies: BelongsToManyCountAssociationsMixin;
 
-	declare readonly movies?: Movie[];
+	declare readonly movies: Array<Movie | null>;
 
 	declare static associations: {
 		movies: Association<Genre, Movie>;

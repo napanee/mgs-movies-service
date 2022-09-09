@@ -16,7 +16,6 @@ interface MoviePeopleAttributes {
 }
 
 export type MoviePeopleInput = Required<MoviePeopleAttributes>;
-export type MoviePeopleOutput = Required<MoviePeopleAttributes>;
 
 const attributes: ModelAttributes = {
 	movieId: {

@@ -28,8 +28,7 @@ import {sequelizeConnection} from '../connection';
 
 interface MovieAttributes {
 	backdrop: string | null;
-	character: string;
-	id: string;
+	id: number;
 	imdb: string;
 	overview: string | null;
 	poster: string | null;
@@ -40,10 +39,7 @@ interface MovieAttributes {
 	tmdb: number;
 }
 
-type OptionalAttributes = 'backdrop'|'character'|'id'|'overview'|'poster'|'runtime';
-
-export type MovieInput = Optional<MovieAttributes, OptionalAttributes>;
-export type MovieOutput = Optional<MovieAttributes, 'character'>;
+export type MovieInput = Optional<MovieAttributes, 'backdrop'|'id'|'overview'|'poster'|'runtime'>;
 
 const attributes: ModelAttributes = {
 	title: {
@@ -113,9 +109,6 @@ const attributes: ModelAttributes = {
 		get(this: Movie): string | undefined {
 			return this.filmography?.[0].character;
 		},
-		set(value) {
-			throw new Error(`Do not try to set the \`character\` with ${value}!`);
-		},
 	},
 };
 
@@ -140,8 +133,7 @@ const loadImages = async (movie: Movie) => {
 
 class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttributes {
 	declare backdrop: string | null;
-	declare character: string;
-	declare id: string;
+	declare id: number;
 	declare imdb: string;
 	declare overview: string | null;
 	declare poster: string | null;
@@ -176,7 +168,10 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	declare hasPeople: BelongsToManyHasAssociationsMixin<Person, string>;
 	declare countPeople: BelongsToManyCountAssociationsMixin;
 
-	declare readonly genres?: Genre[];
+	declare readonly character: string;
+	declare readonly cast?: Array<Person | null> | null;
+	declare readonly directors?: Array<Person | null> | null;
+	declare readonly genres?: Array<Genre>;
 	declare readonly people?: Person[];
 	declare readonly filmography?: {
 		character?: string;

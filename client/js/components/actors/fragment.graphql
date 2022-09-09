@@ -1,0 +1,5 @@
+fragment actorNode on personNode {
+	id
+	imageUrl
+	name
+}

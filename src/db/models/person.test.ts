@@ -1,6 +1,7 @@
 import cryptoJs from 'crypto-js';
 import {Sequelize} from 'sequelize';
 
+import {MEDIA_URL} from '@src/config';
 import {saveImage} from '@utils/index';
 
 import Movie from './Movie';
@@ -83,6 +84,38 @@ describe('The person model', () => {
 		expect(person.image).toBe('pe/19841/new-image');
 	});
 
+	test('should return null for image url', async () => {
+		const person = await Person.create({
+			imdb: 'tt1',
+			name: 'Foo',
+			tmdb: 1,
+			image: null,
+			biography: null,
+			birthday: null,
+			deathday: null,
+			placeOfBirth: null,
+		});
+
+		expect(person.imageUrl).toBeNull();
+	});
+
+	test('should return image url', async () => {
+		mockedSaveImage.mockResolvedValue('foo/bar/baz');
+
+		const person = await Person.create({
+			imdb: 'tt1',
+			name: 'Foo',
+			tmdb: 1,
+			image: 'new-image',
+			biography: null,
+			birthday: null,
+			deathday: null,
+			placeOfBirth: null,
+		});
+
+		expect(person.imageUrl).toBe(`${MEDIA_URL}foo/bar/baz`);
+	});
+
 	test('should get character name from movie', async () => {
 		const person = await Person.create({
 			imdb: 'tt1',
@@ -118,22 +151,5 @@ describe('The person model', () => {
 		});
 
 		expect(result?.character).toBe('Foo');
-	});
-
-	test('should throw error, if character would set directly', async () => {
-		const error = 'Do not try to set the `character` with Foo!';
-		const personCreate = Person.create({
-			imdb: 'tt1',
-			name: 'FooWithCharacter',
-			tmdb: 1,
-			image: null,
-			biography: null,
-			birthday: null,
-			deathday: null,
-			placeOfBirth: null,
-			character: 'Foo',
-		});
-
-		await expect(personCreate).rejects.toThrow(error);
 	});
 });

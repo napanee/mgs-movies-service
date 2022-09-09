@@ -1,9 +1,11 @@
-import {Sequelize} from 'sequelize';
+import {FindAndCountOptions, Sequelize} from 'sequelize';
 
 import {sequelizeConnection} from '@db/connection';
-import {Genre as ModelGenre, Movie as ModelMovie} from '@models/index';
+import {Genre as ModelGenre, Movie as ModelMovie} from '@db/models';
 
 import GenreController from './Genre';
+
+import {GenresOrderByEnumType} from '../queries/Genre';
 
 
 const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};
@@ -69,7 +71,11 @@ describe('The genre resolver', () => {
 				{node: expect.objectContaining({name: 'Foo'})},
 			],
 		};
-		const args = {limit: 3, offset: 0, orderBy: 'name'};
+		const args: FindAndCountOptions = {
+			limit: 3,
+			offset: 0,
+			order: [GenresOrderByEnumType.getValue('NAME_ASC')?.value],
+		};
 
 		await expect(genreResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
@@ -83,26 +89,38 @@ describe('The genre resolver', () => {
 				{node: expect.objectContaining({name: 'Bar'})},
 			],
 		};
-		const args = {limit: 3, offset: 0, orderBy: '-name'};
+		const args = {
+			limit: 3,
+			offset: 0,
+			order: [GenresOrderByEnumType.getValue('NAME_DESC')?.value],
+		};
 
 		await expect(genreResolver.list(args)).resolves
 			.toMatchObject(expectedResponse);
 	});
 
 	test('should response genre list with next pages', async () => {
-		const args = {limit: 1, offset: 0, orderBy: 'name'};
+		const args = {
+			limit: 1,
+			offset: 0,
+			order: [GenresOrderByEnumType.getValue('NAME_ASC')?.value],
+		};
 		const response = await genreResolver.list(args);
 
-		expect(response.pageInfo.hasNextPage()).toBeTruthy();
-		expect(response.pageInfo.hasPreviousPage()).toBeFalsy();
+		expect(response.pageInfo.hasNextPage).toBeTruthy();
+		expect(response.pageInfo.hasPreviousPage).toBeFalsy();
 	});
 
 	test('should response genre list with previous pages', async () => {
-		const args = {limit: 1, offset: 2, orderBy: 'name'};
+		const args = {
+			limit: 1,
+			offset: 2,
+			order: [GenresOrderByEnumType.getValue('NAME_ASC')?.value],
+		};
 		const response = await genreResolver.list(args);
 
-		expect(response.pageInfo.hasNextPage()).toBeFalsy();
-		expect(response.pageInfo.hasPreviousPage()).toBeTruthy();
+		expect(response.pageInfo.hasNextPage).toBeFalsy();
+		expect(response.pageInfo.hasPreviousPage).toBeTruthy();
 	});
 
 	test('should response plain genre list', async () => {

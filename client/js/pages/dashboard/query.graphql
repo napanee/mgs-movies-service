@@ -1,0 +1,14 @@
+query dashboard {
+	actors {
+		totalCount
+	}
+	directors {
+		totalCount
+	}
+	genres {
+		totalCount
+	}
+	movies {
+		totalCount
+	}
+}

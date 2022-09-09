@@ -3,12 +3,14 @@ import {GraphQLObjectType, GraphQLSchema} from 'graphql';
 import {MovieMutation} from './mutations';
 import {GenreQuery, MovieQuery, PersonQuery} from './queries';
 
+import {MutationResolvers, Query} from '../graphql-types';
+
 
 const genreQuery = new GenreQuery();
 const movieQuery = new MovieQuery();
 const personQuery = new PersonQuery();
 const movieMutation = new MovieMutation();
-const query = new GraphQLObjectType({
+const query = new GraphQLObjectType<Query>({
 	name: 'Query',
 	fields: {
 		// Genre
@@ -26,7 +28,7 @@ const query = new GraphQLObjectType({
 		directors: personQuery.list('director'),
 	},
 });
-const mutation = new GraphQLObjectType({
+const mutation = new GraphQLObjectType<MutationResolvers>({
 	name: 'Mutation',
 	fields: {
 		// Movie

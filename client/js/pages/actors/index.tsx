@@ -1,4 +1,3 @@
-import {gql, useQuery} from '@apollo/client';
 import {Grid as MuiGrid} from '@mui/material';
 import {ChangeEvent, Fragment} from 'react';
 
@@ -6,44 +5,15 @@ import Item from '@components/actors/item';
 import {Pagination} from '@generic/index';
 import {useLocationQuery} from '@hooks/useLocationQuery';
 
+import {useActorsQuery} from './query.helper';
 
-type QueryData = {
-	actors: {
-		edges: {
-			node: {
-				id: number;
-				imageUrl: string;
-				name: string;
-			};
-		}[];
-		pageInfo: {
-			hasNextPage: boolean;
-			hasPreviousPage: boolean;
-		};
-		totalCount: number;
-	};
-};
 
 const PAGE_COUNT = 60;
-const QueryActors = gql`
-	query actors($limit: Int, $offset: Int) {
-		actors(limit: $limit, offset: $offset) @connection(key: "actors") {
-			edges {
-				node {
-					id
-					imageUrl
-					name
-				}
-			}
-			totalCount
-		}
-	}
-`;
 
 const Actors = () => {
 	const locationQuery = useLocationQuery();
 	const page = parseInt(locationQuery.get('page') || '1', 10);
-	const {loading: isLoading, data, fetchMore} = useQuery<QueryData>(QueryActors, {
+	const {loading: isLoading, data, fetchMore} = useActorsQuery({
 		fetchPolicy: 'cache-first',
 		variables: {
 			limit: PAGE_COUNT,
@@ -51,7 +21,7 @@ const Actors = () => {
 		},
 	});
 	const count = Math.ceil((data?.actors.totalCount || 1) / PAGE_COUNT);
-	const items = data?.actors.edges.map(({node: data}) => (<Item key={data.id} data={data} />));
+	const items = data?.actors.edges.map(({node}) => (<Item key={node.id} actor={node} />));
 
 	const onChange = (_: ChangeEvent, page: number) => {
 		const offset = (page - 1) * PAGE_COUNT;

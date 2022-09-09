@@ -1,64 +1,24 @@
-import {FindOptions, Includeable, Op, Order, WhereOptions} from 'sequelize';
+import {FindAndCountOptions, FindOptions, Op} from 'sequelize';
 
 import Genre from '@models/Genre';
-import Movie, {MovieInput, MovieOutput} from '@models/Movie';
+import Movie from '@models/Movie';
 import Person from '@models/Person';
+import {
+	MovieConnection,
+	MovieNode,
+	MutationMovieCreateArgs,
+	MutationMovieDeleteArgs,
+	MutationMovieRefetchArgs,
+	MutationMovieUpdateArgs,
+	QueryMovieArgs,
+} from '@src/graphql-types';
 import {fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
 
-
-interface IOptions {
-	include?: Includeable | Includeable[];
-	oder?: Order;
-	where?: WhereOptions<MovieInput>;
-}
-
-export interface IArgsGet {
-	id?: number;
-	title?: string;
-}
-
-export interface IArgsList extends FindOptions<MovieInput> {
-	orderBy?: string;
-}
-
-export interface IArgsCreate {
-	tmdb: number;
-}
-
-export interface IArgsUpdate {
-	id: number;
-	input: {
-		backdrop?: string;
-		poster?: string;
-	};
-}
-
-export interface IArgsRefetch {
-	id: number;
-	input?: {
-		withImages: boolean;
-	};
-}
-
-export interface IArgsDelete {
-	id: number;
-}
-
-export interface IListResponse {
-	edges: {
-		node: MovieOutput;
-	}[];
-	pageInfo: {
-		hasNextPage: () => boolean;
-		hasPreviousPage: () => boolean;
-	};
-	totalCount: number;
-}
 
 class MovieController {
 	private model = Movie;
 
-	async get({id, title}: IArgsGet): Promise<MovieOutput | null> {
+	async get({id, title}: QueryMovieArgs) {
 		if (id && title) {
 			throw new Error('You can only search by one attribute.');
 		}
@@ -67,7 +27,7 @@ class MovieController {
 			throw new Error('You must enter at least one attribute.');
 		}
 
-		const options: IOptions = {
+		const options: FindOptions = {
 			where: {},
 		};
 
@@ -82,16 +42,9 @@ class MovieController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList, plain: boolean): Promise<MovieOutput[]>;
-	async list({orderBy, ...options}: IArgsList, plain = false): Promise<IListResponse | MovieOutput[]> {
-		if (orderBy) {
-			const orderDirection = orderBy.startsWith('-') ? 'DESC' : 'ASC';
-			const order: Order = [[orderBy.replace('-', ''), orderDirection]];
-
-			options.order = order;
-		}
-
+	async list(options: FindAndCountOptions): Promise<MovieConnection>;
+	async list(options: FindAndCountOptions, plain: boolean): Promise<MovieNode[]>;
+	async list(options: FindAndCountOptions, plain = false): Promise<MovieConnection | MovieNode[]> {
 		const {rows, count} = await this.model.findAndCountAll(options);
 
 		if (plain) {
@@ -101,14 +54,14 @@ class MovieController {
 		return {
 			edges: rows.map((node) => ({node})),
 			pageInfo: {
-				hasNextPage: () => count > (options.offset || 0) + rows.length,
-				hasPreviousPage: () => !!options.offset && options.offset > 0,
+				hasNextPage: count > (options.offset || 0) + rows.length,
+				hasPreviousPage: !!options.offset && options.offset > 0,
 			},
 			totalCount: count,
 		};
 	}
 
-	async create({tmdb: id}: IArgsCreate) {
+	async create({tmdb: id}: MutationMovieCreateArgs) {
 		const {genres, tmdb, ...defaults} = await fetchMovieData(id);
 		const [movieModel, isNew] = await Movie.findOrCreate({where: {tmdb}, defaults: {...defaults, tmdb}});
 
@@ -142,7 +95,7 @@ class MovieController {
 		};
 	}
 
-	async update({id, input: {backdrop, poster}}: IArgsUpdate) {
+	async update({id, input: {backdrop, poster}}: MutationMovieUpdateArgs) {
 		const movieModel = await Movie.findByPk(id);
 
 		if (!movieModel) {
@@ -171,7 +124,7 @@ class MovieController {
 		};
 	}
 
-	async refetch({id, input: {withImages} = {withImages: false}}: IArgsRefetch) {
+	async refetch({id, input}: MutationMovieRefetchArgs) {
 		const movieModel = await Movie.findByPk(id);
 
 		if (!movieModel) {
@@ -191,7 +144,7 @@ class MovieController {
 		const genreModels = await Genre.findAll({where: {tmdb: {[Op.in]: genres.map((genre) => genre.id)}}});
 		const people = await fetchMovieCredits(movieModel.tmdb);
 
-		await movieModel.update(movieData, {hooks: withImages});
+		await movieModel.update(movieData, {hooks: !!input?.withImages});
 		await movieModel.addGenres(genreModels);
 		await Promise.all(
 			people.map(async ({tmdb, ...data}) => {
@@ -208,7 +161,7 @@ class MovieController {
 		};
 	}
 
-	async delete({id}: IArgsDelete) {
+	async delete({id}: MutationMovieDeleteArgs) {
 		const deleted = await Movie.destroy({where: {id}, cascade: true});
 
 		if (deleted === 1) {

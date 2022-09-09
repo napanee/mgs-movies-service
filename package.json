@@ -11,7 +11,8 @@
     "lint": "npm run lint:js; npm run lint:scss;",
     "test": "jest --coverage --runInBand --verbose --detectOpenHandles",
     "test:watch": "jest --coverage --watch --runInBand",
-    "migrate": "sequelize db:migrate"
+    "migrate": "sequelize db:migrate",
+    "types:generate": "babel-node ./schema.ts --extensions .ts && graphql-codegen --config ./codegen-backend.yml && graphql-codegen --config ./codegen-frontend.yml && rm -rf ./schema.graphql"
   },
   "repository": {
     "type": "git",
@@ -54,6 +55,12 @@
     "@babel/preset-env": "^7.16.8",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
+    "@graphql-codegen/cli": "^2.11.6",
+    "@graphql-codegen/near-operation-file-preset": "^2.4.1",
+    "@graphql-codegen/typescript": "^2.7.3",
+    "@graphql-codegen/typescript-operations": "^2.5.3",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.3",
+    "@graphql-codegen/typescript-resolvers": "^2.7.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
@@ -83,6 +90,7 @@
     "eslint-plugin-import-alias": "^1.2.0",
     "eslint-plugin-typescript-sort-keys": "^2.1.0",
     "fetch-mock": "^9.11.0",
+    "graphql-tag": "^2.12.6",
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.4.7",

@@ -1,8 +1,24 @@
-import {GraphQLID, GraphQLInt, GraphQLString} from 'graphql';
+import {GraphQLEnumType, GraphQLInt, GraphQLNonNull, GraphQLString} from 'graphql';
+import {FindAndCountOptions, Includeable} from 'sequelize/types';
 
-import PersonResolver, {IArgsGet, IArgsList, PersonType} from '../resolvers/Person';
+import {Movie} from '@db/models';
+import {QueryPeopleArgs, QueryPersonArgs} from '@src/graphql-types';
+
+import PersonResolver, {PersonType} from '../resolvers/Person';
 import {personConnection, personNode} from '../types';
 
+
+export const PeopleOrderByEnumType = new GraphQLEnumType({
+	name: 'PeopleOrderByEnum',
+	values: {
+		NAME_ASC: {
+			value: ['name', 'ASC'],
+		},
+		NAME_DESC: {
+			value: ['name', 'DESC'],
+		},
+	},
+});
 
 class PersonQuery {
 	private resolver = new PersonResolver();
@@ -12,33 +28,58 @@ class PersonQuery {
 			type: personNode,
 			args: {
 				id: {
-					type: GraphQLID,
+					type: GraphQLInt,
 				},
 				name: {
 					type: GraphQLString,
 				},
 			},
-			resolve: (_: unknown, args: IArgsGet) => this.resolver.get(args),
+			resolve: (_: unknown, args: QueryPersonArgs) => this.resolver.get(args),
 		};
 	}
 
 	list(type?: PersonType) {
 		return {
-			type: personConnection,
+			type: new GraphQLNonNull(personConnection),
 			args: {
 				limit: {
 					type: GraphQLInt,
 				},
 				offset: {
-					type: GraphQLInt,
+					type: new GraphQLNonNull(GraphQLInt),
 					defaultValue: 0,
 				},
-				orderBy: {
-					type: GraphQLString,
-					defaultValue: 'name',
+				order: {
+					type: new GraphQLNonNull(PeopleOrderByEnumType),
+					defaultValue: PeopleOrderByEnumType.getValues()[0].value,
 				},
 			},
-			resolve: (_: unknown, args: Omit<IArgsList, 'type'>) => this.resolver.list({...args, type}),
+			resolve: (_: unknown, args: QueryPeopleArgs) => {
+				const options: FindAndCountOptions = {
+					offset: args.offset,
+					order: [args.order],
+				};
+
+				if (args.limit) {
+					options.limit = args.limit;
+				}
+
+				if (type) {
+					const include: Includeable = {
+						attributes: [],
+						model: Movie,
+						as: 'movies',
+						through: {
+							where: {department: type},
+						},
+					};
+
+					options.include = include;
+					options.distinct = true;
+				}
+
+				return this.resolver.list(options);
+			},
 		};
 	}
 }

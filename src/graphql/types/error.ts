@@ -1,14 +1,16 @@
-import {GraphQLObjectType, GraphQLString} from 'graphql';
+import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql';
+
+import {ErrorNode} from '@src/graphql-types';
 
 
-export const errorNode = new GraphQLObjectType({
+export const errorNode: GraphQLObjectType<ErrorNode> = new GraphQLObjectType<ErrorNode>({
 	name: 'errorNode',
 	fields: () => ({
 		field: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		message: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 	}),
 });

@@ -113,6 +113,11 @@ module.exports = {
 						pattern: '@pages/**',
 						group: 'internal',
 						position: 'before'
+					},
+					{
+						pattern: '~/**',
+						group: 'internal',
+						position: 'before'
 					}
 				],
 				'newlines-between': 'always',

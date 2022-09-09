@@ -1,0 +1,29 @@
+overwrite: true
+schema: "./schema.graphql"
+documents: "client/js/**/*.graphql"
+generates:
+  # ./@types/graphql.d.ts:
+  ./client/js/graphql-types.ts:
+    plugins:
+      - typescript
+    config:
+      # noExport: true
+      skipTypename: true
+      avoidOptionals:
+        field: true
+        inputValue: false
+        defaultValue: true
+      scalars:
+        ID: number
+  ./:
+    preset: near-operation-file
+    presetConfig:
+      # baseTypesPath: ./@types/graphql.d.ts
+      baseTypesPath: ./client/js/graphql-types.ts
+      extension: .helper.ts
+      # folder: __generated__
+    plugins:
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      skipTypename: true

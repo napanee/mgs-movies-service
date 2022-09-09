@@ -19,3 +19,11 @@ export const htmlRule = {
 		loader: 'html-loader',
 	},
 };
+
+export const graphQLRule = {
+	test: /\.(graphql|gql)$/,
+	exclude: /node_modules/,
+	use: {
+		loader: 'graphql-tag/loader',
+	},
+};

@@ -1,8 +1,23 @@
-import {GraphQLID, GraphQLInt, GraphQLString} from 'graphql';
+import {GraphQLEnumType, GraphQLInt, GraphQLNonNull, GraphQLString} from 'graphql';
+import {FindAndCountOptions} from 'sequelize/types';
 
-import GenreResolver, {IArgsGet, IArgsList} from '../resolvers/Genre';
+import {QueryGenreArgs, QueryGenresArgs} from '@src/graphql-types';
+
+import GenreResolver from '../resolvers/Genre';
 import {genreConnection, genreNode} from '../types';
 
+
+export const GenresOrderByEnumType = new GraphQLEnumType({
+	name: 'GenresOrderByEnum',
+	values: {
+		NAME_ASC: {
+			value: ['name', 'ASC'],
+		},
+		NAME_DESC: {
+			value: ['name', 'DESC'],
+		},
+	},
+});
 
 class GenreQuery {
 	private resolver = new GenreResolver();
@@ -12,34 +27,44 @@ class GenreQuery {
 			type: genreNode,
 			args: {
 				id: {
-					type: GraphQLID,
+					type: GraphQLInt,
 				},
 				name: {
 					type: GraphQLString,
 				},
 			},
-			resolve: (_: unknown, args: IArgsGet) => this.resolver.get(args),
+			resolve: (_: unknown, args: QueryGenreArgs) => this.resolver.get(args),
 		};
 	}
 
 	list() {
 		return {
-			type: genreConnection,
+			type: new GraphQLNonNull(genreConnection),
 			args: {
-				first: {
+				limit: {
 					type: GraphQLInt,
-					defaultValue: 10,
 				},
 				offset: {
-					type: GraphQLInt,
+					type: new GraphQLNonNull(GraphQLInt),
 					defaultValue: 0,
 				},
-				orderBy: {
-					type: GraphQLString,
-					defaultValue: 'name',
+				order: {
+					type: new GraphQLNonNull(GenresOrderByEnumType),
+					defaultValue: GenresOrderByEnumType.getValues()[0].value,
 				},
 			},
-			resolve: (_: unknown, args: IArgsList) => this.resolver.list(args),
+			resolve: (_: unknown, args: QueryGenresArgs) => {
+				const options: FindAndCountOptions = {
+					offset: args.offset,
+					order: [args.order],
+				};
+
+				if (args.limit) {
+					options.limit = args.limit;
+				}
+
+				return this.resolver.list(options);
+			},
 		};
 	}
 }

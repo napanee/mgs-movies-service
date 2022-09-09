@@ -1,4 +1,3 @@
-import {gql, useQuery} from '@apollo/client';
 import {
 	ClassOutlined as IconClassOutlined,
 	LocalMoviesOutlined as IconLocalMoviesOutlined,
@@ -17,49 +16,18 @@ import {Link} from 'react-router-dom';
 
 import {PaletteType} from '~/theme';
 
+import {DashboardQuery, useDashboardQuery} from './query.helper';
 import * as S from './styles';
 
 
-type QueryData = {
-	actors: {
-		totalCount: number;
-	};
-	directors: {
-		totalCount: number;
-	};
-	genres: {
-		totalCount: number;
-	};
-	movies: {
-		totalCount: number;
-	};
-};
-
 type Items = {
 	Icon: SvgIconComponent;
-	countData: (data: QueryData) => number;
+	countData: (data: DashboardQuery) => number | null | undefined;
 	label: string;
 	routeList: string;
 	type: PaletteType;
 	routeAdd?: string;
 };
-
-const GET_COUNTS = gql`
-	query {
-		actors {
-			totalCount
-		}
-		directors {
-			totalCount
-		}
-		genres {
-			totalCount
-		}
-		movies {
-			totalCount
-		}
-	}
-`;
 
 const items: Items[] = [
 	{
@@ -68,34 +36,34 @@ const items: Items[] = [
 		routeList: '/movies',
 		routeAdd: '/movies/add',
 		type: 'movie',
-		countData: ({movies: {totalCount}}: QueryData) => totalCount,
+		countData: (data: DashboardQuery) => data.movies?.totalCount,
 	},
 	{
 		label: 'Genres',
 		Icon: IconClassOutlined,
 		routeList: '/genres',
 		type: 'genre',
-		countData: ({genres: {totalCount}}: QueryData) => totalCount,
+		countData: (data: DashboardQuery) => data.genres?.totalCount,
 	},
 	{
 		label: 'Actors',
 		Icon: IconPeopleOutlined,
 		routeList: '/actors',
 		type: 'actor',
-		countData: ({actors: {totalCount}}: QueryData) => totalCount,
+		countData: ({actors: {totalCount}}: DashboardQuery) => totalCount,
 	},
 	{
 		label: 'Directors',
 		Icon: IconRecordVoiceOverOutlined,
 		routeList: '/directors',
 		type: 'director',
-		countData: ({directors: {totalCount}}: QueryData) => totalCount,
+		countData: ({directors: {totalCount}}: DashboardQuery) => totalCount,
 	},
 ];
 
 
 const Dashboard = () => {
-	const {loading: isLoading, data} = useQuery<QueryData>(GET_COUNTS);
+	const {loading: isLoading, data} = useDashboardQuery();
 
 	return (
 		<Fragment>

@@ -1,10 +1,12 @@
 import {Sequelize} from 'sequelize';
 
 import {sequelizeConnection} from '@db/connection';
-import {Movie as ModelMovie, Person as ModelPerson} from '@models/index';
+import {Movie as ModelMovie, Person as ModelPerson} from '@db/models';
 import {fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
 
 import MovieController from './Movie';
+
+import {MoviesOrderEnumType} from '../queries/Movie';
 
 
 jest.mock('@utils/themoviedb');
@@ -91,7 +93,7 @@ describe('The movie resolver', () => {
 					{node: expect.objectContaining({title: 'Foo'})},
 				],
 			};
-			const args = {limit: 3, offset: 0, orderBy: 'title'};
+			const args = {limit: 3, offset: 0, order: [MoviesOrderEnumType.getValue('TITLE_ASC')?.value]};
 
 			await expect(movieResolver.list(args)).resolves
 				.toMatchObject(expectedResponse);
@@ -105,26 +107,26 @@ describe('The movie resolver', () => {
 					{node: expect.objectContaining({title: 'Bar'})},
 				],
 			};
-			const args = {limit: 3, offset: 0, orderBy: '-title'};
+			const args = {limit: 3, offset: 0, order: [MoviesOrderEnumType.getValue('TITLE_DESC')?.value]};
 
 			await expect(movieResolver.list(args)).resolves
 				.toMatchObject(expectedResponse);
 		});
 
 		test('should response movie list with next pages', async () => {
-			const args = {limit: 1, offset: 0, orderBy: 'title'};
+			const args = {limit: 1, offset: 0, order: [MoviesOrderEnumType.getValue('TITLE_ASC')?.value]};
 			const result = await movieResolver.list(args);
 
-			expect(result.pageInfo.hasNextPage()).toBeTruthy();
-			expect(result.pageInfo.hasPreviousPage()).toBeFalsy();
+			expect(result.pageInfo.hasNextPage).toBeTruthy();
+			expect(result.pageInfo.hasPreviousPage).toBeFalsy();
 		});
 
 		test('should response movie list with previous pages', async () => {
-			const args = {limit: 1, offset: 2, orderBy: 'title'};
+			const args = {limit: 1, offset: 2, order: [MoviesOrderEnumType.getValue('TITLE_ASC')?.value]};
 			const result = await movieResolver.list(args);
 
-			expect(result.pageInfo.hasNextPage()).toBeFalsy();
-			expect(result.pageInfo.hasPreviousPage()).toBeTruthy();
+			expect(result.pageInfo.hasNextPage).toBeFalsy();
+			expect(result.pageInfo.hasPreviousPage).toBeTruthy();
 		});
 
 		test('should response plain movie list', async () => {

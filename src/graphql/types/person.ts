@@ -1,39 +1,36 @@
-import {GraphQLID, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString} from 'graphql';
+import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql';
+import {FindAndCountOptions, WhereOptions} from 'sequelize/types';
 
-import MoviePeople from '@models/MoviePeople';
-import {PersonOutput} from '@models/Person';
+import MoviePeople, {MoviePeopleInput} from '@models/MoviePeople';
 
 import {pageInfo} from './base';
 import {filmographyNode} from './filmography';
 
-import MovieResolver, {IArgsList as IArgsListMovie} from '../resolvers/Movie';
+import MovieResolver from '../resolvers/Movie';
 
 
 const movieResolver = new MovieResolver();
 
-export const personConnection = new GraphQLObjectType({
+export const personConnection: GraphQLObjectType = new GraphQLObjectType({
 	name: 'personConnection',
 	fields: () => ({
 		edges: {
-			type: new GraphQLList(personEdge),
+			type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(personEdge))),
 		},
 		pageInfo: {
-			type: pageInfo,
+			type: new GraphQLNonNull(pageInfo),
 		},
 		totalCount: {
-			type: GraphQLInt,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 	}),
 });
 
-export const personEdge = new GraphQLObjectType({
+export const personEdge: GraphQLObjectType = new GraphQLObjectType({
 	name: 'personEdge',
 	fields: () => ({
 		node: {
-			type: personNode,
-		},
-		cursor: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(personNode),
 		},
 	}),
 });
@@ -42,10 +39,10 @@ export const personNode: GraphQLObjectType = new GraphQLObjectType({
 	name: 'personNode',
 	fields: () => ({
 		id: {
-			type: GraphQLID,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 		name: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		biography: {
 			type: GraphQLString,
@@ -63,21 +60,21 @@ export const personNode: GraphQLObjectType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		filmography: {
-			type: new GraphQLList(filmographyNode),
-			resolve: (parent: PersonOutput) => {
-				const args: IArgsListMovie = {
+			type: new GraphQLNonNull(new GraphQLList(filmographyNode)),
+			resolve: (person) => {
+				const options: FindAndCountOptions = {
 					attributes: ['title'],
 					include: {
 						model: MoviePeople,
 						as: 'filmography',
 						attributes: ['character'],
 						where: {
-							personId: parent.id,
-						},
+							personId: person.id,
+						} as WhereOptions<MoviePeopleInput>,
 					},
 				};
 
-				return movieResolver.list(args, true);
+				return movieResolver.list(options, true);
 			},
 		},
 	}),

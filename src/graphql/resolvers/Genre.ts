@@ -1,36 +1,13 @@
-import {FindOptions, Order, WhereOptions} from 'sequelize';
+import {FindAndCountOptions, FindOptions} from 'sequelize';
 
-import Genre, {GenreInput, GenreOutput} from '@models/Genre';
+import Genre from '@models/Genre';
+import {GenreConnection, GenreNode, QueryGenreArgs} from '@src/graphql-types';
 
-
-interface IOptions {
-	where?: WhereOptions<GenreInput>;
-}
-
-export interface IArgsGet {
-	id?: number;
-	name?: string;
-}
-
-export interface IArgsList extends FindOptions<GenreInput> {
-	orderBy?: string;
-}
-
-export interface IListResponse {
-	edges: {
-		node: GenreOutput;
-	}[];
-	pageInfo: {
-		hasNextPage: () => boolean;
-		hasPreviousPage: () => boolean;
-	};
-	totalCount: number;
-}
 
 class GenreController {
 	private model = Genre;
 
-	async get({id, name}: IArgsGet): Promise<GenreOutput | null> {
+	async get({id, name}: QueryGenreArgs) {
 		if (id && name) {
 			throw new Error('You can only search by one attribute.');
 		}
@@ -39,7 +16,7 @@ class GenreController {
 			throw new Error('You must enter at least one attribute.');
 		}
 
-		const options: IOptions = {
+		const options: FindOptions = {
 			where: {},
 		};
 
@@ -54,16 +31,9 @@ class GenreController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList, plain?: boolean): Promise<GenreOutput[]>;
-	async list({orderBy, ...options}: IArgsList, plain = false): Promise<IListResponse | GenreOutput[]> {
-		if (orderBy) {
-			const orderDirection = orderBy.startsWith('-') ? 'DESC' : 'ASC';
-			const order: Order = [[orderBy.replace('-', ''), orderDirection]];
-
-			options.order = order;
-		}
-
+	async list(options: FindAndCountOptions): Promise<GenreConnection>;
+	async list(options: FindAndCountOptions, plain?: boolean): Promise<GenreNode[]>;
+	async list(options: FindAndCountOptions, plain = false): Promise<GenreConnection | GenreNode[]> {
 		const {rows, count} = await this.model.findAndCountAll(options);
 
 		if (plain) {
@@ -75,8 +45,8 @@ class GenreController {
 				node,
 			})),
 			pageInfo: {
-				hasNextPage: () => count > (options.offset || 0) + rows.length,
-				hasPreviousPage: () => !!options.offset && options.offset > 0,
+				hasNextPage: count > (options.offset || 0) + rows.length,
+				hasPreviousPage: !!options.offset && options.offset > 0,
 			},
 			totalCount: count,
 		};

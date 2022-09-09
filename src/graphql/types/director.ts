@@ -1,14 +1,16 @@
-import {GraphQLID, GraphQLObjectType, GraphQLString} from 'graphql';
+import {GraphQLInt, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql';
+
+import {DirectorNode} from '@src/graphql-types';
 
 
-export const directorNode: GraphQLObjectType = new GraphQLObjectType({
+export const directorNode: GraphQLObjectType<DirectorNode> = new GraphQLObjectType<DirectorNode>({
 	name: 'directorNode',
 	fields: () => ({
 		id: {
-			type: GraphQLID,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 		name: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		biography: {
 			type: GraphQLString,

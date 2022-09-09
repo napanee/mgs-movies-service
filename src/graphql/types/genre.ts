@@ -1,44 +1,36 @@
-import {
-	GraphQLID,
-	GraphQLInt,
-	GraphQLList,
-	GraphQLObjectType,
-	GraphQLString,
-} from 'graphql';
+import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql';
+import {FindAndCountOptions, WhereOptions} from 'sequelize/types';
 
-import Genre, {GenreOutput} from '@models/Genre';
+import Genre, {GenreInput} from '@models/Genre';
 
 import {pageInfo} from './base';
 import {movieNode} from './movie';
 
-import MovieResolver, {IArgsList as IArgsListMovie} from '../resolvers/Movie';
+import MovieResolver from '../resolvers/Movie';
 
 
 const movieResolver = new MovieResolver();
 
-export const genreConnection = new GraphQLObjectType({
+export const genreConnection: GraphQLObjectType = new GraphQLObjectType({
 	name: 'genreConnection',
 	fields: () => ({
 		edges: {
-			type: new GraphQLList(genreEdge),
+			type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(genreEdge))),
 		},
 		pageInfo: {
-			type: pageInfo,
+			type: new GraphQLNonNull(pageInfo),
 		},
 		totalCount: {
-			type: GraphQLInt,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 	}),
 });
 
-export const genreEdge = new GraphQLObjectType({
+export const genreEdge: GraphQLObjectType = new GraphQLObjectType({
 	name: 'genreEdge',
 	fields: () => ({
 		node: {
-			type: genreNode,
-		},
-		cursor: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(genreNode),
 		},
 	}),
 });
@@ -47,18 +39,18 @@ export const genreNode: GraphQLObjectType = new GraphQLObjectType({
 	name: 'genreNode',
 	fields: () => ({
 		id: {
-			type: GraphQLID,
+			type: new GraphQLNonNull(GraphQLInt),
 		},
 		name: {
-			type: GraphQLString,
+			type: new GraphQLNonNull(GraphQLString),
 		},
 		movies: {
-			type: new GraphQLList(movieNode),
-			resolve: (parent: GenreOutput) => {
-				const args: IArgsListMovie = {
+			type: new GraphQLNonNull(new GraphQLList(movieNode)),
+			resolve: (genre) => {
+				const args: FindAndCountOptions = {
 					include: {
 						model: Genre,
-						where: {id: parent.id},
+						where: {id: genre.id} as WhereOptions<GenreInput>,
 					},
 				};
 

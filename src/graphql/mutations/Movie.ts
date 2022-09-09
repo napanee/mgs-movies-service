@@ -1,6 +1,13 @@
-import {GraphQLID, GraphQLInt, GraphQLNonNull} from 'graphql';
+import {GraphQLInt, GraphQLNonNull} from 'graphql';
 
-import MovieResolver, {IArgsCreate,IArgsDelete, IArgsRefetch, IArgsUpdate} from '../resolvers/Movie';
+import {
+	MutationMovieCreateArgs,
+	MutationMovieDeleteArgs,
+	MutationMovieRefetchArgs,
+	MutationMovieUpdateArgs,
+} from '@src/graphql-types';
+
+import MovieResolver from '../resolvers/Movie';
 import {
 	movieCreatePayload,
 	movieDeletePayload,
@@ -22,7 +29,7 @@ class MovieMutation {
 					type: new GraphQLNonNull(GraphQLInt),
 				},
 			},
-			resolve: (_: unknown, args: IArgsCreate) => this.resolver.create(args),
+			resolve: (_: unknown, args: MutationMovieCreateArgs) => this.resolver.create(args),
 		};
 	}
 
@@ -31,13 +38,13 @@ class MovieMutation {
 			type: movieUpdatePayload,
 			args: {
 				id: {
-					type: new GraphQLNonNull(GraphQLID),
+					type: new GraphQLNonNull(GraphQLInt),
 				},
 				input: {
-					type: movieUpdateInput,
+					type: new GraphQLNonNull(movieUpdateInput),
 				},
 			},
-			resolve: (_: unknown, args: IArgsUpdate) => this.resolver.update(args),
+			resolve: (_: unknown, args: MutationMovieUpdateArgs) => this.resolver.update(args),
 		};
 	}
 
@@ -46,13 +53,13 @@ class MovieMutation {
 			type: movieRefetchPayload,
 			args: {
 				id: {
-					type: new GraphQLNonNull(GraphQLID),
+					type: new GraphQLNonNull(GraphQLInt),
 				},
 				input: {
 					type: movieRefetchInput,
 				},
 			},
-			resolve: (_: unknown, args: IArgsRefetch) => this.resolver.refetch(args),
+			resolve: (_: unknown, args: MutationMovieRefetchArgs) => this.resolver.refetch(args),
 		};
 	}
 
@@ -61,10 +68,10 @@ class MovieMutation {
 			type: movieDeletePayload,
 			args: {
 				id: {
-					type: new GraphQLNonNull(GraphQLID),
+					type: new GraphQLNonNull(GraphQLInt),
 				},
 			},
-			resolve: (_: unknown, args: IArgsDelete) => this.resolver.delete(args),
+			resolve: (_: unknown, args: MutationMovieDeleteArgs) => this.resolver.delete(args),
 		};
 	}
 }

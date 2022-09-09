@@ -7,7 +7,7 @@ import {sequelizeConnection} from '../connection';
 interface UserAttributes {
 	email: string;
 	firstName: string;
-	id: string;
+	id: number;
 	isActive: boolean;
 	lastName: string;
 	password: string;
@@ -19,7 +19,6 @@ interface UserAttributes {
 type OptionalAttributes = 'id'|'isActive'|'token';
 
 export type UserInput = Optional<UserAttributes, OptionalAttributes>;
-export type UserOutput = Required<UserAttributes>;
 
 const attributes: ModelAttributes = {
 	firstName: {
@@ -73,7 +72,7 @@ const hashPassword = (user: User) => {
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
 	declare email: string;
 	declare firstName: string;
-	declare id: string;
+	declare id: number;
 	declare isActive: boolean;
 	declare lastName: string;
 	declare password: string;

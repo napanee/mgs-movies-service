@@ -1,40 +1,19 @@
-import {FindAndCountOptions, Includeable, Order, WhereOptions} from 'sequelize';
+import {FindAndCountOptions, FindOptions} from 'sequelize';
 
-import Movie from '@models/Movie';
-import Person, {PersonInput, PersonOutput} from '@models/Person';
+import Person, {PersonInput} from '@models/Person';
+import {PersonConnection, PersonNode, QueryPersonArgs} from '@src/graphql-types';
 
-
-interface IOptions {
-	where?: WhereOptions<PersonInput>;
-}
-
-export interface IArgsGet {
-	id?: number;
-	name?: string;
-}
 
 export type PersonType = 'actor' | 'director';
-
-export interface IArgsList extends FindAndCountOptions<PersonInput> {
-	orderBy?: string;
+export type ListProps = {
+	plain?: boolean;
 	type?: PersonType;
-}
-
-export interface IListResponse {
-	edges: {
-		node: PersonOutput;
-	}[];
-	pageInfo: {
-		hasNextPage: () => boolean;
-		hasPreviousPage: () => boolean;
-	};
-	totalCount: number;
-}
+};
 
 class PersonController {
 	private model = Person;
 
-	async get({id, name}: IArgsGet): Promise<PersonOutput | null> {
+	async get({id, name}: QueryPersonArgs) {
 		if (id && name) {
 			throw new Error('You can only search by one attribute.');
 		}
@@ -43,7 +22,7 @@ class PersonController {
 			throw new Error('You must enter at least one attribute.');
 		}
 
-		const options: IOptions = {
+		const options: FindOptions<PersonInput> = {
 			where: {},
 		};
 
@@ -58,30 +37,10 @@ class PersonController {
 		return this.model.findOne(options);
 	}
 
-	async list(args: IArgsList): Promise<IListResponse>;
-	async list(args: IArgsList, plain: boolean): Promise<PersonOutput[]>;
-	async list({orderBy, type, ...options}: IArgsList, plain = false): Promise<IListResponse | PersonOutput[]> {
-		if (type) {
-			const include: Includeable = {
-				attributes: [],
-				model: Movie,
-				as: 'movies',
-				through: {
-					where: {department: type},
-				},
-			};
-
-			options.include = include;
-			options.distinct = true;
-		}
-
-		if (orderBy) {
-			const orderDirection = orderBy.startsWith('-') ? 'DESC' : 'ASC';
-			const order: Order = [[orderBy.replace('-', ''), orderDirection]];
-
-			options.order = order;
-		}
-
+	async list(options: FindAndCountOptions<PersonInput>): Promise<PersonConnection>;
+	async list(options: FindAndCountOptions<PersonInput>, plain: boolean): Promise<PersonNode[]>;
+	// eslint-disable-next-line max-len
+	async list(options: FindAndCountOptions<PersonInput>, plain = false): Promise<PersonConnection | PersonNode[]> {
 		const {rows, count} = await this.model.findAndCountAll(options);
 
 		if (plain) {
@@ -93,8 +52,8 @@ class PersonController {
 				node,
 			})),
 			pageInfo: {
-				hasNextPage: () => count > (options.offset || 0) + rows.length,
-				hasPreviousPage: () => !!options.offset && options.offset > 0,
+				hasNextPage: count > (options.offset || 0) + rows.length,
+				hasPreviousPage: !!options.offset && options.offset > 0,
 			},
 			totalCount: count,
 		};
