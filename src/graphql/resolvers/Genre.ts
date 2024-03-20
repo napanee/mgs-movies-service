@@ -1,6 +1,6 @@
 import {FindAndCountOptions, FindOptions} from 'sequelize';
 
-import Genre from '@models/Genre';
+import Genre, {GenreAttributes} from '@models/Genre';
 import {GenreConnection, GenreNode, QueryGenreArgs} from '@src/graphql-types';
 
 
@@ -16,7 +16,7 @@ class GenreController {
 			throw new Error('You must enter at least one attribute.');
 		}
 
-		const options: FindOptions = {
+		const options: FindOptions<GenreAttributes> = {
 			where: {},
 		};
 
@@ -31,9 +31,9 @@ class GenreController {
 		return this.model.findOne(options);
 	}
 
-	async list(options: FindAndCountOptions): Promise<GenreConnection>;
-	async list(options: FindAndCountOptions, plain?: boolean): Promise<GenreNode[]>;
-	async list(options: FindAndCountOptions, plain = false): Promise<GenreConnection | GenreNode[]> {
+	async list(options: FindAndCountOptions<GenreAttributes>): Promise<GenreConnection>;
+	async list(options: FindAndCountOptions<GenreAttributes>, plain?: boolean): Promise<GenreNode[]>;
+	async list(options: FindAndCountOptions<GenreAttributes>, plain = false): Promise<GenreConnection | GenreNode[]> {
 		const {rows, count} = await this.model.findAndCountAll(options);
 
 		if (plain) {

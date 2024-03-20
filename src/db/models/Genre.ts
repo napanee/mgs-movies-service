@@ -21,7 +21,7 @@ import Movie from './Movie';
 import {sequelizeConnection} from '../connection';
 
 
-interface GenreAttributes {
+export interface GenreAttributes {
 	id: number;
 	name: string;
 	tmdb: number;

@@ -4,7 +4,7 @@ import {DataTypes, Model, ModelAttributes, Optional} from 'sequelize';
 import {sequelizeConnection} from '../connection';
 
 
-interface UserAttributes {
+export interface UserAttributes {
 	email: string;
 	firstName: string;
 	id: number;

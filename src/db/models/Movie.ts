@@ -26,7 +26,7 @@ import Person from './Person';
 import {sequelizeConnection} from '../connection';
 
 
-interface MovieAttributes {
+export interface MovieAttributes {
 	backdrop: string | null;
 	id: number;
 	imdb: string;
@@ -39,7 +39,9 @@ interface MovieAttributes {
 	tmdb: number;
 }
 
-export type MovieInput = Optional<MovieAttributes, 'backdrop'|'id'|'overview'|'poster'|'runtime'>;
+type OptionalAttributes = 'backdrop'|'id'|'overview'|'poster'|'runtime';
+
+export type MovieInput = Optional<MovieAttributes, OptionalAttributes>;
 
 const attributes: ModelAttributes = {
 	title: {

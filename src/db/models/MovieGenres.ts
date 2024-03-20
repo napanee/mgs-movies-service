@@ -6,7 +6,7 @@ import Movie from './Movie';
 import {sequelizeConnection} from '../connection';
 
 
-interface MovieGenresAttributes {
+export interface MovieGenresAttributes {
 	genreId: string;
 	movieId: string;
 }

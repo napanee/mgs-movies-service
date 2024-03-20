@@ -1,7 +1,7 @@
 import {FindAndCountOptions, FindOptions, Op} from 'sequelize';
 
 import Genre from '@models/Genre';
-import Movie from '@models/Movie';
+import Movie, {MovieAttributes} from '@models/Movie';
 import Person from '@models/Person';
 import {
 	MovieConnection,
@@ -27,7 +27,7 @@ class MovieController {
 			throw new Error('You must enter at least one attribute.');
 		}
 
-		const options: FindOptions = {
+		const options: FindOptions<MovieAttributes> = {
 			where: {},
 		};
 
@@ -42,9 +42,9 @@ class MovieController {
 		return this.model.findOne(options);
 	}
 
-	async list(options: FindAndCountOptions): Promise<MovieConnection>;
-	async list(options: FindAndCountOptions, plain: boolean): Promise<MovieNode[]>;
-	async list(options: FindAndCountOptions, plain = false): Promise<MovieConnection | MovieNode[]> {
+	async list(options: FindAndCountOptions<MovieAttributes>): Promise<MovieConnection>;
+	async list(options: FindAndCountOptions<MovieAttributes>, plain: boolean): Promise<MovieNode[]>;
+	async list(options: FindAndCountOptions<MovieAttributes>, plain = false): Promise<MovieConnection | MovieNode[]> {
 		const {rows, count} = await this.model.findAndCountAll(options);
 
 		if (plain) {

@@ -1,6 +1,6 @@
 import {FindAndCountOptions, FindOptions} from 'sequelize';
 
-import Person, {PersonInput} from '@models/Person';
+import Person, {PersonAttributes} from '@models/Person';
 import {PersonConnection, PersonNode, QueryPersonArgs} from '@src/graphql-types';
 
 
@@ -22,7 +22,7 @@ class PersonController {
 			throw new Error('You must enter at least one attribute.');
 		}
 
-		const options: FindOptions<PersonInput> = {
+		const options: FindOptions<PersonAttributes> = {
 			where: {},
 		};
 
@@ -37,10 +37,10 @@ class PersonController {
 		return this.model.findOne(options);
 	}
 
-	async list(options: FindAndCountOptions<PersonInput>): Promise<PersonConnection>;
-	async list(options: FindAndCountOptions<PersonInput>, plain: boolean): Promise<PersonNode[]>;
+	async list(options: FindAndCountOptions<PersonAttributes>): Promise<PersonConnection>;
+	async list(options: FindAndCountOptions<PersonAttributes>, plain: boolean): Promise<PersonNode[]>;
 	// eslint-disable-next-line max-len
-	async list(options: FindAndCountOptions<PersonInput>, plain = false): Promise<PersonConnection | PersonNode[]> {
+	async list(options: FindAndCountOptions<PersonAttributes>, plain = false): Promise<PersonConnection | PersonNode[]> {
 		const {rows, count} = await this.model.findAndCountAll(options);
 
 		if (plain) {

@@ -26,7 +26,7 @@ import Movie from './Movie';
 import {sequelizeConnection} from '../connection';
 
 
-interface PersonAttributes {
+export interface PersonAttributes {
 	biography: string | null;
 	birthday: string | null;
 	deathday: string | null;

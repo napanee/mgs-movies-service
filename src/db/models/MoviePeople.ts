@@ -6,7 +6,7 @@ import Person from './Person';
 import {sequelizeConnection} from '../connection';
 
 
-interface MoviePeopleAttributes {
+export interface MoviePeopleAttributes {
 	creditId: string;
 	department: string;
 	movieId: string;
