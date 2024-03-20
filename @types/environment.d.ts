@@ -10,6 +10,7 @@ declare global {
 			DATABASE_PASS: string;
 			DATABASE_PORT: number;
 			DATABASE_USER: string;
+			DEBUG: boolean;
 			NODE_ENV: 'development' | 'test' | 'production';
 		}
 	}
