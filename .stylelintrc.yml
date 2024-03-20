@@ -4,11 +4,11 @@ extends:
   - stylelint-config-standard-scss
   - stylelint-config-styled-components
 plugins:
-  - stylelint-declaration-use-variable
+  - stylelint-declaration-strict-value
   - stylelint-order
   - stylelint-scss
 rules:
-  sh-waqar/declaration-use-variable:
+  scale-unlimited/declaration-strict-value:
     -
       - /color/
       - z-index
@@ -137,7 +137,6 @@ rules:
   number-no-trailing-zeros: true
   property-case: lower
   property-no-unknown:
-    - true
     - ignoreProperties:
       - /-styled-mixin/
     - checkPrefixed: true
