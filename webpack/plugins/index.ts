@@ -2,6 +2,7 @@ import {join} from 'path';
 
 import Dotenv from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 import {deploymentEnv, rootDir} from '../utils/env';
 
@@ -26,3 +27,5 @@ export const htmlWebpackPlugin = new HtmlWebpackPlugin({
 	inject: 'body',
 	template: join(rootDir, 'src', 'index.ejs'),
 });
+
+export const tsconfigPathsPlugin = new TsconfigPathsPlugin();

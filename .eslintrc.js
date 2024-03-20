@@ -80,23 +80,7 @@ module.exports = {
 		],
 		'space-in-parens': ['error', 'never'],
 
-		'import-alias/import-alias': [
-			'error',
-			{
-				'relativeDepth': 1,
-				'aliases': [
-					{'alias': '@models', 'matcher': '^src\/db\/models'}, // src/db/models/* -> @models/*
-					{'alias': '@graphql', 'matcher': '^src\/(graphql)'}, // src/graphql/* -> @graphql/*
-					{'alias': '@utils', 'matcher': '^src\/(utils)'}, // src/utils/* -> @utils/*
-					{'alias': '@db', 'matcher': '^src\/db'}, // src/db/* -> @db/*
-					{'alias': '@src', 'matcher': '^src'},
-					{'alias': '@pages', 'matcher': '^client\/js\/(pages)'}, // client/js/pages/* -> @pages/*
-					{'alias': '@components', 'matcher': '^client\/js\/(components)'}, // client/js/components/* -> @components/*
-					{'alias': '@generic', 'matcher': '^client\/js\/(generic)'}, // client/js/generic/* -> @generic/*
-					{'alias': '@hooks', 'matcher': '^client\/js\/(hooks)'}, // client/js/hooks/* -> @hooks/*
-				]
-			}
-		],
+		'import-alias/import-alias': ['error', {'relativeDepth': 1}],
 
 		'import/newline-after-import': ['error', {'count': 2}],
 		'import/no-extraneous-dependencies': 'off',

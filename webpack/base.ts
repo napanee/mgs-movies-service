@@ -25,14 +25,9 @@ export default {
 		plugins.dotenvPlugin,
 	],
 	resolve: {
-		alias: {
-			'~': join(rootDir, 'client', 'js'),
-			'@components': join(rootDir, 'client', 'js', 'components'),
-			'@generic': join(rootDir, 'client', 'js', 'generic'),
-			'@hooks': join(rootDir, 'client', 'js', 'hooks'),
-			'@utils': join(rootDir, 'client', 'js', 'utils'),
-			'@pages': join(rootDir, 'client', 'js', 'pages'),
-		},
 		extensions: ['.tsx', '.ts', '.js'],
+		plugins: [
+			plugins.tsconfigPathsPlugin,
+		],
 	},
 };

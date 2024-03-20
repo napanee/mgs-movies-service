@@ -1,4 +1,7 @@
-// require('ts-node/register');
+/* eslint-disable @typescript-eslint/no-var-requires */
+const {pathsToModuleNameMapper} = require('ts-jest');
+
+const {compilerOptions} = require('./tsconfig');
 
 
 module.exports = {
@@ -14,13 +17,7 @@ module.exports = {
 	collectCoverageFrom: [
 		'**/*.{js,ts}',
 	],
-	moduleNameMapper: {
-		'@src(.*)$': '<rootDir>/src/$1',
-		'@db(.*)$': '<rootDir>/src/db/$1',
-		'@models(.*)$': '<rootDir>/src/db/models/$1',
-		'@graphql(.*)$': '<rootDir>/src/graphql/$1',
-		'@utils(.*)$': '<rootDir>/src/utils/$1',
-	},
+	moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {prefix: '<rootDir>/'}),
 	setupFiles: [
 		'./src/__setup__/bcrypt.ts',
 		'./src/__setup__/crypto-js.ts',
