@@ -7,5 +7,5 @@ export const isDev = !isProd;
 export const deploymentEnv = process.env.DEPLOYMENT_ENV;
 export const rootDir = join(__dirname, '..', '..');
 export const webpackDir = join(__dirname, '..');
-export const defaultPort = 8080;
+export const defaultPort = 9000;
 export const devServerHost = '0.0.0.0';

@@ -1,7 +1,6 @@
-import {join} from 'path';
+import {join, resolve} from 'path';
 
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
-
+import * as plugins from './plugins';
 import {defaultPort, devServerHost, rootDir} from './utils/env';
 
 import {Configuration} from '../webpack.config.babel';
@@ -9,10 +8,23 @@ import {Configuration} from '../webpack.config.babel';
 
 const config: Configuration = {
 	target: 'web',
-	mode: 'development',
-	devtool: 'cheap-module-source-map',
-	plugins: [new ReactRefreshWebpackPlugin()],
-	devServer: {
+	entry: {app: './js/index.tsx'},
+	context: resolve(process.cwd(), 'client'),
+};
+
+if (process.env.NODE_ENV === 'production') {
+	config.output = {
+		filename: 'js/[name].js',
+		chunkFilename: 'js/[name]-[chunkhash].js',
+		path: join(process.cwd(), 'build', 'static'),
+		publicPath: '/static/',
+	};
+} else {
+	config.plugins = [
+		plugins.htmlWebpackPlugin,
+		plugins.reactRefreshWebpackPlugin,
+	];
+	config.devServer = {
 		client: {
 			overlay: false,
 		},
@@ -27,11 +39,11 @@ const config: Configuration = {
 				publicPath: '/media',
 			},
 		],
-	},
-	output: {
+	};
+	config.output = {
 		publicPath: `http://${devServerHost}:${defaultPort}/`,
 		filename: '[name].[fullhash].js',
-	},
-};
+	};
+}
 
 export default config;

@@ -27,14 +27,13 @@
 			"@pages/*": ["client/js/pages/*"],
 			"@components/*": ["client/js/components/*"],
 			"@generic/*": ["client/js/generic/*"],
-			"@hooks/*": ["client/js/hooks/*"],
+			"@hooks/*": ["client/js/hooks/*"]
 		},
 		"typeRoots": ["./node_modules/@types", "./@types"],
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
-		"importsNotUsedAsValues": "preserve",
 		"incremental": true,
-		"skipLibCheck": true,
+		"skipLibCheck": true
 	},
 	"include": ["**/*.ts", "**/*.tsx", "**/*.js"],
 	"exclude": ["**/node_modules", "**/.*/"]

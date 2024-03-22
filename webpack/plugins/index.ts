@@ -1,11 +1,15 @@
 import {join} from 'path';
 
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import Dotenv from 'dotenv-webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import {ProgressPlugin} from 'webpack';
 
 import {deploymentEnv, rootDir} from '../utils/env';
 
+
+export const reactRefreshWebpackPlugin = new ReactRefreshWebpackPlugin();
 
 let envFile;
 
@@ -29,3 +33,5 @@ export const htmlWebpackPlugin = new HtmlWebpackPlugin({
 });
 
 export const tsconfigPathsPlugin = new TsconfigPathsPlugin();
+
+export const progressPlugin = new ProgressPlugin();

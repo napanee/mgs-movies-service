@@ -71,6 +71,7 @@ describe('The Connection', () => {
 		const oldEnv = process.env;
 
 		process.env.NODE_ENV = 'development';
+		process.env.DEBUG = true;
 
 		const {logging, sequelizeConnection} = await import('./connection');
 

@@ -6,10 +6,12 @@
   "scripts": {
     "server:dev": "nodemon --watch ./src --ignore ./**/*.test.ts --exec babel-node ./src/server.ts --extensions .ts",
     "client:dev": "cross-env NODE_ENV=development webpack serve --config webpack.config.babel.ts",
+    "build": "cross-env NODE_ENV=production DEPLOYMENT_ENV=live webpack --config webpack.config.babel.ts",
+    "prod": "node ./build/server.js",
     "lint:js": "eslint . --ext ts,js,tsx,jsx",
     "lint:scss": "stylelint \"**/*.{ts,js,tsx,jsx}\"",
     "lint": "npm run lint:js; npm run lint:scss;",
-    "test": "jest --coverage --runInBand --verbose --detectOpenHandles",
+    "test": "jest --coverage --runInBand --verbose --forceExit",
     "test:watch": "jest --coverage --watch --runInBand",
     "migrate": "sequelize db:migrate",
     "types:generate": "babel-node ./schema.ts --extensions .ts && graphql-codegen --config ./codegen-backend.yml && graphql-codegen --config ./codegen-frontend.yml && rm -rf ./schema.graphql"
@@ -76,6 +78,7 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@types/supertest": "^2.0.11",
+    "@types/webpack-node-externals": "^3.0.4",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
     "babel-plugin-inline-dotenv": "^1.6.0",
@@ -113,6 +116,7 @@
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
     "webpack-dev-server": "^4.7.4",
-    "webpack-merge": "^5.8.0"
+    "webpack-merge": "^5.8.0",
+    "webpack-node-externals": "^3.0.0"
   }
 }

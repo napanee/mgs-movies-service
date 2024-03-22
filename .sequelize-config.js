@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+
+dotenv.config().parsed;
+
 module.exports = {
 	development: {
 		username: 'postgres',
