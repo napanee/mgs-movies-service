@@ -72,15 +72,15 @@ describe('The movie resolver', () => {
 		});
 
 		test('should response single movie with id', async () => {
-			const expectedResponse = {title: 'Foo'};
+			const expectedResponse = {title: 'Bar'};
 
-			await expect(movieResolver.get({id: 1})).resolves.toMatchObject(expectedResponse);
+			await expect(movieResolver.get({id: 2})).resolves.toMatchObject(expectedResponse);
 		});
 
 		test('should response single movie with title', async () => {
-			const expectedResponse = {title: 'Foo'};
+			const expectedResponse = {id: 2};
 
-			await expect(movieResolver.get({title: 'Foo'})).resolves.toMatchObject(expectedResponse);
+			await expect(movieResolver.get({title: 'Bar'})).resolves.toMatchObject(expectedResponse);
 		});
 	});
 

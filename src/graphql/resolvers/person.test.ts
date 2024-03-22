@@ -63,15 +63,15 @@ describe('The person resolver', () => {
 	});
 
 	test('should response single person with id', async () => {
-		const expectedResponse = {name: 'Foo'};
+		const expectedResponse = {name: 'Bar'};
 
-		await expect(personResolver.get({id: 1})).resolves.toMatchObject(expectedResponse);
+		await expect(personResolver.get({id: 2})).resolves.toMatchObject(expectedResponse);
 	});
 
 	test('should response single person with name', async () => {
-		const expectedResponse = {name: 'Foo'};
+		const expectedResponse = {id: 2};
 
-		await expect(personResolver.get({name: 'Foo'})).resolves.toMatchObject(expectedResponse);
+		await expect(personResolver.get({name: 'Bar'})).resolves.toMatchObject(expectedResponse);
 	});
 
 	test('should response person list', async () => {

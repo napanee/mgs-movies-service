@@ -52,15 +52,15 @@ describe('The genre resolver', () => {
 	});
 
 	test('should response single genre with id', async () => {
-		const expectedResponse = {name: 'Foo'};
+		const expectedResponse = {name: 'Bar'};
 
-		await expect(genreResolver.get({id: 1})).resolves.toMatchObject(expectedResponse);
+		await expect(genreResolver.get({id: 2})).resolves.toMatchObject(expectedResponse);
 	});
 
 	test('should response single genre with name', async () => {
-		const expectedResponse = {name: 'Foo'};
+		const expectedResponse = {id: 2};
 
-		await expect(genreResolver.get({name: 'Foo'})).resolves.toMatchObject(expectedResponse);
+		await expect(genreResolver.get({name: 'Bar'})).resolves.toMatchObject(expectedResponse);
 	});
 
 	test('should response genre list', async () => {
