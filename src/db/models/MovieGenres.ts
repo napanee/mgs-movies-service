@@ -32,7 +32,7 @@ class MovieGenres extends Model<MovieGenresAttributes, MovieGenresInput> impleme
 	declare readonly updatedAt: Date;
 }
 
-MovieGenres.init(attributes, {sequelize: sequelizeConnection});
+MovieGenres.init(attributes, {sequelize: sequelizeConnection, modelName: 'MovieGenres'});
 
 Movie.belongsToMany(Genre, {through: MovieGenres, foreignKey: 'movieId', otherKey: 'genreId'});
 Genre.belongsToMany(Movie, {through: MovieGenres, foreignKey: 'genreId', otherKey: 'movieId'});

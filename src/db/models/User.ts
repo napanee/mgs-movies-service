@@ -82,6 +82,6 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
 	declare readonly updatedAt: Date;
 }
 
-User.init(attributes, {hooks: {beforeSave: hashPassword}, sequelize: sequelizeConnection});
+User.init(attributes, {hooks: {beforeSave: hashPassword}, sequelize: sequelizeConnection, modelName: 'User'});
 
 export default User;

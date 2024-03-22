@@ -54,7 +54,7 @@ class MoviePeople extends Model<MoviePeopleAttributes, MoviePeopleInput> impleme
 	declare readonly updatedAt: Date;
 }
 
-MoviePeople.init(attributes, {sequelize: sequelizeConnection});
+MoviePeople.init(attributes, {sequelize: sequelizeConnection, modelName: 'MoviePeople'});
 
 Movie.belongsToMany(Person, {through: MoviePeople, as: 'people', foreignKey: 'movieId', otherKey: 'personId'});
 Person.belongsToMany(Movie, {through: MoviePeople, as: 'movies', foreignKey: 'personId', otherKey: 'movieId'});

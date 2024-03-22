@@ -76,6 +76,6 @@ class Genre extends Model<GenreAttributes, GenreInput> implements GenreAttribute
 	};
 }
 
-Genre.init(attributes, {sequelize: sequelizeConnection});
+Genre.init(attributes, {sequelize: sequelizeConnection, modelName: 'Genre'});
 
 export default Genre;

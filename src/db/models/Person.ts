@@ -149,6 +149,6 @@ class Person extends Model<PersonAttributes, PersonInput> implements PersonAttri
 	};
 }
 
-Person.init(attributes, {hooks: {beforeSave: loadImage}, sequelize: sequelizeConnection});
+Person.init(attributes, {hooks: {beforeSave: loadImage}, sequelize: sequelizeConnection, modelName: 'Person'});
 
 export default Person;

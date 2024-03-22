@@ -185,6 +185,6 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	};
 }
 
-Movie.init(attributes, {hooks: {beforeSave: loadImages}, sequelize: sequelizeConnection});
+Movie.init(attributes, {hooks: {beforeSave: loadImages}, sequelize: sequelizeConnection, modelName: 'Movie'});
 
 export default Movie;
