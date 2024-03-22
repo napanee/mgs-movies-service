@@ -63,31 +63,31 @@ class MovieController {
 
 	async create({tmdb: id}: MutationMovieCreateArgs) {
 		const {genres, tmdb, ...defaults} = await fetchMovieData(id);
-		const [movieModel, isNew] = await Movie.findOrCreate({where: {tmdb}, defaults: {...defaults, tmdb}});
-
-		if (!isNew) {
-			return {
-				ok: false,
-				movie: movieModel,
-				errors: [{
-					field: 'id',
-					message: 'This Movie already exists.',
-				}],
-			};
-		}
-
-		const genreModels = await Genre.findAll({where: {tmdb: {[Op.in]: genres.map((genre) => genre.id)}}});
+		const [movieModel] = await Movie.findOrCreate({where: {tmdb}, defaults: {...defaults, tmdb}});
 		const people = await fetchMovieCredits(id);
 
-		await movieModel.addGenres(genreModels);
 		await Promise.all(
-			people.map(async ({tmdb, ...data}) => {
-				const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
-				const [personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults: {...defaults, tmdb}});
+			genres.map(async ({id, ...data}) => {
+				const [genreModel] = await Genre.findOrCreate({where: {tmdb: id}, defaults: {...data, tmdb: id}});
 
-				await movieModel.addPerson(personModel, {through: {...data}});
+				await movieModel.addGenre(genreModel);
 			})
 		);
+		await genres.reduce(async (previousPromise, {id, ...data}) => {
+			await previousPromise;
+
+			const [genreModel] = await Genre.findOrCreate({where: {tmdb: id}, defaults: {...data, tmdb: id}});
+
+			return movieModel.addGenre(genreModel);
+		}, Promise.resolve());
+		await people.reduce(async (previousPromise, {tmdb, ...data}) => {
+			await previousPromise;
+
+			const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
+			const [personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults: {...defaults, tmdb: id}});
+
+			return movieModel.addPerson(personModel, {through: {...data}});
+		}, Promise.resolve());
 
 		return {
 			movie: movieModel,
