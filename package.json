@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server:dev": "nodemon --watch ./src --ignore ./**/*.test.ts --exec babel-node ./src/server.ts --extensions .ts",
-    "client:dev": "cross-env NODE_ENV=development webpack serve --config webpack.config.babel.ts",
+    "dev:server": "nodemon --watch ./src --ignore ./**/*.test.ts --exec babel-node ./src/server.ts --extensions .ts",
+    "dev:client": "cross-env NODE_ENV=development webpack serve --config webpack.config.babel.ts",
     "build": "cross-env NODE_ENV=production DEPLOYMENT_ENV=live webpack --config webpack.config.babel.ts",
     "prod": "node ./build/server.js",
     "lint:js": "eslint . --ext ts,js,tsx,jsx",
