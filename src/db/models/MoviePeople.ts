@@ -56,10 +56,10 @@ class MoviePeople extends Model<MoviePeopleAttributes, MoviePeopleInput> impleme
 
 MoviePeople.init(attributes, {sequelize: sequelizeConnection, modelName: 'MoviePeople'});
 
-Movie.belongsToMany(Person, {through: MoviePeople, as: 'people', foreignKey: 'movieId', otherKey: 'personId'});
-Person.belongsToMany(Movie, {through: MoviePeople, as: 'movies', foreignKey: 'personId', otherKey: 'movieId'});
+Movie.belongsToMany(Person, {through: MoviePeople, as: 'cast', foreignKey: 'movieId', otherKey: 'personId'});
+Person.belongsToMany(Movie, {through: MoviePeople, as: 'filmography', foreignKey: 'personId', otherKey: 'movieId'});
 
 Person.hasMany(MoviePeople, {as: 'movieData'});
-Movie.hasMany(MoviePeople, {as: 'filmography'});
+Movie.hasMany(MoviePeople, {as: 'castData'});
 
 export default MoviePeople;

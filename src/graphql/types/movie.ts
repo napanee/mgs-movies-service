@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 import {FindAndCountOptions, WhereOptions} from 'sequelize/types';
 
-import Movie, {MovieInput} from '@models/Movie';
+import MovieGenres, {MovieGenresInput} from '@models/MovieGenres';
 import MoviePeople, {MoviePeopleInput} from '@models/MoviePeople';
 
 import {actorNode} from './actor';
@@ -90,7 +90,7 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 							movieId: movie.id,
 						} as WhereOptions<MoviePeopleInput>,
 					},
-					order: ['movieData', 'order', 'asc'],
+					order: [['movieData', 'order', 'asc']],
 				};
 
 				return personResolver.list(options, true);
@@ -101,15 +101,13 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 			resolve: (movie) => {
 				const options: FindAndCountOptions = {
 					include: {
-						model: Movie,
-						as: 'movies',
-						where: {id: movie.id} as WhereOptions<MovieInput>,
-						through: {
-							attributes: ['character'],
-							where: {
-								department: 'director',
-							} as WhereOptions<MoviePeopleInput>,
-						},
+						model: MoviePeople,
+						as: 'movieData',
+						attributes: [],
+						where: {
+							department: 'director',
+							movieId: movie.id,
+						} as WhereOptions<MoviePeopleInput>,
 					},
 				};
 
@@ -118,11 +116,16 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 		},
 		genres: {
 			type: new GraphQLList(genreNode),
-			resolve: (parent) => {
+			resolve: (movie) => {
 				const options: FindAndCountOptions = {
+					attributes: ['name'],
 					include: {
-						model: Movie,
-						where: {id: parent.id} as WhereOptions<MovieInput>,
+						model: MovieGenres,
+						as: 'movieData',
+						attributes: [],
+						where: {
+							movieId: movie.id,
+						} as WhereOptions<MovieGenresInput>,
 					},
 				};
 

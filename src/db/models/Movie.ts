@@ -21,6 +21,7 @@ import {
 import {saveImage} from '@utils/index';
 
 import Genre from './Genre';
+import MoviePeople from './MoviePeople';
 import Person from './Person';
 
 import {sequelizeConnection} from '../connection';
@@ -109,7 +110,7 @@ const attributes: ModelAttributes = {
 	character: {
 		type: DataTypes.VIRTUAL,
 		get(this: Movie): string | undefined {
-			return this.filmography?.[0].character;
+			return this.castData?.[0].character;
 		},
 	},
 };
@@ -174,14 +175,11 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	declare readonly cast?: Array<Person | null> | null;
 	declare readonly directors?: Array<Person | null> | null;
 	declare readonly genres?: Array<Genre>;
-	declare readonly people?: Person[];
-	declare readonly filmography?: {
-		character?: string;
-	}[];
+	declare readonly castData?: Array<MoviePeople>;
 
 	declare static associations: {
+		cast: Association<Movie, Person>;
 		genres: Association<Movie, Genre>;
-		people: Association<Movie, Person>;
 	};
 }
 

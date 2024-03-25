@@ -1,15 +1,17 @@
 import {GraphQLNonNull, GraphQLObjectType, GraphQLString, GraphQLUnionType} from 'graphql';
 
-import {FilmographyNode} from '@src/graphql-types';
+import Movie from '@models/Movie';
 
+import {movieNode} from './movie';
+
+
+const movieNodeConfig = movieNode.toConfig();
 
 export const filmographyActorNode: GraphQLObjectType = new GraphQLObjectType({
 	name: 'filmographyActorNode',
 	fields: () => ({
+		...movieNodeConfig.fields,
 		character: {
-			type: new GraphQLNonNull(GraphQLString),
-		},
-		title: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
 	}),
@@ -18,16 +20,14 @@ export const filmographyActorNode: GraphQLObjectType = new GraphQLObjectType({
 export const filmographyDirectorNode: GraphQLObjectType = new GraphQLObjectType({
 	name: 'filmographyDirectorNode',
 	fields: () => ({
-		title: {
-			type: new GraphQLNonNull(GraphQLString),
-		},
+		...movieNodeConfig.fields,
 	}),
 });
 
 export const filmographyNode: GraphQLUnionType = new GraphQLUnionType({
 	name: 'filmographyNode',
 	types: [filmographyActorNode, filmographyDirectorNode],
-	resolveType: (value: FilmographyNode) => {
-		return 'character' in value ? 'filmographyActorNode' : 'filmographyDirectorNode';
+	resolveType: (value: Movie) => {
+		return !!value.character ? 'filmographyActorNode' : 'filmographyDirectorNode';
 	},
 });

@@ -63,10 +63,9 @@ export const personNode: GraphQLObjectType = new GraphQLObjectType({
 			type: new GraphQLNonNull(new GraphQLList(filmographyNode)),
 			resolve: (person) => {
 				const options: FindAndCountOptions = {
-					attributes: ['title'],
 					include: {
 						model: MoviePeople,
-						as: 'filmography',
+						as: 'castData',
 						attributes: ['character'],
 						where: {
 							personId: person.id,

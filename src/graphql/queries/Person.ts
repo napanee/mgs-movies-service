@@ -1,7 +1,8 @@
 import {GraphQLEnumType, GraphQLInt, GraphQLNonNull, GraphQLString} from 'graphql';
-import {FindAndCountOptions, Includeable} from 'sequelize/types';
+import {FindAndCountOptions, Includeable, WhereOptions} from 'sequelize/types';
 
 import {Movie} from '@db/models';
+import {MoviePeopleInput} from '@models/MoviePeople';
 import {QueryPeopleArgs, QueryPersonArgs} from '@src/graphql-types';
 
 import PersonResolver, {PersonType} from '../resolvers/Person';
@@ -68,10 +69,13 @@ class PersonQuery {
 					const include: Includeable = {
 						attributes: [],
 						model: Movie,
-						as: 'movies',
+						as: 'filmography',
 						through: {
-							where: {department: type},
+							where: {
+								department: type,
+							} as WhereOptions<MoviePeopleInput>,
 						},
+						required: true,
 					};
 
 					options.include = include;

@@ -30,7 +30,6 @@ module.exports = {
 				type: Sequelize.STRING,
 			},
 			imdb: {
-				allowNull: false,
 				type: Sequelize.STRING,
 			},
 			tmdb: {
