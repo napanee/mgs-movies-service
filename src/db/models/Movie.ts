@@ -114,7 +114,7 @@ const attributes: ModelAttributes = {
 	character: {
 		type: DataTypes.VIRTUAL,
 		get(this: Movie): string | undefined {
-			return this.castData?.[0].character;
+			return this.MoviePeople?.character;
 		},
 	},
 };
@@ -183,15 +183,16 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	declare hasPeople: BelongsToManyHasAssociationsMixin<Person, string>;
 	declare countPeople: BelongsToManyCountAssociationsMixin;
 
+	declare readonly Genres?: Array<Genre>;
+	declare readonly MoviePeople?: {
+		character?: string;
+	};
+	declare readonly People?: Array<Person>;
 	declare readonly character: string;
-	declare readonly cast?: Array<Person | null> | null;
-	declare readonly directors?: Array<Person | null> | null;
-	declare readonly genres?: Array<Genre>;
-	declare readonly castData?: Array<MoviePeople>;
 
 	declare static associations: {
-		cast: Association<Movie, Person>;
-		genres: Association<Movie, Genre>;
+		Genres: Association<Movie, Genre>;
+		People: Association<Movie, Person>;
 	};
 }
 

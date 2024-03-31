@@ -22,6 +22,7 @@ import {MEDIA_URL} from '@src/config';
 import {saveImage} from '@utils/index';
 
 import Movie from './Movie';
+import MoviePeople from './MoviePeople';
 
 import {sequelizeConnection} from '../connection';
 
@@ -87,7 +88,7 @@ const attributes: ModelAttributes = {
 	character: {
 		type: DataTypes.VIRTUAL,
 		get(this: Person): string | undefined {
-			return this.movieData?.[0].character;
+			return this.MoviePeople?.character;
 		},
 	},
 	imageUrl: {
@@ -137,15 +138,15 @@ class Person extends Model<PersonAttributes, PersonInput> implements PersonAttri
 	declare hasMovies: BelongsToManyHasAssociationsMixin<Movie, string>;
 	declare countMovies: BelongsToManyCountAssociationsMixin;
 
-	declare readonly character: string;
-	declare readonly filmography: Array<Movie | null>;
-	declare readonly imageUrl: string | null;
-	declare readonly movieData?: {
+	declare readonly Movies: Array<Movie | null>;
+	declare readonly MoviePeople?: {
 		character?: string;
-	}[];
+	};
+	declare readonly character: string;
+	declare readonly imageUrl: string | null;
 
 	declare static associations: {
-		movies: Association<Person, Movie>;
+		Movies: Association<Person, Movie>;
 	};
 }
 

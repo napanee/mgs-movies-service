@@ -86,7 +86,6 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 				const options: FindAndCountOptions = {
 					include: {
 						model: MoviePeople,
-						as: 'movieData',
 						attributes: ['character'],
 						where: {
 							department: 'actor',
@@ -105,7 +104,6 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 				const options: FindAndCountOptions = {
 					include: {
 						model: MoviePeople,
-						as: 'movieData',
 						attributes: [],
 						where: {
 							department: 'director',
@@ -124,7 +122,6 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 					attributes: ['name'],
 					include: {
 						model: MovieGenres,
-						as: 'movieData',
 						attributes: [],
 						where: {
 							movieId: movie.id,

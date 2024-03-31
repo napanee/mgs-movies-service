@@ -69,10 +69,10 @@ class Genre extends Model<GenreAttributes, GenreInput> implements GenreAttribute
 	declare hasMovies: BelongsToManyHasAssociationsMixin<Movie, string>;
 	declare countMovies: BelongsToManyCountAssociationsMixin;
 
-	declare readonly movies: Array<Movie | null>;
+	declare readonly Movies: Array<Movie | null>;
 
 	declare static associations: {
-		movies: Association<Genre, Movie>;
+		Movies: Association<Genre, Movie>;
 	};
 }
 

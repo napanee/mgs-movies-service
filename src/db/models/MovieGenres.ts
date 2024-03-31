@@ -37,6 +37,7 @@ MovieGenres.init(attributes, {sequelize: sequelizeConnection, modelName: 'MovieG
 Movie.belongsToMany(Genre, {through: MovieGenres, foreignKey: 'movieId', otherKey: 'genreId'});
 Genre.belongsToMany(Movie, {through: MovieGenres, foreignKey: 'genreId', otherKey: 'movieId'});
 
-Genre.hasMany(MovieGenres, {as: 'movieData'});
+Genre.hasMany(MovieGenres);
+Movie.hasMany(MovieGenres);
 
 export default MovieGenres;

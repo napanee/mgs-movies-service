@@ -69,7 +69,6 @@ class PersonQuery {
 					const include: Includeable = {
 						attributes: [],
 						model: Movie,
-						as: 'filmography',
 						through: {
 							where: {
 								department: type,
