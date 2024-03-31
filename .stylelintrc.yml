@@ -1,23 +1,30 @@
 processors:
   - stylelint-processor-styled-components
 extends:
-  - stylelint-config-standard-scss
-  - stylelint-config-styled-components
+  - stylelint-config-recommended
+  - postcss-styled-syntax
+ignoreFiles:
+  - client/js/theme/resetStyles.ts
+customSyntax: postcss-styled-syntax
 plugins:
-  - stylelint-declaration-strict-value
   - stylelint-order
+  - stylelint-declaration-strict-value
   - stylelint-scss
 rules:
   scale-unlimited/declaration-strict-value:
     -
-      - /color/
+      - /color$/
       - z-index
-      - ignoreValues:
+    -
+      ignoreValues:
+        - =>
+        - currentColor
         - inherit
         - transparent
 
   alpha-value-notation: number
   at-rule-no-unknown: null # defined by stylelint-scss
+  scss/at-rule-no-unknown: true
   at-rule-empty-line-before:
     - always
     -
@@ -29,31 +36,13 @@ rules:
       except:
         - first-nested
         - blockless-after-blockless
-  at-rule-name-case: lower
-  at-rule-name-newline-after: null
-  at-rule-semicolon-newline-after: always
-  at-rule-semicolon-space-before: never
-  block-closing-brace-empty-line-before: never
-  block-closing-brace-newline-after:
-    - always
-    -
-      ignoreAtRules:
-        - if
-        - else
-  block-closing-brace-newline-before: always
-  block-opening-brace-newline-after: always
-  block-opening-brace-newline-before: never-single-line
-  block-no-empty: true
   color-function-notation: legacy
-  color-hex-case: upper
   color-hex-length: long
   color-named: never
   color-no-hex: null
   color-no-invalid-hex: true
   comment-no-empty: true
   custom-property-pattern: null
-  declaration-bang-space-before: always
-  declaration-bang-space-after: never
   declaration-block-no-duplicate-properties:
     - true
     - ignore:
@@ -61,13 +50,6 @@ rules:
   declaration-block-no-redundant-longhand-properties: null
   declaration-block-no-shorthand-property-overrides: true
   declaration-block-single-line-max-declarations: null
-  declaration-block-semicolon-newline-before: never-multi-line
-  declaration-block-semicolon-space-before: never
-  declaration-block-semicolon-newline-after: always
-  declaration-block-trailing-semicolon: always
-  declaration-colon-newline-after: null
-  declaration-colon-space-before: never
-  declaration-colon-space-after: always-single-line
   declaration-empty-line-before:
     - never
     - ignore:
@@ -104,24 +86,15 @@ rules:
   font-weight-notation: numeric
   function-allowed-list: null
   function-calc-no-unspaced-operator: true
-  function-comma-newline-before: never-multi-line
-  function-comma-newline-after: never-multi-line
-  function-comma-space-before: never
-  function-comma-space-after: always
   function-disallowed-list: null
   function-linear-gradient-no-nonstandard-direction: true
-  function-max-empty-lines: 0
   function-name-case: lower
-  function-parentheses-newline-inside: never-multi-line
-  function-parentheses-space-inside: never
   function-url-no-scheme-relative: true
   function-url-quotes: always
   hue-degree-notation: null
-  indentation: tab
   keyframe-declaration-no-important: true
   keyframes-name-pattern: null
   length-zero-no-unit: true
-  max-empty-lines: 1
   max-nesting-depth: 8
   media-feature-name-no-unknown: true
   no-descending-specificity: null
@@ -129,39 +102,16 @@ rules:
   no-duplicate-selectors:
     - true
     - disallowInList: false
-  no-extra-semicolons: true
-  no-empty-first-line: true
   no-invalid-double-slash-comments: true
-  number-leading-zero: always
   number-max-precision: 2
-  number-no-trailing-zeros: true
-  property-case: lower
-  property-no-unknown:
-    - ignoreProperties:
-      - /-styled-mixin/
-    - checkPrefixed: true
   rule-empty-line-before:
     - always
     - except:
       - after-single-line-comment
       - first-nested
   shorthand-property-no-redundant-values: true
-  selector-attribute-brackets-space-inside: never
-  selector-attribute-operator-space-after: never
-  selector-attribute-operator-space-before: never
   selector-attribute-quotes: always
-  selector-combinator-space-after: always
-  selector-combinator-space-before: always
-  selector-descendant-combinator-no-non-space: true
-  selector-pseudo-class-case: lower
-  selector-pseudo-class-parentheses-space-inside: never
-  selector-pseudo-element-case: lower
   selector-type-case: lower
-  selector-list-comma-newline-after: always
-  selector-list-comma-newline-before: never-multi-line
-  selector-list-comma-space-after: null
-  selector-list-comma-space-before: null
-  selector-max-empty-lines: 0
   selector-max-compound-selectors: null
   selector-no-qualifying-type: null
   selector-no-vendor-prefix:
@@ -181,7 +131,6 @@ rules:
   selector-pseudo-element-no-unknown: true
   selector-type-no-unknown: true
   string-no-newline: true
-  string-quotes: single
   time-min-milliseconds: null
   unit-allowed-list:
     # Font-relative lengths
@@ -209,21 +158,12 @@ rules:
     # Other
     - 'fr'
     - '%'
-  unit-case: lower
   unit-no-unknown: true
   value-keyword-case:
     - lower
     - ignoreKeywords:
       - dummyValue
-  value-list-comma-newline-before: never-multi-line
-  value-list-comma-newline-after: never-multi-line
-  value-list-comma-space-before: never
-  value-list-comma-space-after: always
-  value-list-max-empty-lines: 0
   value-no-vendor-prefix: true
-
-  scss/at-rule-no-unknown: true
-
   order/order: null
   order/properties-alphabetical-order: null
   order/properties-order:

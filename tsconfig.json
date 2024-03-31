@@ -1,22 +1,10 @@
 {
 	"compilerOptions": {
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"outDir": "./build",
-		"module": "commonjs",
-		"target": "esnext",
+		"target": "es5",
 		"lib": ["es6", "dom"],
-		"sourceMap": true,
-		"allowJs": false,
+		"module": "ESNext",
 		"jsx": "react-jsx",
-		"moduleResolution": "node",
-		"noEmit": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noImplicitAny": true,
-		"strictNullChecks": true,
 		"baseUrl": "./",
-		"rootDir": "./",
 		"paths": {
 			"~/*": ["./*", "src/*", "client/js/*"],
 			"@src/*": ["src/*"],
@@ -29,12 +17,23 @@
 			"@generic/*": ["client/js/generic/*"],
 			"@hooks/*": ["client/js/hooks/*"]
 		},
-		"typeRoots": ["./node_modules/@types", "./@types"],
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
+		"allowJs": false,
+		"skipLibCheck": true,
 		"incremental": true,
-		"skipLibCheck": true
+		"moduleResolution": "bundler",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"noEmit": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitAny": true,
+		"strictNullChecks": true
 	},
 	"include": ["**/*.ts", "**/*.tsx", "**/*.js"],
-	"exclude": ["**/node_modules", "**/.*/"]
+	"exclude": ["**/node_modules", "**/.*/"],
+	"ts-node": {
+		"compilerOptions": {
+			"module": "CommonJS"
+		}
+	}
 }

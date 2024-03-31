@@ -3,7 +3,7 @@ import {join, resolve} from 'path';
 import * as plugins from './plugins';
 import {defaultPort, devServerHost, rootDir} from './utils/env';
 
-import {Configuration} from '../webpack.config.babel';
+import {Configuration} from '../webpack.config';
 
 
 const config: Configuration = {

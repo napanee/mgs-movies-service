@@ -1,9 +1,8 @@
 import {GraphQLEnumType, GraphQLInt, GraphQLNonNull, GraphQLString} from 'graphql';
-import {Op} from 'sequelize';
-import type {FindAndCountOptions, WhereOptions} from 'sequelize/types';
+import {FindAndCountOptions, Op, WhereOptions} from 'sequelize';
 
 import {MovieAttributes} from '@models/Movie';
-import {QueryMovieArgs, QueryMoviesArgs, MoviesFilterEnum} from '@src/graphql-types';
+import {QueryMovieArgs, QueryMoviesArgs} from '@src/graphql-types';
 
 import MovieResolver from '../resolvers/Movie';
 import {movieConnection, movieNode} from '../types';

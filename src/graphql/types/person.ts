@@ -1,5 +1,5 @@
 import {GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql';
-import {FindAndCountOptions, WhereOptions} from 'sequelize/types';
+import {FindAndCountOptions, WhereOptions} from 'sequelize';
 
 import MoviePeople, {MoviePeopleInput} from '@models/MoviePeople';
 

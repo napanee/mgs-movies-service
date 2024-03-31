@@ -21,7 +21,6 @@ import {
 import {saveImage} from '@utils/index';
 
 import Genre from './Genre';
-import MoviePeople from './MoviePeople';
 import Person from './Person';
 
 import {sequelizeConnection} from '../connection';

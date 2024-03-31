@@ -1,5 +1,5 @@
 import express from 'express';
-import {graphqlHTTP} from 'express-graphql';
+import {createHandler} from 'graphql-http/lib/use/express';
 
 import GraphQLSchema from '@graphql/index';
 
@@ -8,9 +8,6 @@ const
 	router = express.Router()
 ;
 
-router.use('/', graphqlHTTP(() => ({
-	schema: GraphQLSchema,
-	graphiql: process.env.NODE_ENV === 'development',
-})));
+router.use('/', createHandler({schema: GraphQLSchema}));
 
 export default router;

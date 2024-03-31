@@ -22,7 +22,6 @@ import {MEDIA_URL} from '@src/config';
 import {saveImage} from '@utils/index';
 
 import Movie from './Movie';
-import MoviePeople from './MoviePeople';
 
 import {sequelizeConnection} from '../connection';
 

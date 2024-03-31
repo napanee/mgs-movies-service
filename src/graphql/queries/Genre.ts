@@ -1,5 +1,5 @@
 import {GraphQLEnumType, GraphQLInt, GraphQLNonNull, GraphQLString} from 'graphql';
-import {FindAndCountOptions} from 'sequelize/types';
+import {FindAndCountOptions} from 'sequelize';
 
 import {QueryGenreArgs, QueryGenresArgs} from '@src/graphql-types';
 

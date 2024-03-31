@@ -7,7 +7,7 @@ import {
 	GraphQLObjectType,
 	GraphQLString,
 } from 'graphql';
-import {FindAndCountOptions, WhereOptions} from 'sequelize/types';
+import {FindAndCountOptions, WhereOptions} from 'sequelize';
 
 import MovieGenres, {MovieGenresInput} from '@models/MovieGenres';
 import MoviePeople, {MoviePeopleInput} from '@models/MoviePeople';
