@@ -1,7 +1,9 @@
 import {GraphQLEnumType, GraphQLInt, GraphQLNonNull, GraphQLString} from 'graphql';
-import {FindAndCountOptions} from 'sequelize/types';
+import {Op} from 'sequelize';
+import type {FindAndCountOptions, WhereOptions} from 'sequelize/types';
 
-import {QueryMovieArgs, QueryMoviesArgs} from '@src/graphql-types';
+import {MovieAttributes} from '@models/Movie';
+import {QueryMovieArgs, QueryMoviesArgs, MoviesFilterEnum} from '@src/graphql-types';
 
 import MovieResolver from '../resolvers/Movie';
 import {movieConnection, movieNode} from '../types';
@@ -27,6 +29,15 @@ export const MoviesOrderEnumType = new GraphQLEnumType({
 		},
 		RELEASE_DATE_DESC: {
 			value: ['releaseDate', 'DESC'],
+		},
+	},
+});
+
+export const MoviesFilterEnumType = new GraphQLEnumType({
+	name: 'MoviesFilterEnum',
+	values: {
+		STAGEABLE: {
+			value: 'stageable',
 		},
 	},
 });
@@ -63,15 +74,26 @@ class MovieQuery {
 				},
 				order: {
 					type: new GraphQLNonNull(MoviesOrderEnumType),
-					defaultValue: MoviesOrderEnumType.getValues()[0].value,
+					defaultValue: MoviesOrderEnumType.getValue('TITLE_ASC')?.value,
+				},
+				filter: {
+					type: MoviesFilterEnumType,
 				},
 			},
 			resolve: (_: unknown, args: QueryMoviesArgs) => {
-				const options: FindAndCountOptions = {
+				const options: FindAndCountOptions<MovieAttributes> = {
 					limit: args.limit,
 					offset: args.offset,
 					order: [args.order],
 				};
+
+				if (args.filter === MoviesFilterEnumType.getValue('STAGEABLE')?.value) {
+					options.where = {
+						backdrop: {[Op.not]: null},
+						logo: {[Op.not]: null},
+					} as WhereOptions<MovieAttributes>;
+				}
+
 
 				return this.resolver.list(options);
 			},
