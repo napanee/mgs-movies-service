@@ -2,6 +2,7 @@ import {
 	Box as MuiBox,
 	Card as MuiCard,
 	Divider as MuiDivider,
+	css,
 } from '@mui/material';
 import {styled} from '@mui/material/styles';
 
@@ -20,11 +21,14 @@ export const Card = styled(MuiCard)`
 	height: 100%;
 `;
 
-export const Box = styled(MuiBox)`
+export const Box = styled(MuiBox, {shouldForwardProp: (prop) => prop !== 'isInner'})<{isInner?: boolean}>`
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
-	${({isInner}: {isInner?: boolean}) => isInner && 'flex-direction: column; align-items: flex-end;'}
+	${({isInner}) => isInner && css`
+		flex-direction: column;
+		align-items: flex-end;
+	`}
 `;
 
 export const BoxIcon = styled(MuiBox)<{type: PaletteType}>`

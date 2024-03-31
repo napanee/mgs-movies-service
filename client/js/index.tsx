@@ -2,7 +2,7 @@ import {ApolloClient, ApolloProvider, HttpLink, InMemoryCache} from '@apollo/cli
 import {relayStylePagination} from '@apollo/client/utilities';
 import {CssBaseline} from '@mui/material';
 import {StyledEngineProvider, ThemeProvider} from '@mui/material/styles';
-import {render} from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 
 import App from './components/app';
@@ -20,8 +20,10 @@ const cache = new InMemoryCache({
 	},
 });
 const client = new ApolloClient({link, cache});
+const container = document.getElementById('root');
+const root = createRoot(container!);
 
-render(
+root.render(
 	<BrowserRouter basename="/admin">
 		<StyledEngineProvider injectFirst>
 			<ThemeProvider theme={theme}>
@@ -31,6 +33,5 @@ render(
 				</ApolloProvider>
 			</ThemeProvider>
 		</StyledEngineProvider>
-	</BrowserRouter>,
-	document.getElementById('root')
+	</BrowserRouter>
 );
