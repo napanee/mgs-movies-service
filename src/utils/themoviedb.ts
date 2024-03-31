@@ -69,11 +69,14 @@ type MovieCreditsType = {
 type MovieImageType = {
 	file_path: string;
 	height: number;
+	iso_639_1: string | null;
+	vote_average: number;
 	width: number;
 };
 
 type MovieImagesType = {
 	backdrops: MovieImageType[];
+	logos: MovieImageType[];
 	posters: MovieImageType[];
 };
 
@@ -128,18 +131,16 @@ export function searchWithImdb(id: string) {
 export function fetchMovieData(id: number) {
 	return __fetch<MovieDataType>(`movie/${id}?language=de`)
 		.then(({
-			backdropPath: backdrop,
 			genres,
 			id: tmdb,
 			imdbId: imdb,
 			originalTitle: titleOriginal,
 			overview,
-			posterPath: poster,
 			releaseDate,
 			runtime,
 			title,
 		}) => {
-			return {backdrop, genres, tmdb, imdb, titleOriginal, overview, poster, releaseDate, runtime, title};
+			return {genres, tmdb, imdb, titleOriginal, overview, releaseDate, runtime, title};
 		});
 }
 
@@ -163,14 +164,47 @@ export function fetchPerson(id: number) {
 		});
 }
 
-export function fetchImages(id: number, lng?: string) {
-	return __fetch<MovieImagesType>(`movie/${id}/images${lng ? `?language=${lng}` : ''}`)
-		.then(({backdrops, posters}) => ({
-			backdrops: backdrops
-				.map((backdrop) => transformKeys(backdrop))
-				.map(({filePath, width, height}) => ({filePath, width, height})),
-			posters: posters
-				.map((poster) => transformKeys(poster))
-				.map(({filePath, width, height}) => ({filePath, width, height})),
-		}));
+export function fetchImages(id: number) {
+	return __fetch<MovieImagesType>(`movie/${id}/images?include_image_language=null,en,de`)
+		.then(({backdrops, logos, posters}) => {
+			const sortOrderBackdrops = [null, 'de', 'en'];
+			const sortOrderLogos = ['de', 'en', null];
+			const sortOrderPosters = ['de', 'en', null];
+
+			backdrops.sort((a, b) => {
+				if (a.iso_639_1 === b.iso_639_1) {
+					return b.vote_average - a.vote_average;
+				}
+
+				return sortOrderBackdrops.indexOf(a.iso_639_1) - sortOrderBackdrops.indexOf(b.iso_639_1);
+			});
+
+			logos.sort((a, b) => {
+				if (a.iso_639_1 === b.iso_639_1) {
+					return b.vote_average - a.vote_average;
+				}
+
+				return sortOrderLogos.indexOf(a.iso_639_1) - sortOrderLogos.indexOf(b.iso_639_1);
+			});
+
+			posters.sort((a, b) => {
+				if (a.iso_639_1 === b.iso_639_1) {
+					return b.vote_average - a.vote_average;
+				}
+
+				return sortOrderPosters.indexOf(a.iso_639_1) - sortOrderPosters.indexOf(b.iso_639_1);
+			});
+
+			return {
+				backdrops: backdrops
+					.map((backdrop) => transformKeys(backdrop))
+					.map(({filePath, width, height, voteAverage}) => ({filePath, width, height, voteAverage})),
+				logos: logos
+					.map((logo) => transformKeys(logo))
+					.map(({filePath, width, height, voteAverage}) => ({filePath, width, height, voteAverage})),
+				posters: posters
+					.map((poster) => transformKeys(poster))
+					.map(({filePath, width, height, voteAverage}) => ({filePath, width, height, voteAverage})),
+			};
+		});
 }

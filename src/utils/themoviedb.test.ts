@@ -47,12 +47,14 @@ describe('The image saver', () => {
 
 	test('should return images for all languages', async () => {
 		const responseValue = {
-			backdrops: [{file_path: 'Foo', width: 100, height: 100, extra: 'data'}],
-			posters: [{file_path: 'Bar', width: 100, height: 100, extra: 'data'}],
+			backdrops: [{file_path: 'Foo', width: 100, height: 100, voteAverage: 5, extra: 'data'}],
+			logos: [{file_path: 'Baz', width: 100, height: 100, voteAverage: 5, extra: 'data'}],
+			posters: [{file_path: 'Bar', width: 100, height: 100, voteAverage: 5, extra: 'data'}],
 		};
 		const expectedResponse = {
-			backdrops: [{filePath: 'Foo', width: 100, height: 100}],
-			posters: [{filePath: 'Bar', width: 100, height: 100}],
+			backdrops: [{filePath: 'Foo', width: 100, height: 100, voteAverage: 5}],
+			logos: [{filePath: 'Baz', width: 100, height: 100, voteAverage: 5}],
+			posters: [{filePath: 'Bar', width: 100, height: 100, voteAverage: 5}],
 		};
 
 		fetch.mockResponse(JSON.stringify(responseValue), {status: 200});
@@ -64,7 +66,7 @@ describe('The image saver', () => {
 	});
 
 	test('should return images for german languages', async () => {
-		fetch.mockResponse(JSON.stringify({backdrops: [], posters: []}), {status: 200});
+		fetch.mockResponse(JSON.stringify({backdrops: [], logos: [], posters: []}), {status: 200});
 
 		await fetchImages(1, 'de-DE');
 

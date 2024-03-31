@@ -74,6 +74,9 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 		backdrop: {
 			type: GraphQLString,
 		},
+		logo: {
+			type: GraphQLString,
+		},
 		poster: {
 			type: GraphQLString,
 		},
@@ -184,6 +187,9 @@ export const movieUpdateInput: GraphQLInputObjectType = new GraphQLInputObjectTy
 	name: 'movieUpdateInput',
 	fields: () => ({
 		backdrop: {
+			type: GraphQLString,
+		},
+		logo: {
 			type: GraphQLString,
 		},
 		poster: {

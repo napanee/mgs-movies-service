@@ -31,6 +31,7 @@ export interface MovieAttributes {
 	backdrop: string | null;
 	id: number;
 	imdb: string;
+	logo: string | null;
 	overview: string | null;
 	poster: string | null;
 	releaseDate: string;
@@ -40,7 +41,7 @@ export interface MovieAttributes {
 	tmdb: number;
 }
 
-type OptionalAttributes = 'backdrop'|'id'|'overview'|'poster'|'runtime';
+type OptionalAttributes = 'backdrop'|'id'|'logo'|'overview'|'poster'|'runtime';
 
 export type MovieInput = Optional<MovieAttributes, OptionalAttributes>;
 
@@ -89,6 +90,9 @@ const attributes: ModelAttributes = {
 	poster: {
 		type: DataTypes.STRING,
 	},
+	logo: {
+		type: DataTypes.STRING,
+	},
 	imdb: {
 		allowNull: false,
 		type: DataTypes.STRING,
@@ -126,6 +130,13 @@ const loadImages = async (movie: Movie) => {
 		movie.set('backdrop', backdrop);
 	}
 
+	if (movie.changed('logo') && movie.logo) {
+		const prefix = MD5('movie/logo').toString().substring(0, 2);
+		const logo = await saveImage(movie.logo, `${prefix}/${hash}`);
+
+		movie.set('logo', logo);
+	}
+
 	if (movie.changed('poster') && movie.poster) {
 		const prefix = MD5('movie/poster').toString().substring(0, 2);
 		const poster = await saveImage(movie.poster, `${prefix}/${hash}`);
@@ -138,6 +149,7 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	declare backdrop: string | null;
 	declare id: number;
 	declare imdb: string;
+	declare logo: string | null;
 	declare overview: string | null;
 	declare poster: string | null;
 	declare releaseDate: string;

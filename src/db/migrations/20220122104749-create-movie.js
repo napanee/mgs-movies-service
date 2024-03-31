@@ -37,6 +37,9 @@ module.exports = {
 			poster: {
 				type: Sequelize.STRING,
 			},
+			logo: {
+				type: Sequelize.STRING,
+			},
 			imdb: {
 				allowNull: false,
 				type: Sequelize.STRING,

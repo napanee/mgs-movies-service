@@ -12,7 +12,7 @@ import {
 	MutationMovieUpdateArgs,
 	QueryMovieArgs,
 } from '@src/graphql-types';
-import {fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
+import {fetchImages, fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
 
 
 class MovieController {
@@ -65,14 +65,15 @@ class MovieController {
 		const {genres, tmdb, ...defaults} = await fetchMovieData(id);
 		const [movieModel] = await Movie.findOrCreate({where: {tmdb}, defaults: {...defaults, tmdb}});
 		const people = await fetchMovieCredits(id);
+		const images = await fetchImages(id);
 
-		await Promise.all(
-			genres.map(async ({id, ...data}) => {
-				const [genreModel] = await Genre.findOrCreate({where: {tmdb: id}, defaults: {...data, tmdb: id}});
+		movieModel.set({
+			backdrop: images.backdrops[0]?.filePath,
+			logo: images.logos[0]?.filePath,
+			poster: images.posters[0]?.filePath,
+		});
+		await movieModel.save();
 
-				await movieModel.addGenre(genreModel);
-			})
-		);
 		await genres.reduce(async (previousPromise, {id, ...data}) => {
 			await previousPromise;
 
@@ -95,7 +96,7 @@ class MovieController {
 		};
 	}
 
-	async update({id, input: {backdrop, poster}}: MutationMovieUpdateArgs) {
+	async update({id, input: {backdrop, logo, poster}}: MutationMovieUpdateArgs) {
 		const movieModel = await Movie.findByPk(id);
 
 		if (!movieModel) {
@@ -110,6 +111,10 @@ class MovieController {
 
 		if (backdrop) {
 			movieModel.backdrop = backdrop;
+		}
+
+		if (logo) {
+			movieModel.logo = logo;
 		}
 
 		if (poster) {
