@@ -11,7 +11,12 @@ export interface Configuration extends WebpackConfiguration {
 	devServer?: WebpackDevServerConfiguration;
 }
 
-export default [
-	merge<Configuration>(configCommon, configClient),
-	merge<Configuration>(configCommon, configServer),
+export const configMergedClient = merge<Configuration>(configCommon, configClient);
+export const configMergedServer = merge<Configuration>(configCommon, configServer);
+
+const config = [
+	configMergedClient,
+	configMergedServer,
 ];
+
+export default config;

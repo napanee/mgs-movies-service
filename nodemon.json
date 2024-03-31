@@ -1,0 +1,8 @@
+{
+	"watch": "./src",
+	"ignore": [
+		"node_modules/",
+		"./**/*.test.ts"
+	],
+	"exec": "babel-node ./src/server.ts --extensions .ts,.tsx"
+}
