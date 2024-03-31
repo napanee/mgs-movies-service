@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, {Application} from 'express';
 
-import {STATIC_ROOT, STATIC_URL} from './config/config';
+import {MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL} from './config';
 import dbInit from './db/init';
 import routerGraphql from './routes/graphql';
 
@@ -14,6 +14,7 @@ const corsOptions = {origin: '*', optionsSuccessStatus: 200};
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(MEDIA_URL, express.static(MEDIA_ROOT));
 app.use(STATIC_URL, express.static(STATIC_ROOT));
 app.use('/graphql', routerGraphql);
 app.get('/admin', (_, res) => {
