@@ -18,6 +18,7 @@ import {
 	Optional,
 } from 'sequelize';
 
+import {MEDIA_URL} from '@src/config';
 import {saveImage} from '@utils/index';
 
 import Genre from './Genre';
@@ -116,6 +117,24 @@ const attributes: ModelAttributes = {
 			return this.MoviePeople?.character;
 		},
 	},
+	backdropUrl: {
+		type: DataTypes.VIRTUAL,
+		get(this: Movie): string | null {
+			return this.backdrop ? `${MEDIA_URL}${this.backdrop}` : null;
+		},
+	},
+	logoUrl: {
+		type: DataTypes.VIRTUAL,
+		get(this: Movie): string | null {
+			return this.logo ? `${MEDIA_URL}${this.logo}` : null;
+		},
+	},
+	posterUrl: {
+		type: DataTypes.VIRTUAL,
+		get(this: Movie): string | null {
+			return this.poster ? `${MEDIA_URL}${this.poster}` : null;
+		},
+	},
 };
 
 const loadImages = async (movie: Movie) => {
@@ -188,6 +207,9 @@ class Movie extends Model<MovieAttributes, MovieInput> implements MovieAttribute
 	};
 	declare readonly People?: Array<Person>;
 	declare readonly character: string;
+	declare readonly backdropUrl: string | null;
+	declare readonly logoUrl: string | null;
+	declare readonly posterUrl: string | null;
 
 	declare static associations: {
 		Genres: Association<Movie, Genre>;

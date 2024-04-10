@@ -80,6 +80,14 @@ type MovieImagesType = {
 	posters: MovieImageType[];
 };
 
+export type MovieImageResultType = CamelCasedProperties<Omit<MovieImageType, 'iso_639_1'>>;
+
+export type MovieImagesResultType = {
+	backdrops: MovieImageResultType[];
+	logos: MovieImageResultType[];
+	posters: MovieImageResultType[];
+};
+
 // eslint-disable-next-line max-len
 interface IMovieCreditsResponse extends Omit<CreditType, 'id'>, Partial<Omit<CastType, keyof CreditType>>, Partial<Omit<CrewType, keyof CreditType>> {
 	credit_id: string;
@@ -164,7 +172,7 @@ export function fetchPerson(id: number) {
 		});
 }
 
-export function fetchImages(id: number) {
+export function fetchImages(id: number): Promise<MovieImagesResultType> {
 	return __fetch<MovieImagesType>(`movie/${id}/images?include_image_language=null,en,de`)
 		.then(({backdrops, logos, posters}) => {
 			const sortOrderBackdrops = [null, 'de', 'en'];

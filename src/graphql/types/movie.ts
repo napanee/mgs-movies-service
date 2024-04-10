@@ -62,6 +62,9 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 		titleOriginal: {
 			type: new GraphQLNonNull(GraphQLString),
 		},
+		tmdb: {
+			type: new GraphQLNonNull(GraphQLInt),
+		},
 		runtime: {
 			type: GraphQLInt,
 		},
@@ -71,13 +74,13 @@ export const movieNode: GraphQLObjectType = new GraphQLObjectType({
 		overview: {
 			type: GraphQLString,
 		},
-		backdrop: {
+		backdropUrl: {
 			type: GraphQLString,
 		},
-		logo: {
+		logoUrl: {
 			type: GraphQLString,
 		},
-		poster: {
+		posterUrl: {
 			type: GraphQLString,
 		},
 		cast: {
