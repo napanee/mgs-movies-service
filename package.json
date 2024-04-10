@@ -41,6 +41,8 @@
     "dayjs": "^1.10.7",
     "express": "^4.19.2",
     "graphql-http": "^1.22.0",
+    "mobx": "^6.12.3",
+    "mobx-react-lite": "^4.0.7",
     "pg": "^8.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -5,6 +5,9 @@ import {StyledEngineProvider, ThemeProvider} from '@mui/material/styles';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter} from 'react-router-dom';
 
+import Modal from '@generic/modal/Modal';
+import {Provider as StoreProvider, stores} from '@stores/index';
+
 import App from './components/app';
 import theme from './theme';
 
@@ -29,7 +32,10 @@ root.render(
 			<ThemeProvider theme={theme}>
 				<CssBaseline />
 				<ApolloProvider client={client}>
-					<App />
+					<StoreProvider value={stores}>
+						<App />
+						<Modal />
+					</StoreProvider>
 				</ApolloProvider>
 			</ThemeProvider>
 		</StyledEngineProvider>

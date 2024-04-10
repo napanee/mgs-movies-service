@@ -15,7 +15,8 @@
 			"@pages/*": ["client/js/pages/*"],
 			"@components/*": ["client/js/components/*"],
 			"@generic/*": ["client/js/generic/*"],
-			"@hooks/*": ["client/js/hooks/*"]
+			"@hooks/*": ["client/js/hooks/*"],
+			"@stores/*": ["client/js/stores/*"]
 		},
 		"allowJs": false,
 		"skipLibCheck": true,
