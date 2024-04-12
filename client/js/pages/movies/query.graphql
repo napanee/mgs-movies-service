@@ -1,0 +1,14 @@
+query getMovies($limit: Int, $offset: Int) {
+	movies(limit: $limit, offset: $offset, order: TITLE_ASC) {
+		edges {
+			node {
+				...movieNode
+			}
+		}
+		pageInfo {
+			hasNextPage
+			hasPreviousPage
+		}
+		totalCount
+	}
+}

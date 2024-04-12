@@ -51,6 +51,10 @@ const theme = createTheme({
 			fontWeight: 700,
 		},
 	},
+	zIndex: {
+		background: -1,
+		base: 0,
+	},
 });
 
 export default theme;

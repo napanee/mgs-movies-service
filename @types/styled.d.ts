@@ -31,4 +31,9 @@ declare module '@mui/material/styles' {
 			}
 		};
 	}
+
+	interface ZIndex {
+		background: number;
+		base: number;
+	}
 }

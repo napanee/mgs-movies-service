@@ -1,0 +1,8 @@
+fragment movieNode on movieNode {
+	id
+	backdropUrl
+	logoUrl
+	title
+	posterUrl
+	tmdb
+}

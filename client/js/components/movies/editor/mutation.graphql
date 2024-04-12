@@ -1,0 +1,12 @@
+mutation movie($id: Int!, $input: movieUpdateInput!) {
+	movieUpdate(id: $id, input: $input) {
+		ok
+		errors {
+			field
+			message
+		}
+		movie {
+			title
+		}
+	}
+}
