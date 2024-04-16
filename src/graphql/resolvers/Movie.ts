@@ -62,8 +62,19 @@ class MovieController {
 	}
 
 	async create({tmdb: id}: MutationMovieCreateArgs) {
+		let movieModel = await Movie.findOne({where: {tmdb: id}});
+
+		if (movieModel) {
+			return {
+				movie: movieModel,
+				ok: false,
+			};
+		}
+
 		const {genres, tmdb, ...defaults} = await fetchMovieData(id);
-		const [movieModel] = await Movie.findOrCreate({where: {tmdb}, defaults: {...defaults, tmdb}});
+
+		[movieModel] = await Movie.findOrCreate({where: {tmdb}, defaults: {...defaults, tmdb}});
+
 		const people = await fetchMovieCredits(id);
 		const images = await fetchImages(id);
 
@@ -74,18 +85,21 @@ class MovieController {
 		});
 		await movieModel.save();
 
-		await genres.reduce(async (previousPromise, {id, ...data}) => {
-			await previousPromise;
-
+		await genres.map(async ({id, ...data}) => {
 			const [genreModel] = await Genre.findOrCreate({where: {tmdb: id}, defaults: {...data, tmdb: id}});
 
 			return movieModel.addGenre(genreModel);
-		}, Promise.resolve());
+		});
 		await people.reduce(async (previousPromise, {tmdb, ...data}) => {
 			await previousPromise;
 
-			const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
-			const [personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults: {...defaults, tmdb: id}});
+			let personModel = await Person.findOne({where: {tmdb}});
+
+			if (!personModel) {
+				const {tmdb: id, ...defaults} = await fetchPerson(tmdb);
+
+				[personModel] = await Person.findOrCreate({where: {tmdb: id}, defaults: {...defaults, tmdb: id}});
+			}
 
 			return movieModel.addPerson(personModel, {through: {...data}});
 		}, Promise.resolve());
