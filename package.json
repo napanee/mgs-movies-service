@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon",
     "graphql": "ruru -SP -p 4001 -e http://localhost:3000/graphql",
-    "build": "cross-env NODE_ENV=production DEPLOYMENT_ENV=live webpack",
+    "build": "NODE_ENV=production DEPLOYMENT_ENV=live webpack",
     "prod": "node ./build/server.js",
     "lint:js": "eslint . --ext ts,js,tsx,jsx",
     "lint:scss": "stylelint \"**/*.{ts,js,tsx,jsx}\"",
@@ -85,7 +85,6 @@
     "@typescript-eslint/parser": "^7.4.0",
     "babel-plugin-inline-dotenv": "^1.6.0",
     "babel-plugin-tsconfig-paths-module-resolver": "^1.0.4",
-    "cross-env": "^7.0.3",
     "dotenv-webpack": "^8.1.0",
     "eslint": "^8.8.0",
     "eslint-config-airbnb-typescript": "^18.0.0",
