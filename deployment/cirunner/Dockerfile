@@ -22,7 +22,9 @@ RUN set -ex \
 	&& npm ci --quiet --loglevel=error --ignore-scripts \
 	&& rm -fr /root/.npm/ \
 	&& rm -fr /root/.node-gyp/ \
-	&& mkdir -p /.npm && chmod 777 -R /.npm
+	&& mkdir -p /.npm && chmod 777 -R /.npm \
+	&& mkdir -p /ci/node_modules/.cache && chmod 777 -R /ci/node_modules/.cache \
+	&& npm rebuild bcrypt
 
 WORKDIR /app
 
