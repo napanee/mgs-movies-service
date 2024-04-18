@@ -60,7 +60,7 @@ export const personNode: GraphQLObjectType = new GraphQLObjectType({
 			type: GraphQLString,
 		},
 		filmography: {
-			type: new GraphQLNonNull(new GraphQLList(filmographyNode)),
+			type: new GraphQLList(filmographyNode),
 			resolve: (person) => {
 				const options: FindAndCountOptions = {
 					include: {

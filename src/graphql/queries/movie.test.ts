@@ -1,4 +1,4 @@
-import {FindAndCountOptions} from 'sequelize/types';
+import {FindAndCountOptions} from 'sequelize';
 import supertest from 'supertest';
 
 import {Genre, Movie, Person} from '@db/models';
@@ -32,9 +32,11 @@ const movieList = [...Array(10)].map((_, index): MovieNode => ({
 	releaseDate: '2022-01-01',
 	title: `Foo${index}`,
 	titleOriginal: `Foo${index}`,
-	backdrop: null,
+	tmdb: 1,
+	backdropUrl: null,
+	logoUrl: null,
+	posterUrl: null,
 	overview: null,
-	poster: null,
 	runtime: null,
 	cast: [],
 	directors: [],

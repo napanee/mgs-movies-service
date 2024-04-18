@@ -11,7 +11,7 @@
     "lint:js": "eslint . --ext ts,js,tsx,jsx",
     "lint:scss": "stylelint \"**/*.{ts,js,tsx,jsx}\"",
     "lint": "npm run lint:js; npm run lint:scss;",
-    "test": "jest --coverage --runInBand --verbose --forceExit",
+    "test": "jest --coverage --verbose --detectOpenHandles",
     "test:watch": "jest --coverage --watch --runInBand",
     "migrate": "sequelize db:migrate",
     "types:generate": "babel-node ./schema.ts --extensions .ts && graphql-codegen --config ./codegen-backend.yml && graphql-codegen --config ./codegen-frontend.yml && rm -rf ./schema.graphql"

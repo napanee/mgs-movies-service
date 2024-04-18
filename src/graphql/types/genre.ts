@@ -45,7 +45,7 @@ export const genreNode: GraphQLObjectType = new GraphQLObjectType({
 			type: new GraphQLNonNull(GraphQLString),
 		},
 		movies: {
-			type: new GraphQLNonNull(new GraphQLList(movieNode)),
+			type: new GraphQLList(movieNode),
 			resolve: (genre) => {
 				const args: FindAndCountOptions = {
 					include: {

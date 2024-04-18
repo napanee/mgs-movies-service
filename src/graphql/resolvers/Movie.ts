@@ -66,8 +66,12 @@ class MovieController {
 
 		if (movieModel) {
 			return {
-				movie: movieModel,
 				ok: false,
+				movie: movieModel,
+				errors: [{
+					field: 'id',
+					message: 'This Movie already exists.',
+				}],
 			};
 		}
 
@@ -78,12 +82,11 @@ class MovieController {
 		const people = await fetchMovieCredits(id);
 		const images = await fetchImages(id);
 
-		movieModel.set({
+		await movieModel.update({
 			backdrop: images.backdrops[0]?.filePath,
 			logo: images.logos[0]?.filePath,
 			poster: images.posters[0]?.filePath,
 		});
-		await movieModel.save();
 
 		await genres.map(async ({id, ...data}) => {
 			const [genreModel] = await Genre.findOrCreate({where: {tmdb: id}, defaults: {...data, tmdb: id}});

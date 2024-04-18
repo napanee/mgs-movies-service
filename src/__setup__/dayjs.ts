@@ -1,10 +1,10 @@
 jest.mock('dayjs', () => {
-	return (value: string | null) => {
+	return (value: object | string | null) => {
 		const date = value;
 
 		return {
 			isValid: () => !!date,
-			year: () => date?.substring(0, 4) || '1984',
+			year: () => date?.toString().substring(0, 4) || '1984',
 		};
 	};
 });
