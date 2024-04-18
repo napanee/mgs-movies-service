@@ -32,9 +32,7 @@ tests:
 	docker-compose \
 		-f deployment/docker-compose.ci.yml \
 		run -u `id -u`:`id -g` tests \
-		npm run test \
-		|| true  # TODO REMOVE WHEN TEST PASS
-
+		npm run test
 
 buildapp:
 	export COMMIT="$$(echo $${GITHUB_SHA} | cut -c1-7)"
