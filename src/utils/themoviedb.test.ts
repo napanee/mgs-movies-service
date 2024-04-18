@@ -13,6 +13,8 @@ import {
 jest.mock('fs');
 enableFetchMocks();
 
+const apiURL = 'https://api.themoviedb.org/3/movie/1/images?include_image_language=null,en,de';
+
 describe('The image saver', () => {
 	afterEach(() => {
 		fetch.resetMocks();
@@ -23,7 +25,7 @@ describe('The image saver', () => {
 
 		process.env.MOVIE_DB_KEY = '12345';
 
-		fetch.mockResponse(JSON.stringify({backdrops: [], posters: []}), {status: 200});
+		fetch.mockResponse(JSON.stringify({backdrops: [], logos: [], posters: []}), {status: 200});
 
 		await fetchImages(1);
 
@@ -61,16 +63,8 @@ describe('The image saver', () => {
 
 		const result = await fetchImages(1);
 
-		expect(fetch).toBeCalledWith('https://api.themoviedb.org/3/movie/1/images', expect.anything());
+		expect(fetch).toBeCalledWith(apiURL, expect.anything());
 		expect(result).toEqual(expectedResponse);
-	});
-
-	test('should return images for german languages', async () => {
-		fetch.mockResponse(JSON.stringify({backdrops: [], logos: [], posters: []}), {status: 200});
-
-		await fetchImages(1, 'de-DE');
-
-		expect(fetch).toBeCalledWith('https://api.themoviedb.org/3/movie/1/images?language=de-DE', expect.anything());
 	});
 
 	test('should return movie credits', async () => {
@@ -106,13 +100,11 @@ describe('The image saver', () => {
 			extra: '',
 		};
 		const expectedResponse = {
-			backdrop: 'backdrop_path',
 			genres: 'genres',
 			tmdb: 'id',
 			imdb: 'imdb_id',
 			titleOriginal: 'original_title',
 			overview: 'overview',
-			poster: 'poster_path',
 			releaseDate: 'release_date',
 			runtime: 'runtime',
 			title: 'title',

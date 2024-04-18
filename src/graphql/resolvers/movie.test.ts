@@ -2,7 +2,7 @@ import {Sequelize} from 'sequelize';
 
 import {sequelizeConnection} from '@db/connection';
 import {Movie as ModelMovie, Person as ModelPerson} from '@db/models';
-import {fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
+import {fetchImages, fetchMovieCredits, fetchMovieData, fetchPerson} from '@utils/index';
 
 import MovieController from './Movie';
 
@@ -16,14 +16,12 @@ const nullablePersonProperties = {biography: null, birthday: null, deathday: nul
 const nullableMovieProperties = {overview: null, runtime: null, backdrop: null, poster: null};
 const movieDataDefault = {
 	...nullableMovieProperties,
-	backdrop: null,
 	genres: [
 		{id: 1, name: 'foo'},
 		{id: 2, name: 'bar'},
 	],
 	titleOriginal: 'titleOriginal',
 	overview: null,
-	poster: null,
 	releaseDate: '2022-01-01',
 	runtime: 1,
 	title: 'title',
@@ -36,6 +34,7 @@ const personDataDefault = {
 const mockedFetchMovieCredits = fetchMovieCredits as jest.MockedFunction<typeof fetchMovieCredits>;
 const mockedFetchMovieData = fetchMovieData as jest.MockedFunction<typeof fetchMovieData>;
 const mockedFetchPerson = fetchPerson as jest.MockedFunction<typeof fetchPerson>;
+const mockedFetchImages = fetchImages as jest.MockedFunction<typeof fetchImages>;
 
 describe('The movie resolver', () => {
 	const db: Sequelize = sequelizeConnection;
@@ -148,6 +147,7 @@ describe('The movie resolver', () => {
 			mockedFetchMovieData.mockReset();
 			mockedFetchMovieCredits.mockReset();
 			mockedFetchPerson.mockReset();
+			mockedFetchImages.mockReset();
 		});
 
 		test('should fail, because movie already exists', async () => {
@@ -168,7 +168,7 @@ describe('The movie resolver', () => {
 
 			const result = await movieResolver.create({tmdb: 1});
 
-			expect(mockedFetchMovieData).toHaveBeenCalledTimes(1);
+			expect(mockedFetchMovieData).toHaveBeenCalledTimes(0);
 			expect(result).toEqual(expectedResponse);
 		});
 
@@ -179,12 +179,17 @@ describe('The movie resolver', () => {
 				imdb: 'tt4',
 			});
 			mockedFetchMovieCredits.mockResolvedValue([
-				{creditId: '1', department: 'Foo', tmdb: 1},
+				{creditId: '1', department: 'Foo', tmdb: 2},
 			]);
 			mockedFetchPerson.mockResolvedValue({
 				...personDataDefault,
 				imdb: 'tt1',
 				tmdb: 1,
+			});
+			mockedFetchImages.mockResolvedValue({
+				backdrops: [],
+				logos: [],
+				posters: [],
 			});
 
 			const expectedResponse = {
@@ -200,6 +205,7 @@ describe('The movie resolver', () => {
 			expect(mockedFetchMovieData).toHaveBeenCalledTimes(1);
 			expect(mockedFetchMovieCredits).toHaveBeenCalledTimes(1);
 			expect(mockedFetchPerson).toHaveBeenCalledTimes(1);
+			expect(mockedFetchImages).toHaveBeenCalledTimes(1);
 			expect(result).toEqual(expectedResponse);
 			await expect(result.movie.countPeople()).resolves.toBe(1);
 		});
