@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+const dotenv = require('dotenv');
 const {pathsToModuleNameMapper} = require('ts-jest');
 
 const {compilerOptions} = require('./tsconfig');
 
+
+dotenv.config({path: '.env.test'});
 
 module.exports = {
 	roots: ['<rootDir>/src'],

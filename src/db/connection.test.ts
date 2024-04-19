@@ -4,6 +4,12 @@ import {Sequelize} from 'sequelize';
 describe('The Connection', () => {
 	let db: Sequelize;
 	const originalLog = global.console.log;
+	const OLD_ENV = process.env;
+
+	beforeEach(() => {
+		jest.resetModules();
+		process.env = {...OLD_ENV};
+	});
 
 	beforeEach(() => {
 		global.console.log = jest.fn();
@@ -16,8 +22,6 @@ describe('The Connection', () => {
 	});
 
 	test('should contain test database', async () => {
-		const oldEnv = process.env;
-
 		process.env.DATABASE_NAME = 'db_test';
 
 		const {sequelizeConnection} = await import('./connection');
@@ -29,13 +33,9 @@ describe('The Connection', () => {
 		};
 
 		expect(sequelizeConnection.config).toEqual(expect.objectContaining(config));
-
-		process.env = oldEnv;
 	});
 
 	test('should return development config', async () => {
-		const oldEnv = process.env;
-
 		process.env.NODE_ENV = 'development';
 
 		const {sequelizeConnection} = await import('./connection');
@@ -47,8 +47,6 @@ describe('The Connection', () => {
 		};
 
 		expect(sequelizeConnection.config).toEqual(expect.objectContaining(config));
-
-		process.env = oldEnv;
 	});
 
 	test('should not use logging, when not in debug mode', async () => {
@@ -63,8 +61,6 @@ describe('The Connection', () => {
 	});
 
 	test('should use logging in debug mode', async () => {
-		const oldEnv = process.env;
-
 		process.env.DEBUG = true;
 
 		const {logging, sequelizeConnection} = await import('./connection');
@@ -75,7 +71,5 @@ describe('The Connection', () => {
 
 		await sequelizeConnection.showAllSchemas({logging});
 		expect(global.console.log).toHaveBeenCalled();
-
-		process.env = oldEnv;
 	});
 });
