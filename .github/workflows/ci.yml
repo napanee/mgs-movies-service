@@ -68,7 +68,7 @@ jobs:
           chmod 600 ~/.ssh/deploy.key
           cat >> ~/.ssh/config <<END
           Host *
-            User TODO_server_username
+            User martin
             IdentityFile ~/.ssh/deploy.key
             StrictHostKeyChecking no
           END
@@ -81,4 +81,4 @@ jobs:
           pip3 install 'docker<7'
 
       - name: 'Deploy application'
-        run: echo python deployment/deploy.py -s $GITHUB_REF_NAME deploy  # TODO REMOVE ECHO
+        run: python deployment/deploy.py -s $GITHUB_REF_NAME deploy

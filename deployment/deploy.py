@@ -19,8 +19,8 @@ APP_SERVICE = 'app'
 TUNNEL_PORT = random.randint(20000, 30000)
 
 STAGES = {
-    'main': {'host': 'TODO_server_name', 'nginx_port': 80},
-    'develop': {'host': 'TODO_server_name', 'nginx_port': 8080},
+    'main': {'host': '91.65.98.162', 'nginx_port': 80},
+    'develop': {'host': '91.65.98.162', 'nginx_port': 8080},
 }
 
 
