@@ -12,6 +12,7 @@
     "lint:scss": "stylelint \"**/*.{ts,js,tsx,jsx}\"",
     "lint": "npm run lint:js; npm run lint:scss;",
     "ci-lint": "npm run types:generate && npm run lint",
+    "ci-test": "npm run migrate && jest --detectOpenHandles",
     "test": "jest --coverage --verbose --detectOpenHandles",
     "test:watch": "jest --coverage --watch --runInBand",
     "migrate": "sequelize db:migrate",
