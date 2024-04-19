@@ -1,13 +1,14 @@
 .ONESHELL: all
 
 SHELL := /bin/bash
+REPO = `echo $(GITHUB_REPOSITORY) | tr A-Z a-z`
 
 restorecache:
-	docker pull ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache || true
+	docker pull ghcr.io/${REPO}/cirunner-cache || true
 
 updatecache:
-	docker tag cirunner ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache
-	docker push ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache || true
+	docker tag cirunner ghcr.io/${REPO}/cirunner-cache
+	docker push ghcr.io/${REPO}/cirunner-cache || true
 
 prepare:
 	docker-compose \
@@ -36,15 +37,15 @@ tests:
 
 buildapp:
 	export COMMIT="$$(echo $${GITHUB_SHA} | cut -c1-7)"
-	docker pull ghcr.io/${GITHUB_REPOSITORY}/app || true
+	docker pull ghcr.io/${REPO}/app || true
 	docker \
 		build \
 		--cache-from \
-		ghcr.io/${GITHUB_REPOSITORY}/app:latest \
+		ghcr.io/${REPO}/app:latest \
 		--tag \
-		ghcr.io/${GITHUB_REPOSITORY}/app:latest \
+		ghcr.io/${REPO}/app:latest \
 		--tag \
-		ghcr.io/${GITHUB_REPOSITORY}/app:$${GITHUB_REF_NAME} \
+		ghcr.io/${REPO}/app:$${GITHUB_REF_NAME} \
 		--build-arg \
 		BUILDKIT_INLINE_CACHE=1 \
 		--build-arg \
@@ -56,17 +57,17 @@ buildapp:
 		.
 
 pushapp:
-	docker push ghcr.io/${GITHUB_REPOSITORY}/app:latest
-	docker push ghcr.io/${GITHUB_REPOSITORY}/app:$${GITHUB_REF_NAME}
+	docker push ghcr.io/${REPO}/app:latest
+	docker push ghcr.io/${REPO}/app:$${GITHUB_REF_NAME}
 
 buildnginx:
 	docker \
 		build \
 		--tag \
-		ghcr.io/${GITHUB_REPOSITORY}/nginx:$${GITHUB_REF_NAME} \
+		ghcr.io/${REPO}/nginx:$${GITHUB_REF_NAME} \
 		--file \
 		deployment/nginx/Dockerfile \
 		.
 
 pushnginx:
-	docker push ghcr.io/${GITHUB_REPOSITORY}/nginx:$${GITHUB_REF_NAME}
+	docker push ghcr.io/${REPO}/nginx:$${GITHUB_REF_NAME}
