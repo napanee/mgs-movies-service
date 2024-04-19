@@ -20,11 +20,11 @@ const config: Config = {
 		dialect: 'postgres',
 	},
 	test: {
-		username: 'postgres',
-		password: 'postgres',
-		database: 'movies_test',
-		host: '127.0.0.1',
-		dialect: 'postgres',
+		username: process.env.DATABASE_USER,
+		password: process.env.DATABASE_PASS,
+		database: process.env.DATABASE_NAME,
+		host: process.env.DATABASE_HOST,
+		dialect: process.env.DATABASE_DIALECT,
 	},
 	production: {
 		username: process.env.DATABASE_USER,
