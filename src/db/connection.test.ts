@@ -16,15 +16,21 @@ describe('The Connection', () => {
 	});
 
 	test('should contain test database', async () => {
+		const oldEnv = process.env;
+
+		process.env.DATABASE_NAME = 'db_test';
+
 		const {sequelizeConnection} = await import('./connection');
 
 		db = sequelizeConnection;
 
 		const config = {
-			database: 'movies_test',
+			database: 'db_test',
 		};
 
 		expect(sequelizeConnection.config).toEqual(expect.objectContaining(config));
+
+		process.env = oldEnv;
 	});
 
 	test('should return development config', async () => {
@@ -45,16 +51,7 @@ describe('The Connection', () => {
 		process.env = oldEnv;
 	});
 
-	test('should not use logging in production mode', async () => {
-		const oldEnv = process.env;
-
-		process.env.NODE_ENV = 'production';
-		process.env.DATABASE_USER = 'postgres';
-		process.env.DATABASE_PASS = 'postgres';
-		process.env.DATABASE_NAME = 'movies_test';
-		process.env.DATABASE_HOST = '127.0.0.1';
-		process.env.DATABASE_DIALECT = 'postgres';
-
+	test('should not use logging, when not in debug mode', async () => {
 		const {logging, sequelizeConnection} = await import('./connection');
 
 		db = sequelizeConnection;
@@ -63,14 +60,11 @@ describe('The Connection', () => {
 
 		await sequelizeConnection.showAllSchemas({logging});
 		expect(global.console.log).toHaveBeenCalledTimes(0);
-
-		process.env = oldEnv;
 	});
 
-	test('should use logging in development mode', async () => {
+	test('should use logging in debug mode', async () => {
 		const oldEnv = process.env;
 
-		process.env.NODE_ENV = 'development';
 		process.env.DEBUG = true;
 
 		const {logging, sequelizeConnection} = await import('./connection');
