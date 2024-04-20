@@ -35,7 +35,7 @@ RUN npm run build
 
 FROM base as app
 
-COPY package.json package-lock.json deployment/app/entrypoint.sh /app/
+COPY tsconfig.json package.json package-lock.json deployment/app/entrypoint.sh /app/
 COPY --from=builder /build/build/ /app/build/
 
 WORKDIR /app
