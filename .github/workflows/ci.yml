@@ -81,4 +81,4 @@ jobs:
           pip3 install 'docker<7'
 
       - name: 'Deploy application'
-        run: ssh -v 91.65.98.162 uptime
+        run: python deployment/deploy.py -s $GITHUB_REF_NAME deploy
