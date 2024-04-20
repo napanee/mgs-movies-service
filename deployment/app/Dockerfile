@@ -35,13 +35,18 @@ RUN npm run build
 
 FROM base as app
 
-COPY deployment/app/entrypoint.sh /app/
+COPY package.json package-lock.json deployment/app/entrypoint.sh /app/
 COPY --from=builder /build/build/ /app/build/
 
-WORKDIR /app/build/
+WORKDIR /app
+
+RUN set -ex \
+	&& npm ci --quiet --loglevel=error \
+	&& rm -fr /root/.npm/ \
+	&& rm -fr /root/.node-gyp/
 
 ARG BUILD
 ENV BUILD=$BUILD
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["node", "server.js"]
+CMD ["node", "build/server.js"]
