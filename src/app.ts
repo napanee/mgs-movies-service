@@ -11,12 +11,16 @@ import routerGraphql from './routes/graphql';
 import {configMergedClient as webpackConfig} from '../webpack.config';
 
 
-dbInit();
+const isDev = process.env.NODE_ENV === 'development';
+
+if (isDev) {
+	dbInit();
+}
 
 const app: Application = express();
 const corsOptions = {origin: '*', optionsSuccessStatus: 200};
 
-if (process.env.NODE_ENV === 'development') {
+if (isDev) {
 	const webpackCompiler = webpack(webpackConfig);
 
 	app.use(
