@@ -37,22 +37,14 @@ tests:
 buildapp:
 	export COMMIT="$$(echo $${GITHUB_SHA} | cut -c1-7)"
 	docker pull ghcr.io/${GITHUB_REPOSITORY}/app || true
-	docker \
-		build \
-		--cache-from \
-		ghcr.io/${GITHUB_REPOSITORY}/app:latest \
-		--tag \
-		ghcr.io/${GITHUB_REPOSITORY}/app:latest \
-		--tag \
-		ghcr.io/${GITHUB_REPOSITORY}/app:$${GITHUB_REF_NAME} \
-		--build-arg \
-		BUILDKIT_INLINE_CACHE=1 \
-		--build-arg \
-		BUILD=$${COMMIT} \
-		--file \
-		deployment/app/Dockerfile \
-		--target \
-		app \
+	docker build \
+		--cache-from ghcr.io/${GITHUB_REPOSITORY}/app:latest \
+		--tag ghcr.io/${GITHUB_REPOSITORY}/app:latest \
+		--tag ghcr.io/${GITHUB_REPOSITORY}/app:$${GITHUB_REF_NAME} \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		--build-arg BUILD=$${COMMIT} \
+		--file deployment/app/Dockerfile \
+		--target app \
 		.
 
 pushapp:
@@ -60,12 +52,9 @@ pushapp:
 	docker push ghcr.io/${GITHUB_REPOSITORY}/app:$${GITHUB_REF_NAME}
 
 buildnginx:
-	docker \
-		build \
-		--tag \
-		ghcr.io/${GITHUB_REPOSITORY}/nginx:$${GITHUB_REF_NAME} \
-		--file \
-		deployment/nginx/Dockerfile \
+	docker build \
+		--tag ghcr.io/${GITHUB_REPOSITORY}/nginx:$${GITHUB_REF_NAME} \
+		--file deployment/nginx/Dockerfile \
 		.
 
 pushnginx:
