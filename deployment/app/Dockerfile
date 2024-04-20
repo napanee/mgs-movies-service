@@ -44,4 +44,4 @@ ARG BUILD
 ENV BUILD=$BUILD
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["node", "build/server.js"]
+CMD ["node", "server.js"]
