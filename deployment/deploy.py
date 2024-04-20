@@ -75,7 +75,7 @@ def get_env(stage):
         {
             'DOCKER_HOST': f'tcp://localhost:{TUNNEL_PORT}',
             'COMPOSE_PROJECT_NAME': f'{PROJECT_NAME}{stage}',
-            'COMPOSE_FILE': os.path.join(DEPLOYMENT_DIR, 'docker-compose.yml'),
+            'COMPOSE_FILE': os.path.join(DEPLOYMENT_DIR, 'docker compose.yml'),
             'COMPOSE_STAGE': stage,
             'COMPOSE_NGINX_PORT': str(STAGES[stage]['nginx_port']),
         }
@@ -115,18 +115,18 @@ def ensure_tunnel(command):
 
 @ensure_tunnel
 def run_deploy(options):
-    result = shell_command(options.stage, 'docker-compose pull --quiet')
+    result = shell_command(options.stage, 'docker compose pull --quiet')
     if result[0] != 0:
         sys.exit(result[0])
 
-    result = shell_command(options.stage, 'docker-compose up -d --build')
+    result = shell_command(options.stage, 'docker compose up -d --build')
     sys.exit(result[0])
 
 
 @ensure_tunnel
 def run_exec(options):
     result = shell_command(
-        options.stage, f'docker-compose exec -T {APP_SERVICE} {options.command}'
+        options.stage, f'docker compose exec -T {APP_SERVICE} {options.command}'
     )
     sys.exit(result[0])
 
