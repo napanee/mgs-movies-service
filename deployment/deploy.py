@@ -75,7 +75,7 @@ def get_env(stage):
         {
             'DOCKER_HOST': f'tcp://localhost:{TUNNEL_PORT}',
             'COMPOSE_PROJECT_NAME': f'{PROJECT_NAME}{stage}',
-            'COMPOSE_FILE': os.path.join(DEPLOYMENT_DIR, 'docker compose.yml'),
+            'COMPOSE_FILE': os.path.join(DEPLOYMENT_DIR, 'docker-compose.yml'),
             'COMPOSE_STAGE': stage,
             'COMPOSE_NGINX_PORT': str(STAGES[stage]['nginx_port']),
         }
