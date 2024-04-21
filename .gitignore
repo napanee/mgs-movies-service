@@ -1,8 +1,10 @@
 .env*
 .vscode
-build
+*.tsbuildinfo
+dist
 node_modules
 /web
 /coverage
 *.helper.ts
+schema.graphql
 graphql-types.ts

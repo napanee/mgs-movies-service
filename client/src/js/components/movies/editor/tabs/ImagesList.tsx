@@ -1,4 +1,5 @@
 import {Check as CheckIcon} from '@mui/icons-material';
+// eslint-disable-next-line import/order
 import {Box, ImageList, ImageListOwnProps} from '@mui/material';
 
 import {MovieImageResultType} from '@utils/themoviedb';

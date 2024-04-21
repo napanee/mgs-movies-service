@@ -1,8 +1,6 @@
 import {createTheme, lighten} from '@mui/material/styles';
 
 
-export type PaletteType = 'movie'|'genre'|'actor'|'director';
-
 const theme = createTheme({
 	drawer: {
 		width: 240,

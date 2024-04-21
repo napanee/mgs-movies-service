@@ -6,14 +6,13 @@ module.exports = {
 				'runtime': 'automatic',
 			},
 		],
-		'@babel/preset-typescript',
-	],
-	'plugins': [
 		[
-			'@babel/plugin-transform-typescript', {
+			'@babel/preset-typescript', {
 				allowDeclareFields: true,
 			},
 		],
+	],
+	'plugins': [
 		[
 			'inline-dotenv', {
 				path: './.env',

@@ -6,6 +6,8 @@ import {Box, Button} from '@mui/material';
 import {useEffect, useState} from 'react';
 
 import {useStore} from '@stores/index';
+
+// eslint-disable-next-line import/order
 import {MovieImagesResultType, fetchImages} from '@utils/themoviedb';
 
 import {useMovieMutation} from './mutation.helper';

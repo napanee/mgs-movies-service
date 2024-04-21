@@ -10,16 +10,6 @@ export const typescriptRule = {
 	exclude: /node_modules/,
 };
 
-/**
- * @see https://webpack.js.org/loaders/html-loader
- */
-export const htmlRule = {
-	test: /\.(html)$/,
-	use: {
-		loader: 'html-loader',
-	},
-};
-
 export const graphQLRule = {
 	test: /\.(graphql|gql)$/,
 	exclude: /node_modules/,

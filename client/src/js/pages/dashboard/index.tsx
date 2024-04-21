@@ -14,8 +14,6 @@ import {
 import {Fragment} from 'react';
 import {Link} from 'react-router-dom';
 
-import {PaletteType} from '~/theme';
-
 import {DashboardQuery, useDashboardQuery} from './query.helper';
 import * as S from './styles';
 

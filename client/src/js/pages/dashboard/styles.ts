@@ -6,8 +6,6 @@ import {
 } from '@mui/material';
 import {styled} from '@mui/material/styles';
 
-import {PaletteType} from '~/theme';
-
 
 export const Divider = styled(MuiDivider)`
 	margin: ${({theme}) => theme.spacing(2, 0)};
