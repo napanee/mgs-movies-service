@@ -1,40 +1,39 @@
 {
-	"compilerOptions": {
-		"target": "ES6",
-		"lib": ["es6", "dom"],
-		"module": "ESNext",
-		"jsx": "react-jsx",
-		"baseUrl": "./",
-		"paths": {
-			"~/*": ["./*", "src/*", "client/js/*"],
-			"@src/*": ["src/*"],
-			"@db/*": ["src/db/*"],
-			"@models/*": ["src/db/models/*"],
-			"@graphql/*": ["src/graphql/*"],
-			"@utils/*": ["src/utils/*", "client/js/utils/*"],
-			"@pages/*": ["client/js/pages/*"],
-			"@components/*": ["client/js/components/*"],
-			"@generic/*": ["client/js/generic/*"],
-			"@hooks/*": ["client/js/hooks/*"],
-			"@stores/*": ["client/js/stores/*"]
-		},
-		"allowJs": false,
-		"skipLibCheck": true,
-		"incremental": true,
-		"moduleResolution": "bundler",
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"noEmit": true,
-		"noImplicitReturns": true,
-		"noImplicitThis": true,
-		"noImplicitAny": true,
-		"strictNullChecks": true
-	},
-	"include": ["**/*.ts", "**/*.tsx", "**/*.js"],
-	"exclude": ["**/node_modules", "**/.*/"],
-	"ts-node": {
-		"compilerOptions": {
-			"module": "CommonJS"
-		}
-	}
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "lib": ["es6", "dom"],
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["server/src/*"],
+      "@db/*": ["server/src/db/*"],
+      "@models/*": ["server/src/db/models/*"],
+      "@graphql/*": ["server/src/graphql/*"],
+      "@utils/*": ["server/src/utils/*"],
+      "@pages/*": ["client/src/js/pages/*"],
+      "@components/*": ["client/src/js/components/*"],
+      "@generic/*": ["client/src/js/generic/*"],
+      "@hooks/*": ["client/src/js/hooks/*"],
+      "@stores/*": ["client/src/js/stores/*"]
+    }
+  },
+  "include": ["**/*.js", "**/*.ts", "**/*.tsx"],
+  "exclude": ["**/node_modules", "**/.*/"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }

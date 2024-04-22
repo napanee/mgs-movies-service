@@ -10,13 +10,13 @@ updatecache:
 	docker push ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache || true
 
 prepare:
-	docker-compose \
+	docker compose \
 		-f deployment/docker-compose.ci.yml \
 		build
 
 lint:
 	set -ex \
-		&& docker-compose \
+		&& docker compose \
 			-f deployment/docker-compose.ci.yml \
 			run -u `id -u`:`id -g` tests \
 			npm run ci-lint \
@@ -29,7 +29,7 @@ lint:
 			nginx -t
 
 tests:
-	docker-compose \
+	docker compose \
 		-f deployment/docker-compose.ci.yml \
 		run -u `id -u`:`id -g` tests \
 		npm run ci-test

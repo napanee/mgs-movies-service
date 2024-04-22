@@ -15,7 +15,6 @@ const config: Configuration = {
 	module: {
 		rules: [
 			rules.typescriptRule,
-			// rules.htmlRule,
 			rules.graphQLRule,
 		],
 	},

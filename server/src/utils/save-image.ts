@@ -1,7 +1,6 @@
 import {mkdirSync, writeFileSync} from 'fs';
 import path from 'path';
 
-import 'cross-fetch/polyfill';
 import {MD5} from 'crypto-js';
 
 import {MEDIA_ROOT} from '../config';

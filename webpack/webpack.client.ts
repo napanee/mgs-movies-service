@@ -17,19 +17,18 @@ const config: Configuration = {
 			'./js/index.tsx',
 		],
 	},
-	context: resolve(process.cwd(), 'client'),
+	context: resolve(process.cwd(), 'client', 'src'),
 	output: {
 		filename: 'js/[name].js',
 		chunkFilename: 'js/[name]-[chunkhash].js',
-		path: resolve(process.cwd(), 'build', 'static'),
+		path: resolve(process.cwd(), 'dist', 'static'),
 		publicPath: '/static/',
 	},
-	plugins: [
-		plugins.htmlWebpackPlugin,
-	],
 };
 
 if (isDev) {
+	config.plugins = config.plugins || [];
+
 	((config.entry as EntryObject).app as [string])
 		.push('webpack-hot-middleware/client?path=/__webpack_hmr&reload=true');
 	config.plugins?.push(plugins.hotModuleReplacementPlugin);

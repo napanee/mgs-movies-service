@@ -1,0 +1,28 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"rootDir": "./server",
+		"outDir": "./dist",
+		"target": "ES6",
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"noEmit": false,
+    "allowJs": true,
+	},
+	"include": ["server/**/*.js", "server/**/*.ts"],
+	"exclude": [
+		"**/node_modules",
+		"**/.*/",
+		"**/*.test.ts",
+		"**/__setup__/*",
+		"**/__mocks__/*"
+	],
+	"tsc-alias": {
+		"verbose": true,
+		"replacers": {
+			"base-url": {
+				"enabled": false
+			}
+		}
+	}
+}
