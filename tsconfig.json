@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
+    "lib": ["es6", "dom"],
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "baseUrl": "./",
+    "paths": {
+      "@src/*": ["server/src/*"],
+      "@db/*": ["server/src/db/*"],
+      "@models/*": ["server/src/db/models/*"],
+      "@graphql/*": ["server/src/graphql/*"],
+      "@utils/*": ["server/src/utils/*"],
+      "@pages/*": ["client/src/js/pages/*"],
+      "@components/*": ["client/src/js/components/*"],
+      "@generic/*": ["client/src/js/generic/*"],
+      "@hooks/*": ["client/src/js/hooks/*"],
+      "@stores/*": ["client/src/js/stores/*"]
+    }
+  },
+  "include": ["**/*.js", "**/*.ts", "**/*.tsx"],
+  "exclude": ["**/node_modules", "**/.*/"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
+}
