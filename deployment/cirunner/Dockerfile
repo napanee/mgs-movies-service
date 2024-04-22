@@ -16,7 +16,12 @@ RUN set -ex \
 
 WORKDIR /ci
 
+RUN mkdir -p /ci/client/
+RUN mkdir -p /ci/server/
+
 COPY deployment/cirunner/entrypoint.sh package.json package-lock.json /ci/
+COPY client/package.json /ci/client
+COPY server/package.json /ci/server
 
 RUN set -ex \
 	&& npm ci --quiet --loglevel=error --ignore-scripts \

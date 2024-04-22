@@ -1,4 +1,3 @@
-import 'cross-fetch/polyfill';
 import {CamelCasedProperties, JsonObject, SnakeCasedProperties} from 'type-fest';
 
 import {transformKeys} from './transformer';

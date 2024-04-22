@@ -20,7 +20,12 @@ FROM base as builder
 
 WORKDIR /build
 
+RUN mkdir -p /build/client/
+RUN mkdir -p /build/server/
+
 COPY package.json package-lock.json /build/
+COPY client/package.json /build/client
+COPY server/package.json /build/server
 
 RUN set -ex \
 	&& npm ci --quiet --loglevel=error \
@@ -35,13 +40,16 @@ RUN npm run build
 
 FROM base as app
 
-COPY tsconfig.json package.json package-lock.json deployment/app/entrypoint.sh /app/
-COPY --from=builder /build/build/ /app/build/
+RUN mkdir -p /app/server/
+
+COPY package.json deployment/app/entrypoint.sh /app/
+COPY server/package.json /app/server
+COPY --from=builder /build/dist/ /app/dist/
 
 WORKDIR /app
 
 RUN set -ex \
-	&& npm ci --quiet --loglevel=error \
+	&& npm ci -w server --quiet --loglevel=error \
 	&& rm -fr /root/.npm/ \
 	&& rm -fr /root/.node-gyp/
 
