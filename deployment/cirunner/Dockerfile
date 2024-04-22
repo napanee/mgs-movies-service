@@ -19,7 +19,7 @@ WORKDIR /ci
 RUN mkdir -p /ci/client/
 RUN mkdir -p /ci/server/
 
-COPY deployment/cirunner/entrypoint.sh package.json package-lock.json /ci/
+COPY package.json package-lock.json /ci/
 COPY client/package.json /ci/client
 COPY server/package.json /ci/server
 
@@ -33,5 +33,4 @@ RUN set -ex \
 
 WORKDIR /app
 
-ENTRYPOINT ["/ci/entrypoint.sh"]
 CMD ["bash"]
