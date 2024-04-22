@@ -34,6 +34,7 @@ RUN set -ex \
 
 COPY . /build/
 
+RUN npm run generate:graphql
 RUN npm run build
 
 
