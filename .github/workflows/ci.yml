@@ -1,0 +1,84 @@
+name: CI
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 'Login to github registry'
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: 'restore cirunner cache'
+        run: make -f deployment/Makefile.ci restorecache
+      - name: 'prepare cirunner'
+        run: make -f deployment/Makefile.ci prepare
+      - name: 'update cirunner cache'
+        run: make -f deployment/Makefile.ci updatecache
+
+      - name: 'execute linters'
+        run: make -f deployment/Makefile.ci lint
+      - name: 'execute tests'
+        run: make -f deployment/Makefile.ci tests
+
+  build:
+    needs:
+      - test
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 'Login to github registry'
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: 'Build app image'
+        run: make -f deployment/Makefile.ci buildapp
+      - name: 'Push app image'
+        run: make -f deployment/Makefile.ci pushapp
+
+      - name: 'Build nginx image'
+        run: make -f deployment/Makefile.ci buildnginx
+      - name: 'Push nginx image'
+        run: make -f deployment/Makefile.ci pushnginx
+
+  deploy:
+    needs:
+      - test
+      - build
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 'Login to github registry'
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: 'Configure SSH'
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$DEPLOY_SSH_KEY" > ~/.ssh/deploy.key
+          chmod 600 ~/.ssh/deploy.key
+          cat >> ~/.ssh/config <<END
+          Host *
+            User martin
+            IdentityFile ~/.ssh/deploy.key
+            StrictHostKeyChecking no
+          END
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: 'Install latest docker-compose'
+        run: |
+          pip3 install docker-compose
+          pip3 install 'docker<7'
+
+      - name: 'Deploy application'
+        run: python deployment/deploy.py -s $GITHUB_REF_NAME deploy

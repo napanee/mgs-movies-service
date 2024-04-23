@@ -1,0 +1,61 @@
+.ONESHELL: all
+
+SHELL := /bin/bash
+
+restorecache:
+	docker pull ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache || true
+
+updatecache:
+	docker tag cirunner ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache
+	docker push ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache || true
+
+prepare:
+	docker compose \
+		-f deployment/docker-compose.ci.yml \
+		build
+
+lint:
+	set -ex \
+		&& docker compose \
+			-f deployment/docker-compose.ci.yml \
+			run -u `id -u`:`id -g` tests \
+			npm run ci-lint \
+		&& docker run --rm \
+			-v ${PWD}/deployment/nginx/nginx.conf:/etc/nginx/nginx.conf \
+			-v ${PWD}/deployment/nginx/site.conf:/etc/nginx/site.conf \
+			-v ${PWD}/deployment/nginx/security_headers.conf:/etc/nginx/security_headers.conf \
+			--add-host app:127.0.0.1 \
+			nginx:alpine \
+			nginx -t
+
+tests:
+	docker compose \
+		-f deployment/docker-compose.ci.yml \
+		run -u `id -u`:`id -g` tests \
+		npm run ci-test
+
+buildapp:
+	export COMMIT="$$(echo $${GITHUB_SHA} | cut -c1-7)"
+	docker pull ghcr.io/${GITHUB_REPOSITORY}/app || true
+	docker build \
+		--cache-from ghcr.io/${GITHUB_REPOSITORY}/app:latest \
+		--tag ghcr.io/${GITHUB_REPOSITORY}/app:latest \
+		--tag ghcr.io/${GITHUB_REPOSITORY}/app:$${GITHUB_REF_NAME} \
+		--build-arg BUILDKIT_INLINE_CACHE=1 \
+		--build-arg BUILD=$${COMMIT} \
+		--file deployment/app/Dockerfile \
+		--target app \
+		.
+
+pushapp:
+	docker push ghcr.io/${GITHUB_REPOSITORY}/app:latest
+	docker push ghcr.io/${GITHUB_REPOSITORY}/app:$${GITHUB_REF_NAME}
+
+buildnginx:
+	docker build \
+		--tag ghcr.io/${GITHUB_REPOSITORY}/nginx:$${GITHUB_REF_NAME} \
+		--file deployment/nginx/Dockerfile \
+		.
+
+pushnginx:
+	docker push ghcr.io/${GITHUB_REPOSITORY}/nginx:$${GITHUB_REF_NAME}

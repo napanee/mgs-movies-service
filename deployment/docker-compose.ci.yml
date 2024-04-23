@@ -1,0 +1,36 @@
+services:
+  tests:
+    image: cirunner
+    build:
+      context: ..
+      dockerfile: deployment/cirunner/Dockerfile
+      cache_from:
+        - 'ghcr.io/${GITHUB_REPOSITORY}/cirunner-cache'
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    command: ['exit']
+    user: $USER
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: test
+      DATABASE_HOST: postgres
+      DATABASE_NAME: postgres
+      DATABASE_USER: postgres
+      DATABASE_PASS: IPahchah3AX8ahyaash2
+      DATABASE_DIALECT: postgres
+    volumes:
+      - $PWD:/app
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: IPahchah3AX8ahyaash2
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+    driver: local

@@ -1,0 +1,43 @@
+services:
+  app:
+    image: ghcr.io/${GITHUB_REPOSITORY}/app:${COMPOSE_STAGE}
+    restart: unless-stopped
+    expose:
+      - 3000
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_NAME: postgres
+      DATABASE_USER: postgres
+      DATABASE_PASS: asdaiiu6ftadfraz5fr
+      DATABASE_DIALECT: postgres
+    volumes:
+      - media:/app/web/media
+
+  nginx:
+    image: ghcr.io/${GITHUB_REPOSITORY}/nginx:${COMPOSE_STAGE}
+    restart: unless-stopped
+    depends_on:
+      - app
+    expose:
+      - 80
+    ports:
+      - ${COMPOSE_NGINX_PORT}:80
+    volumes:
+      - media:/web/media:ro
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: asdaiiu6ftadfraz5fr
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+    driver: local
+  media:
+    driver: local

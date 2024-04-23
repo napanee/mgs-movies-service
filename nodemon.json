@@ -1,8 +1,8 @@
 {
-	"watch": "./src",
-	"ignore": [
-		"node_modules/",
-		"./**/*.test.ts"
-	],
-	"exec": "babel-node ./src/server.ts --extensions .ts,.tsx"
+  "watch": "./server/src",
+  "ignore": [
+    "node_modules/",
+    "./**/*.test.ts"
+  ],
+  "exec": "babel-node ./webpack/server.ts --extensions .ts,.tsx"
 }
