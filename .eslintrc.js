@@ -133,6 +133,12 @@ module.exports = {
 				prefix: ['can', 'has', 'is'],
 			},
 		],
+		'@typescript-eslint/no-unused-vars': [
+			'error',
+			{
+				'argsIgnorePattern': '^_',
+			}
+		],
 		'@typescript-eslint/comma-dangle': [
 			'error',
 			{
