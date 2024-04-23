@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(MEDIA_URL, express.static(MEDIA_ROOT));
 app.use(STATIC_URL, express.static(STATIC_ROOT));
 app.use('/graphql', routerGraphql);
-app.get('/admin', (_, res) => {
+app.get('/admin(/*)?', (_req, res) => {
 	res.send(`
 		<!DOCTYPE html>
 		<html lang="de">
