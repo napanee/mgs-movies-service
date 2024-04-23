@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, {Application} from 'express';
+import express, {Application, NextFunction, Request, Response} from 'express';
 
 import {MEDIA_ROOT, MEDIA_URL, STATIC_ROOT, STATIC_URL} from './config';
 import dbInit from './db/init';
@@ -37,6 +37,11 @@ app.get('/admin(/*)?', (_req, res) => {
 			</body>
 		</html>
 	`);
+});
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+	// eslint-disable-next-line no-console
+	console.error(err.stack);
+	res.status(500).send('<h1>Internal Server Error (500)</h1>');
 });
 
 export default app;
