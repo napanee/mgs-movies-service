@@ -3,27 +3,27 @@
     "generate:graphql": "graphql-codegen --config ./codegen.yml"
   },
   "dependencies": {
-    "@apollo/client": "^3.5.8",
+    "@apollo/client": "^3.10.4",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.15.14",
-    "@mui/material": "^5.15.14",
+    "@mui/icons-material": "^5.15.18",
+    "@mui/material": "^5.15.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.73",
-    "@types/react-dom": "^18.2.23",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
     "postcss-styled-syntax": "^0.6.4",
-    "stylelint": "^16.3.1",
+    "stylelint": "^16.5.0",
     "stylelint-config-recommended": "^14.0.0",
     "stylelint-declaration-strict-value": "^1.10.4",
     "stylelint-order": "^6.0.4",
     "stylelint-processor-styled-components": "^1.10.0",
-    "stylelint-scss": "^6.2.1"
+    "stylelint-scss": "^6.3.0"
   }
 }
